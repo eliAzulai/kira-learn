@@ -40,3 +40,10 @@ test('returns empty hook when no .hook paragraph present', async () => {
   assert.equal(meta.title, 'Webhooks');
   assert.equal(meta.hook, '');
 });
+
+test('extracts meta-published date when content attribute appears before name', () => {
+  const html = `<!DOCTYPE html><html><head><title>X</title>
+<meta content="2026-06-01" name="article:published"></head><body></body></html>`;
+  const meta = extractMetadata({ html, slug: 'x', mtime: new Date('2020-01-01') });
+  assert.equal(meta.date, '2026-06-01');
+});
