@@ -31,3 +31,9 @@ cd ~/projects/kira-learn
 node build-index.js
 git add . && git commit --amend --no-edit && git push
 ```
+
+## How articles get added
+
+The `/kira-learn` skill (defined at `~/.claude/skills/kira-learn/SKILL.md`) writes a new article into `articles/`, regenerates `index.html` and `sharp.html`, then commits and pushes. Vercel auto-deploys on push.
+
+The skill injects `<meta name="article:published" content="YYYY-MM-DD">` into each new article's `<head>`. The build script reads that for sort order, falling back to file mtime when the meta tag is absent (for the original 28 articles imported in the first content commit).
