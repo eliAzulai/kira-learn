@@ -21,8 +21,8 @@
 !/articles/
 !/articles/**
 
-!/public/
-!/public/**
+!/favicon.svg
+!/robots.txt
 
 !/docs/
 !/docs/**
@@ -38,3 +38,4 @@
 **/node_modules/
 **/.vercel/
 **/*.log
+.vercel
