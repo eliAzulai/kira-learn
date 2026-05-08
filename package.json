@@ -1,0 +1,14 @@
+{
+  "name": "kiralearn",
+  "version": "1.0.0",
+  "description": "Static site for kiralearn.space — generated from /kira-learn skill output",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build-index.js",
+    "test": "node --test tests/"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
