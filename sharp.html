@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kira Learn — Sharp</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #08090a;
+    color: #d0d6e0;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-feature-settings: "cv01", "ss03";
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  .container { max-width: 720px; margin: 0 auto; padding: 6rem 1.5rem; }
+  header { margin-bottom: 5rem; }
+  .site-name {
+    font-size: 0.85rem;
+    color: #8a8f98;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  main { display: flex; flex-direction: column; }
+  .entry {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .entry:last-child { border-bottom: none; }
+  .entry .date {
+    font-size: 0.75rem;
+    color: #8a8f98;
+    font-variant-numeric: tabular-nums;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.85rem;
+  }
+  .entry h2 {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    font-weight: 600;
+    color: #f7f8f8;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+    transition: color 0.2s ease;
+  }
+  .entry:hover h2 { color: #7170ff; }
+  .entry .hook { color: #8a8f98; font-size: 1rem; }
+  footer {
+    margin-top: 5rem;
+    padding-top: 2rem;
+    color: #8a8f98;
+    font-size: 0.85rem;
+    display: flex;
+    gap: 2rem;
+  }
+  footer a { color: #7170ff; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="site-name">Kira Learn</div>
+  </header>
+  <main>
+    <a class="entry" href="/articles/operator-hotlist-vs-ralph-look">
+      <div class="date">May 3, 2026</div>
+      <h2>Operator Hotlist vs. Ralph Look</h2>
+      
+    </a>
+    <a class="entry" href="/articles/supervisor-loop-vs-ralph-loop">
+      <div class="date">May 3, 2026</div>
+      <h2>Supervisor Loop vs Ralph Loop</h2>
+      
+    </a>
+    <a class="entry" href="/articles/macos-background-items-daemon-tracing">
+      <div class="date">Apr 28, 2026</div>
+      <h2>macOS Background Items, Daemons, and Tracing Reinstallers</h2>
+      <p class="hook">A weird Background Item name is not the same thing as active malware. The work is to separate a real runnable daemon from stale macOS bookkeeping.</p>
+    </a>
+    <a class="entry" href="/articles/acp-vs-acpx-vs-cli-routing">
+      <div class="date">Apr 25, 2026</div>
+      <h2>ACP vs ACPX vs Direct CLI Routing — Kira Learn</h2>
+      <p class="hook">Three ways to talk to coding agents. They look similar. They aren't.</p>
+    </a>
+    <a class="entry" href="/articles/prompting-claude-thinking-partner">
+      <div class="date">Apr 25, 2026</div>
+      <h2>Turn Claude Into a Thinking Partner — Kira Learn</h2>
+      <p class="hook">The gap between &quot;meh&quot; and &quot;wow&quot; outputs isn't the model. It's eight principles you can stack on every prompt.</p>
+    </a>
+    <a class="entry" href="/articles/peterdiamandis-elons-60b-cursor-bet-claude-kills-saas-and-openais-mass-departures">
+      <div class="date">Apr 24, 2026</div>
+      <h2>Peter Diamandis Digest: Elon&amp;apos;s $60B Cursor Bet, Claude kills SaaS, and OpenAI&amp;apos;s Mass Departures | EP #249</h2>
+      
+    </a>
+    <a class="entry" href="/articles/gemini-notebooklm-human-intelligence-system">
+      <div class="date">Apr 20, 2026</div>
+      <h2>The Four-Floor AI System That Actually Makes You Smarter — Kira Learn</h2>
+      <p class="hook">Most people use AI as one giant shortcut. That often makes their thinking weaker. The better move is to split the stack into distinct layers so truth, reasoning, specialization, and execution do different jobs.</p>
+    </a>
+    <a class="entry" href="/articles/peterdiamandis-sam-altmans-attack-amazon-vs-starlink-and-what-opus-47-actually-means">
+      <div class="date">Apr 19, 2026</div>
+      <h2>Peter Diamandis Digest: Sam Altman’s Attack, Amazon vs. Starlink, and What Opus 4.7 Actually Means | #248</h2>
+      
+    </a>
+    <a class="entry" href="/articles/peterdiamandis-elon-musk-vs-sam-altman-ai-job-loss-and-openais-852b-valuation">
+      <div class="date">Apr 16, 2026</div>
+      <h2>Peter Diamandis Digest: Elon vs Altman, AI Jobs, and OpenAI's $852B Valuation</h2>
+      
+    </a>
+    <a class="entry" href="/articles/peterdiamandis-spacex-goes-public-claude-mythos-data-center-delay">
+      <div class="date">Apr 12, 2026</div>
+      <h2>Peter Diamandis, SpaceX IPO, Claude Mythos, and the Data Center Squeeze</h2>
+      
+    </a>
+    <a class="entry" href="/articles/rabbishimonrussell-crisis-chinuch-panel-part-1">
+      <div class="date">Apr 11, 2026</div>
+      <h2>Crisis Chinuch Panel Part 1 &amp;mdash; Russell &amp;amp; Jacobson</h2>
+      
+    </a>
+    <a class="entry" href="/articles/rabbishimonrussell-crisis-chinuch-panel-part-2">
+      <div class="date">Apr 11, 2026</div>
+      <h2>Crisis Chinuch Panel Part 2 &amp;mdash; Russell &amp;amp; Jacobson</h2>
+      
+    </a>
+    <a class="entry" href="/articles/rabbishimonrussell-navigating-yom-tov-for-our-children">
+      <div class="date">Apr 11, 2026</div>
+      <h2>Navigating Yom Tov for Our Children — Rabbi Shimon Russell</h2>
+      
+    </a>
+    <a class="entry" href="/articles/top-claude-code-tools-april-2026-adaptation">
+      <div class="date">Apr 11, 2026</div>
+      <h2>What I'm Stealing From The Claude Code Tools Video — Kira Learn</h2>
+      <p class="hook">Watched a 40-minute tour of every shiny Claude Code add-on. Here's the short list I'm actually installing — and the mental model behind the cuts.</p>
+    </a>
+    <a class="entry" href="/articles/natebjones-3-trillion-ipo-trap">
+      <div class="date">Apr 10, 2026</div>
+      <h2>The $3 Trillion IPO Trap Nobody's Talking About</h2>
+      <p class="hook">Three AI giants are about to go public. Your retirement fund is the exit liquidity.</p>
+    </a>
+    <a class="entry" href="/articles/natebjones-512k-lines-leaked-code-ai-tools">
+      <div class="date">Apr 10, 2026</div>
+      <h2>Conway: The Always-On Agent Hidden in Anthropic's Leaked Code</h2>
+      <p class="hook">A packaging error pushed 512,000 lines of Claude Code source to a public registry. Buried inside was something Anthropic never announced: an always-on agent called Conway that reveals a platform lock-in strategy we haven't seen before.</p>
+    </a>
+    <a class="entry" href="/articles/natebjones-6-6-billion-ai-company-one-week-moat">
+      <div class="date">Apr 10, 2026</div>
+      <h2>The One-Week Moat: Why $6.6 Billion AI Companies Are Built on Sand</h2>
+      <p class="hook">Lovable just raised $330 million. But anyone with Claude Code could rebuild their product in a week. So what actually matters?</p>
+    </a>
+    <a class="entry" href="/articles/natebjones-markdown-file-replaced-design-meeting-google-stitch">
+      <div class="date">Apr 10, 2026</div>
+      <h2>Design Moved to the Command Line</h2>
+      <p class="hook">Three tools — Google Stitch, Remotion, and Blender MCP — just collapsed the cost of creative work. Here's what that means.</p>
+    </a>
+    <a class="entry" href="/articles/natebjones-missing-orchestration-layer-destroying-teams">
+      <div class="date">Apr 10, 2026</div>
+      <h2>The Missing Orchestration Layer Destroying Teams Right Now</h2>
+      <p class="hook">AI agents can think and code. But they still can't reliably work together -- and that gap is where billions of dollars will be won or lost.</p>
+    </a>
+    <a class="entry" href="/articles/natebjones-polymarket-bot-438k-30-days">
+      <div class="date">Apr 10, 2026</div>
+      <h2>A Bot Made $438K in 30 Days -- And It's a Warning for Every Industry</h2>
+      <p class="hook">A simple trading bot on Polymarket reveals the hidden force reshaping every business: AI is collapsing the inefficiencies your industry was built on.</p>
+    </a>
+    <a class="entry" href="/articles/peterdiamandis-ai-synthetic-biology-ben-lamm-colossal">
+      <div class="date">Apr 10, 2026</div>
+      <h2>AI + Synthetic Biology: Programming Life Itself</h2>
+      <p class="hook">One company is using AI to design living organisms — from woolly mammoths to plastic-eating microbes.</p>
+    </a>
+    <a class="entry" href="/articles/peterdiamandis-elon-chip-race-sp500-repricing">
+      <div class="date">Apr 10, 2026</div>
+      <h2>Elon's TerraFab, the S&amp;P 500 Repricing, and the End of Human Driving</h2>
+      <p class="hook">50x the world's chip supply. Flying cars in 18 months. And the financial framework that priced every stock for a century might be breaking.</p>
+    </a>
+    <a class="entry" href="/articles/peterdiamandis-eric-schmidt-robotics-singularity-energy">
+      <div class="date">Apr 10, 2026</div>
+      <h2>Eric Schmidt: The Robotics Race, Singularity Timeline, and the 92-Gigawatt Problem</h2>
+      <p class="hook">The former Google CEO lays out why the US is 10% into an AI revolution, why China is winning robotics, and why the real bottleneck is electricity — not talent or capital.</p>
+    </a>
+    <a class="entry" href="/articles/peterdiamandis-uber-robotaxi-dara-khosrowshahi">
+      <div class="date">Apr 10, 2026</div>
+      <h2>Uber's Robotaxi Playbook: The End of Human Driving</h2>
+      <p class="hook">Uber's CEO explains why your kids probably won't need a driver's license -- and how Uber plans to orchestrate a world of robot cars, flying taxis, and AI gig work.</p>
+    </a>
+    <a class="entry" href="/articles/peterdiamandis-uber-vs-tesla-robotaxi-timelines">
+      <div class="date">Apr 10, 2026</div>
+      <h2>The Robotaxi Race: Why Uber Bets on Being the Middleman</h2>
+      <p class="hook">Uber's CEO explains why they won't build a self-driving car — and why that might be the smartest move in the race.</p>
+    </a>
+    <a class="entry" href="/articles/top-claude-code-tools-april-2026">
+      <div class="date">Apr 10, 2026</div>
+      <h2>The Claude Code Tools That Actually Matter — Kira Learn</h2>
+      <p class="hook">There are dozens of Claude Code plugins and skills floating around. Most are noise. Here's how to tell the difference.</p>
+    </a>
+    <a class="entry" href="/articles/ssh-keys-vps-security-and-server-hardening">
+      <div class="date">Apr 5, 2026</div>
+      <h2>SSH Keys, VPS Security &amp; Server Hardening</h2>
+      <p class="hook">Your server is on the internet 24/7. Here's how to make sure only you can get in.</p>
+    </a>
+    <a class="entry" href="/articles/webhooks">
+      <div class="date">Apr 5, 2026</div>
+      <h2>Webhooks — How Apps Talk to Each Other in Real Time</h2>
+      <p class="hook">Instead of constantly asking &quot;anything new?&quot; — just get a tap on the shoulder when something happens.</p>
+    </a>
+  </main>
+  <footer>
+    <a href="/">← Grid view</a>
+  </footer>
+</div>
+</body>
+</html>
