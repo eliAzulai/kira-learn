@@ -1,0 +1,34 @@
+# kiralearn.space deploy repo — allowlist model
+# Everything is ignored by default. Only deploy-shaped files are tracked.
+# This keeps personal notes, transcripts, and action logs out of the public repo.
+
+# Ignore everything
+/*
+/**
+
+# Allowlist deploy files & folders
+!/.gitignore
+!/.gitattributes
+!/README.md
+!/DESIGN.md
+!/index.html
+!/sharp.html
+!/build-index.js
+!/package.json
+!/package-lock.json
+!/vercel.json
+
+!/articles/
+!/articles/**
+
+!/public/
+!/public/**
+
+!/docs/
+!/docs/**
+
+# Inside allowlisted folders, still ignore noise
+**/.DS_Store
+**/node_modules/
+**/.vercel/
+**/*.log
