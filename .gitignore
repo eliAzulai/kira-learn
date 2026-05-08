@@ -27,6 +27,12 @@
 !/docs/
 !/docs/**
 
+!/lib/
+!/lib/**
+
+!/tests/
+!/tests/**
+
 # Inside allowlisted folders, still ignore noise
 **/.DS_Store
 **/node_modules/
