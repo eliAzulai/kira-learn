@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSH Keys, VPS Security & Server Hardening</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0f172a;
+    color: #cbd5e1;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    line-height: 1.7;
+    padding: 2rem 1rem;
+  }
+  article {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 2.2rem;
+    color: #f1f5f9;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards;
+  }
+  .hook {
+    font-size: 1.1rem;
+    color: #38bdf8;
+    margin-bottom: 2.5rem;
+    font-style: italic;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.2s forwards;
+  }
+  h2 {
+    font-size: 1.4rem;
+    color: #f1f5f9;
+    margin: 2.5rem 0 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #1e293b;
+  }
+  h3 {
+    font-size: 1.1rem;
+    color: #e2e8f0;
+    margin: 1.5rem 0 0.5rem;
+  }
+  p { margin-bottom: 1rem; }
+  strong { color: #f1f5f9; }
+  code {
+    background: #1e293b;
+    color: #38bdf8;
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  }
+  pre {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    overflow-x: auto;
+    margin: 1rem 0 1.5rem;
+    position: relative;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    font-size: 0.85rem;
+    color: #e2e8f0;
+  }
+  pre .copy-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: #334155;
+    border: none;
+    color: #94a3b8;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s, background 0.2s, color 0.2s;
+    font-family: inherit;
+  }
+  pre:hover .copy-btn { opacity: 1; }
+  pre .copy-btn:hover { background: #475569; color: #f1f5f9; }
+  pre .copy-btn.copied { background: #22c55e; color: #fff; }
+  ul, ol { margin: 0.5rem 0 1.5rem 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+    50% { box-shadow: 0 0 12px 2px rgba(56, 189, 248, 0.15); }
+  }
+  @keyframes drawLine {
+    from { stroke-dashoffset: 40; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  /* Interactive flow diagram */
+  .diagram {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    margin: 2rem 0;
+  }
+  .diagram-title {
+    text-align: center;
+    font-size: 1rem;
+    color: #38bdf8;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+  .flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .flow-step.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .flow-step:hover .flow-box {
+    border-color: #38bdf8;
+    background: #162032;
+  }
+  .flow-step:hover .flow-num {
+    background: #38bdf8;
+    color: #0f172a;
+  }
+  .flow-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #0f172a;
+    border: 2px solid #38bdf8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: #38bdf8;
+    flex-shrink: 0;
+    transition: background 0.3s, color 0.3s;
+  }
+  .flow-box {
+    flex: 1;
+    background: #0f172a;
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    border: 1px solid #334155;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .flow-box-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #64748b;
+  }
+  .flow-box-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #f1f5f9;
+  }
+  .flow-box-desc {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin-top: 0.2rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, margin 0.3s ease;
+  }
+  .flow-step.expanded .flow-box-desc {
+    max-height: 100px;
+    margin-top: 0.4rem;
+  }
+  .flow-arrow {
+    text-align: center;
+    padding-left: 12px;
+    margin: 0.2rem 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .flow-arrow.visible { opacity: 1; }
+  .flow-arrow svg {
+    width: 20px;
+    height: 28px;
+  }
+  .flow-arrow svg line {
+    stroke: #334155;
+    stroke-width: 2;
+    stroke-dasharray: 40;
+    animation: drawLine 0.6s ease forwards;
+  }
+  .flow-arrow svg polygon { fill: #334155; }
+
+  /* Layers — interactive */
+  .layers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+  }
+  .layer {
+    text-align: center;
+    background: #0f172a;
+    border-radius: 10px;
+    padding: 1.2rem 0.8rem;
+    border: 1px solid #334155;
+    cursor: pointer;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    position: relative;
+  }
+  .layer:hover {
+    transform: translateY(-4px);
+    border-color: #38bdf8;
+    box-shadow: 0 8px 24px rgba(56, 189, 248, 0.1);
+  }
+  .layer.active {
+    border-color: #22c55e;
+    animation: pulseGlow 2s ease infinite;
+  }
+  .layer-icon { font-size: 1.8rem; margin-bottom: 0.4rem; transition: transform 0.3s; }
+  .layer:hover .layer-icon { transform: scale(1.2); }
+  .layer-name { font-size: 0.85rem; font-weight: 600; color: #f1f5f9; }
+  .layer-detail { font-size: 0.75rem; color: #64748b; margin-top: 0.2rem; line-height: 1.4; }
+  .layer-expanded {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    margin-top: 0.5rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    line-height: 1.5;
+  }
+  .layer.active .layer-expanded { max-height: 120px; }
+
+  /* Checklist — interactive */
+  .checklist {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    margin: 1.5rem 0;
+  }
+  .check-item {
+    background: #1e293b;
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    border: 1px solid #334155;
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    cursor: pointer;
+    transition: border-color 0.3s, background 0.3s, transform 0.2s;
+  }
+  .check-item:hover {
+    border-color: #22c55e;
+    background: #162032;
+    transform: translateX(4px);
+  }
+  .check-item.checked {
+    border-color: #22c55e;
+    background: rgba(34, 197, 94, 0.05);
+  }
+  .check-icon {
+    color: #334155;
+    font-weight: 700;
+    flex-shrink: 0;
+    font-size: 1.1rem;
+    transition: color 0.3s, transform 0.3s;
+  }
+  .check-item.checked .check-icon {
+    color: #22c55e;
+    transform: scale(1.2);
+  }
+  .check-text { font-size: 0.82rem; color: #cbd5e1; line-height: 1.4; }
+  .check-text strong { color: #f1f5f9; }
+
+  /* Progress bar for checklist */
+  .progress-bar {
+    height: 4px;
+    background: #334155;
+    border-radius: 2px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #22c55e, #38bdf8);
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.5s ease;
+  }
+
+  /* Takeaways */
+  .takeaways {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin-top: 2rem;
+    border-left: 3px solid #22c55e;
+  }
+  .takeaways h2 { border: none; margin-top: 0; color: #22c55e; }
+  .takeaways li { color: #e2e8f0; }
+
+  /* Password vs Key comparison */
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .compare-card {
+    background: #0f172a;
+    border-radius: 10px;
+    padding: 1.2rem;
+    border: 1px solid #334155;
+    text-align: center;
+    transition: transform 0.3s, border-color 0.3s;
+    cursor: default;
+  }
+  .compare-card:hover { transform: scale(1.02); }
+  .compare-card.bad { border-color: #ef4444; }
+  .compare-card.bad:hover { border-color: #f87171; }
+  .compare-card.good { border-color: #22c55e; }
+  .compare-card.good:hover { border-color: #4ade80; }
+  .compare-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+  .compare-title { font-weight: 600; color: #f1f5f9; font-size: 0.95rem; margin-bottom: 0.3rem; }
+  .compare-stat { font-size: 0.8rem; color: #64748b; }
+  .compare-stat span { color: #f1f5f9; font-weight: 600; }
+
+  /* Attack animation */
+  .attack-demo {
+    background: #0f172a;
+    border-radius: 10px;
+    padding: 1.2rem;
+    margin: 1.5rem 0;
+    border: 1px solid #334155;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.8rem;
+    overflow: hidden;
+  }
+  .attack-demo .terminal-line {
+    opacity: 0;
+    color: #ef4444;
+    margin-bottom: 0.3rem;
+    transition: opacity 0.3s;
+  }
+  .attack-demo .terminal-line.success {
+    color: #22c55e;
+  }
+  .attack-demo .terminal-line.visible { opacity: 1; }
+  .attack-btn {
+    background: #334155;
+    border: 1px solid #475569;
+    color: #e2e8f0;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    margin-top: 0.8rem;
+    transition: background 0.2s;
+    font-family: inherit;
+  }
+  .attack-btn:hover { background: #475569; }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 1.6rem; }
+    .layers { grid-template-columns: 1fr; }
+    .checklist { grid-template-columns: 1fr; }
+    .comparison { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<article>
+
+<h1>SSH Keys, VPS Security & Server Hardening</h1>
+<p class="hook">Your server is on the internet 24/7. Here's how to make sure only you can get in.</p>
+
+<h2>The Simple Version</h2>
+
+<p>Imagine you rent a small office in a building downtown. It's yours, but it's in a shared building — anyone can walk up to the door. You need a lock.</p>
+
+<p>A <strong>password</strong> is like a combination lock. Anyone who guesses the right numbers can get in. And people are trying — thousands of times a day, automatically.</p>
+
+<p>An <strong>SSH key</strong> is more like a special two-part key system. You have a private key that never leaves your pocket, and a matching lock (the public key) installed on your office door. Only your key opens that lock. Nobody can guess it, copy it, or brute-force it.</p>
+
+<!-- Password vs Key comparison -->
+<div class="comparison">
+  <div class="compare-card bad">
+    <div class="compare-icon">🔢</div>
+    <div class="compare-title">Password</div>
+    <div class="compare-stat">Avg crack time: <span>~2 hours</span></div>
+    <div class="compare-stat">Can be guessed: <span>Yes</span></div>
+    <div class="compare-stat">Can be phished: <span>Yes</span></div>
+  </div>
+  <div class="compare-card good">
+    <div class="compare-icon">🔐</div>
+    <div class="compare-title">SSH Key (Ed25519)</div>
+    <div class="compare-stat">Crack time: <span>Heat death of universe</span></div>
+    <div class="compare-stat">Can be guessed: <span>No</span></div>
+    <div class="compare-stat">Can be phished: <span>No</span></div>
+  </div>
+</div>
+
+<p>A <strong>VPS</strong> (Virtual Private Server) is that rented office. It's a computer sitting in a data center somewhere — always on, always connected. And because it's always online, people are constantly rattling the doorknob.</p>
+
+<p><strong>Server hardening</strong> is everything you do beyond just having a good lock: removing the doorbell so strangers can't ring it, boarding up windows you don't use, and telling building security to only let in people who show the right key — no exceptions.</p>
+
+<!-- SSH Auth Flow Diagram -->
+<div class="diagram" id="auth-flow">
+  <div class="diagram-title">How SSH Key Authentication Works <span style="font-size:0.75rem;color:#64748b;">— click each step</span></div>
+
+  <div class="flow-step" onclick="toggleStep(this)" data-delay="0">
+    <div class="flow-num">1</div>
+    <div class="flow-box">
+      <div class="flow-box-label">Your Mac</div>
+      <div class="flow-box-title">ssh my-server</div>
+      <div class="flow-box-desc">SSH reads ~/.ssh/config, finds the host alias, resolves to your server's IP and connects as root.</div>
+    </div>
+  </div>
+  <div class="flow-arrow" data-delay="100">
+    <svg viewBox="0 0 20 28"><line x1="10" y1="2" x2="10" y2="22"/><polygon points="5,19 10,26 15,19"/></svg>
+  </div>
+
+  <div class="flow-step" onclick="toggleStep(this)" data-delay="200">
+    <div class="flow-num">2</div>
+    <div class="flow-box">
+      <div class="flow-box-label">Keychain</div>
+      <div class="flow-box-title">Passphrase unlocked automatically</div>
+      <div class="flow-box-desc">macOS Keychain decrypts your private key using the stored passphrase. No typing needed — it's locked behind your Mac login.</div>
+    </div>
+  </div>
+  <div class="flow-arrow" data-delay="300">
+    <svg viewBox="0 0 20 28"><line x1="10" y1="2" x2="10" y2="22"/><polygon points="5,19 10,26 15,19"/></svg>
+  </div>
+
+  <div class="flow-step" onclick="toggleStep(this)" data-delay="400">
+    <div class="flow-num">3</div>
+    <div class="flow-box">
+      <div class="flow-box-label">Network</div>
+      <div class="flow-box-title">Challenge-response handshake</div>
+      <div class="flow-box-desc">Server sends a random challenge. Your private key signs it. The server verifies the signature using the public key. The private key never leaves your machine — it just proves it exists.</div>
+    </div>
+  </div>
+  <div class="flow-arrow" data-delay="500">
+    <svg viewBox="0 0 20 28"><line x1="10" y1="2" x2="10" y2="22"/><polygon points="5,19 10,26 15,19"/></svg>
+  </div>
+
+  <div class="flow-step" onclick="toggleStep(this)" data-delay="600">
+    <div class="flow-num">4</div>
+    <div class="flow-box">
+      <div class="flow-box-label">Server</div>
+      <div class="flow-box-title">Access granted</div>
+      <div class="flow-box-desc">Signature checks out. You're in. No password was ever transmitted over the network.</div>
+    </div>
+  </div>
+</div>
+
+<h2>How It Actually Works</h2>
+
+<h3>SSH Keys: The Math Behind the Magic</h3>
+
+<p>When you run <code>ssh-keygen</code>, your computer creates two files:</p>
+
+<ul>
+  <li><strong>Private key</strong> (<code>~/.ssh/id_ed25519</code>) — stays on your machine, never shared. This is your actual key.</li>
+  <li><strong>Public key</strong> (<code>~/.ssh/id_ed25519.pub</code>) — gets copied to every server you want to access. This is the lock.</li>
+</ul>
+
+<p>When you connect, the server sends a challenge that only your private key can answer. The private key never travels over the network — it just proves it exists. The algorithm (Ed25519) is based on elliptic curve cryptography, and cracking it would take longer than the age of the universe.</p>
+
+<p>You protect the private key with a <strong>passphrase</strong> — a password that encrypts the key file itself. On macOS, you store this in <strong>Keychain</strong> so you don't type it every time.</p>
+
+<!-- Three Layers Diagram — click to explore -->
+<div class="diagram">
+  <div class="diagram-title">Three Layers of Protection <span style="font-size:0.75rem;color:#64748b;">— click to explore</span></div>
+  <div class="layers">
+    <div class="layer" onclick="toggleLayer(this)">
+      <div class="layer-icon">🔑</div>
+      <div class="layer-name">Private Key File</div>
+      <div class="layer-detail">~/.ssh/id_ed25519</div>
+      <div class="layer-expanded">The actual cryptographic key. 256-bit Ed25519. Lives only on your disk. If someone steals this file, they still need the passphrase to use it.</div>
+    </div>
+    <div class="layer" onclick="toggleLayer(this)">
+      <div class="layer-icon">🔒</div>
+      <div class="layer-name">Passphrase</div>
+      <div class="layer-detail">Encrypts the key file</div>
+      <div class="layer-expanded">A password that encrypts the private key at rest. Without it, the key file is useless gibberish. Choose something long and memorable — it's your last line of defense.</div>
+    </div>
+    <div class="layer" onclick="toggleLayer(this)">
+      <div class="layer-icon">🍎</div>
+      <div class="layer-name">macOS Keychain</div>
+      <div class="layer-detail">Stores passphrase securely</div>
+      <div class="layer-expanded">Apple's encrypted credential store. Locked behind your Mac login password and the Secure Enclave chip. Unlocks the passphrase automatically so you don't type it every time.</div>
+    </div>
+  </div>
+</div>
+
+<h3>Your SSH Config: Shortcuts</h3>
+
+<p>Instead of typing <code>ssh root@203.0.113.10</code> every time, set up <code>~/.ssh/config</code>:</p>
+
+<pre><code>Host my-server
+  HostName 203.0.113.10
+  User root
+
+Host *
+  UseKeychain yes
+  AddKeysToAgent yes
+  IdentityFile ~/.ssh/id_ed25519</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+<p>Now <code>ssh my-server</code> does the same thing. The wildcard <code>Host *</code> block applies your key and Keychain settings to all connections.</p>
+
+<h3>Server Hardening: Locking Down the Doors</h3>
+
+<p>Once your key is in place, harden the server by editing <code>/etc/ssh/sshd_config</code>:</p>
+
+<pre><code># Block all password login attempts
+PasswordAuthentication no
+
+# Root can only log in with a key
+PermitRootLogin without-password</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+<p>Then restart SSH:</p>
+
+<pre><code>systemctl restart ssh</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+<p><strong>Watch for override files.</strong> Cloud providers drop configs into <code>/etc/ssh/sshd_config.d/</code> that can silently re-enable password auth. Always check:</p>
+
+<pre><code>grep -r 'PasswordAuthentication' /etc/ssh/sshd_config.d/</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+<!-- Attack simulation -->
+<div class="diagram">
+  <div class="diagram-title">What Happens When Attackers Try</div>
+  <div class="attack-demo" id="attack-demo">
+    <div class="terminal-line">$ ssh root@your-server (password: admin123)</div>
+    <div class="terminal-line">Permission denied (publickey).</div>
+    <div class="terminal-line">$ ssh root@your-server (password: root)</div>
+    <div class="terminal-line">Permission denied (publickey).</div>
+    <div class="terminal-line">$ ssh root@your-server (password: P@ssw0rd!)</div>
+    <div class="terminal-line">Permission denied (publickey).</div>
+    <div class="terminal-line">&nbsp;</div>
+    <div class="terminal-line success">Server doesn't even accept passwords.</div>
+    <div class="terminal-line success">They can try forever. It won't matter.</div>
+  </div>
+  <button class="attack-btn" onclick="runAttackDemo()">Simulate attack</button>
+</div>
+
+<!-- Hardening Checklist — interactive -->
+<div class="diagram">
+  <div class="diagram-title">Hardening Checklist <span style="font-size:0.75rem;color:#64748b;">— click to check off</span></div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="checklist" id="checklist">
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-icon">○</div>
+      <div class="check-text"><strong>PasswordAuthentication no</strong><br>Blocks all brute-force attacks</div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-icon">○</div>
+      <div class="check-text"><strong>PermitRootLogin without-password</strong><br>Root via key only</div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-icon">○</div>
+      <div class="check-text"><strong>Check sshd_config.d/</strong><br>Cloud-init can override your settings</div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-icon">○</div>
+      <div class="check-text"><strong>Restart SSH after changes</strong><br>systemctl restart ssh</div>
+    </div>
+  </div>
+</div>
+
+<div class="takeaways">
+  <h2>Key Takeaways</h2>
+  <ul>
+    <li><strong>SSH keys beat passwords</strong> — they can't be guessed, phished, or brute-forced</li>
+    <li><strong>Private key + passphrase + Keychain</strong> = three layers of protection</li>
+    <li><strong>Disable password auth</strong> on every server — it's the #1 hardening step</li>
+    <li><strong>Check for cloud-init overrides</strong> in <code>/etc/ssh/sshd_config.d/</code></li>
+    <li><strong>SSH config aliases</strong> save time without reducing security</li>
+  </ul>
+</div>
+
+</article>
+
+<script>
+// Animate flow steps on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const delay = entry.target.dataset.delay || 0;
+      setTimeout(() => {
+        entry.target.classList.add('visible');
+      }, delay);
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.flow-step, .flow-arrow').forEach(el => observer.observe(el));
+
+// Click to expand flow steps
+function toggleStep(el) {
+  el.classList.toggle('expanded');
+}
+
+// Click to explore layers
+function toggleLayer(el) {
+  const wasActive = el.classList.contains('active');
+  document.querySelectorAll('.layer').forEach(l => l.classList.remove('active'));
+  if (!wasActive) el.classList.add('active');
+}
+
+// Interactive checklist
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  const icon = el.querySelector('.check-icon');
+  icon.textContent = el.classList.contains('checked') ? '✓' : '○';
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = document.querySelectorAll('.check-item').length;
+  const checked = document.querySelectorAll('.check-item.checked').length;
+  const pct = (checked / total) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+// Attack simulation
+function runAttackDemo() {
+  const lines = document.querySelectorAll('#attack-demo .terminal-line');
+  lines.forEach(l => l.classList.remove('visible'));
+
+  lines.forEach((line, i) => {
+    setTimeout(() => {
+      line.classList.add('visible');
+    }, i * 500);
+  });
+}
+
+// Copy code blocks
+function copyCode(btn) {
+  const code = btn.parentElement.querySelector('code').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+</script>
+</body>
+</html>

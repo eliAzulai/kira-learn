@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACP vs ACPX vs Direct CLI Routing — Kira Learn</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08090a;
+    --panel: #0f1011;
+    --surface: #191a1b;
+    --code-bg: #141620;
+    --text: #f7f8f8;
+    --body: #d0d6e0;
+    --muted: #8a8f98;
+    --quiet: #62666d;
+    --accent: #7170ff;
+    --accent-hover: #828fff;
+    --brand: #5e6ad2;
+    --border-subtle: rgba(255,255,255,0.05);
+    --border-std: rgba(255,255,255,0.08);
+    --green: #10b981;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--body);
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    font-feature-settings: "cv01", "ss03";
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  article {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 96px 24px 120px;
+  }
+  h1 {
+    color: var(--text);
+    font-size: 48px;
+    font-weight: 510;
+    line-height: 1.05;
+    letter-spacing: -1.056px;
+    margin-bottom: 16px;
+  }
+  .hook {
+    color: var(--muted);
+    font-size: 18px;
+    line-height: 1.6;
+    letter-spacing: -0.165px;
+    margin-bottom: 56px;
+    max-width: 600px;
+  }
+  h2 {
+    color: var(--text);
+    font-size: 32px;
+    font-weight: 510;
+    line-height: 1.13;
+    letter-spacing: -0.704px;
+    margin-top: 64px;
+    margin-bottom: 20px;
+  }
+  h3 {
+    color: var(--text);
+    font-size: 20px;
+    font-weight: 590;
+    line-height: 1.33;
+    letter-spacing: -0.24px;
+    margin-top: 32px;
+    margin-bottom: 12px;
+  }
+  p {
+    color: var(--body);
+    font-size: 16px;
+    line-height: 1.65;
+    margin-bottom: 16px;
+  }
+  p.lead {
+    font-size: 18px;
+    color: var(--body);
+    line-height: 1.6;
+    letter-spacing: -0.165px;
+  }
+  strong { color: var(--text); font-weight: 590; }
+  em { color: var(--text); font-style: normal; font-weight: 510; }
+  code {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 13px;
+    background: var(--code-bg);
+    color: var(--text);
+    border: 1px solid var(--border-std);
+    border-radius: 4px;
+    padding: 1px 6px;
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border-std);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin: 20px 0;
+    overflow-x: auto;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--body);
+  }
+  pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: var(--body);
+  }
+  pre .c { color: var(--quiet); }
+  pre .k { color: var(--accent); }
+  pre .s { color: #a8b1ff; }
+
+  ul { margin: 12px 0 20px 22px; }
+  li { color: var(--body); margin-bottom: 8px; line-height: 1.6; }
+
+  .callout {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border-std);
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin: 24px 0;
+  }
+  .callout p { margin-bottom: 0; }
+  .callout p + p { margin-top: 8px; }
+  .callout-title {
+    color: var(--accent);
+    font-weight: 590;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .diagram {
+    margin: 32px 0;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border-std);
+    border-radius: 12px;
+    padding: 32px 24px;
+  }
+  .diagram svg { display: block; width: 100%; height: auto; }
+
+  .lane-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin: 32px 0;
+  }
+  @media (min-width: 720px) {
+    .lane-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  .lane {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border-std);
+    border-radius: 8px;
+    padding: 20px;
+    transition: background 0.2s;
+  }
+  .lane:hover { background: rgba(255,255,255,0.04); }
+  .lane-tag {
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 510;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .lane h4 {
+    color: var(--text);
+    font-size: 16px;
+    font-weight: 590;
+    margin-bottom: 8px;
+  }
+  .lane p {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.55;
+    letter-spacing: -0.165px;
+    margin-bottom: 0;
+  }
+
+  .takeaways {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border-std);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-top: 48px;
+  }
+  .takeaways h2 { margin-top: 0; }
+  .takeaways ul { margin-left: 18px; }
+  .takeaways li::marker { color: var(--accent); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    font-size: 14px;
+  }
+  th, td {
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--body);
+  }
+  th {
+    color: var(--text);
+    font-weight: 590;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-bottom-color: var(--border-std);
+  }
+  tr:last-child td { border-bottom: none; }
+
+  .kicker {
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 510;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+</style>
+</head>
+<body>
+<article>
+
+  <div class="kicker">Kira Learn · Routing</div>
+  <h1>ACP, ACPX, and Direct CLI Routing — what's the actual difference?</h1>
+  <p class="hook">Three ways to talk to coding agents. They look similar. They aren't.</p>
+
+  <section class="simple">
+    <h2>The Simple Version</h2>
+
+    <p class="lead">Imagine you have three coding assistants in your house: Codex, Claude Code, and Gemini. They each live in their own room and they each speak their own dialect. You want to send them work.</p>
+
+    <p>You could <strong>walk to each room and talk to them directly</strong>. That works. But you have to remember which dialect goes with which assistant, you have to bring your own pen and paper for each one, and if you want them to remember earlier conversations, that's on you to track.</p>
+
+    <p>Or you could install a <strong>universal intercom</strong>. The intercom speaks one shared language. You press the button for "Claude" or "Codex" or "Gemini" and the same intercom translates for you. Same buttons. Same screen. Same memory.</p>
+
+    <p>Or you could hire a <strong>chief of staff</strong>. The chief of staff has the universal intercom, but they also keep a notebook of every conversation, label each one as a thread, and bring you summaries. You don't even press the button — you tell the chief of staff what you want, and they handle the rest.</p>
+
+    <p>That's the whole picture. <em>Direct CLI</em> is walking to each room. <em>ACPX</em> is the universal intercom. <em>OpenClaw's ACP runtime</em> is the chief of staff. They're all useful — for different jobs.</p>
+  </section>
+
+  <div class="diagram">
+    <svg viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .lane-label { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 510; fill: #f7f8f8; }
+          .agent-label { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 400; fill: #d0d6e0; }
+          .annot { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 400; fill: #8a8f98; }
+          .you { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 590; fill: #f7f8f8; }
+        </style>
+      </defs>
+
+      <!-- You -->
+      <circle cx="60" cy="140" r="28" fill="rgba(113,112,255,0.15)" stroke="#7170ff" stroke-width="1.2"/>
+      <text x="60" y="145" class="you" text-anchor="middle">You</text>
+
+      <!-- Lane 1: Direct CLI (top) -->
+      <line x1="92" y1="125" x2="240" y2="60" stroke="#3e3e44" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="92" y1="135" x2="240" y2="100" stroke="#3e3e44" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="92" y1="145" x2="240" y2="140" stroke="#3e3e44" stroke-width="1" stroke-dasharray="3,3"/>
+      <text x="160" y="40" class="annot" text-anchor="middle">Direct CLI — three different dialects</text>
+
+      <rect x="240" y="48" width="100" height="26" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)"/>
+      <text x="290" y="65" class="agent-label" text-anchor="middle">codex exec</text>
+      <rect x="240" y="88" width="100" height="26" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)"/>
+      <text x="290" y="105" class="agent-label" text-anchor="middle">claude --print</text>
+      <rect x="240" y="128" width="100" height="26" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)"/>
+      <text x="290" y="145" class="agent-label" text-anchor="middle">gemini --acp</text>
+
+      <!-- Lane 2: ACPX (middle) -->
+      <line x1="92" y1="160" x2="380" y2="195" stroke="#5e6ad2" stroke-width="1.5"/>
+      <rect x="380" y="180" width="120" height="32" rx="6" fill="rgba(94,106,210,0.15)" stroke="#5e6ad2" stroke-width="1"/>
+      <text x="440" y="200" class="lane-label" text-anchor="middle">acpx</text>
+      <text x="440" y="170" class="annot" text-anchor="middle">one wrapper, many harnesses</text>
+
+      <line x1="500" y1="190" x2="600" y2="170" stroke="#3e3e44" stroke-width="1"/>
+      <line x1="500" y1="196" x2="600" y2="196" stroke="#3e3e44" stroke-width="1"/>
+      <line x1="500" y1="202" x2="600" y2="222" stroke="#3e3e44" stroke-width="1"/>
+
+      <rect x="600" y="160" width="100" height="22" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)"/>
+      <text x="650" y="174" class="agent-label" text-anchor="middle">codex</text>
+      <rect x="600" y="186" width="100" height="22" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)"/>
+      <text x="650" y="200" class="agent-label" text-anchor="middle">claude</text>
+      <rect x="600" y="212" width="100" height="22" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)"/>
+      <text x="650" y="226" class="agent-label" text-anchor="middle">gemini</text>
+
+      <!-- Lane 3: ACP runtime (bottom) -->
+      <line x1="92" y1="155" x2="240" y2="245" stroke="#7170ff" stroke-width="1.5"/>
+      <rect x="240" y="232" width="160" height="32" rx="6" fill="rgba(113,112,255,0.15)" stroke="#7170ff" stroke-width="1"/>
+      <text x="320" y="252" class="lane-label" text-anchor="middle">OpenClaw ACP runtime</text>
+      <line x1="400" y1="248" x2="540" y2="248" stroke="#7170ff" stroke-width="1.5"/>
+      <rect x="540" y="232" width="160" height="32" rx="6" fill="rgba(94,106,210,0.10)" stroke="rgba(255,255,255,0.08)"/>
+      <text x="620" y="252" class="lane-label" text-anchor="middle">acpx → harnesses</text>
+      <text x="470" y="225" class="annot" text-anchor="middle">+ threads, lifecycle, logs</text>
+    </svg>
+  </div>
+
+  <section>
+    <h2>How It Actually Works</h2>
+
+    <p>Now the technical version. The trick to keeping this clear is to remember it's three <em>layers</em>, not three competing tools. Each layer wraps the one below it.</p>
+
+    <h3>Layer 1 — Direct CLI</h3>
+
+    <p>This is what it sounds like: you call the binary. <code>codex</code>, <code>claude</code>, <code>gemini</code>. Each agent has its own flags, its own session model, its own quirks. Codex won't run outside a git repo. Claude Code wants <code>--print --permission-mode bypassPermissions</code>. Pi needs a PTY. You — or a skill — own all those rules.</p>
+
+    <pre><code><span class="c"># Three different incantations for three different tools</span>
+codex exec --full-auto <span class="s">"refactor the auth module"</span>
+claude --permission-mode bypassPermissions --print <span class="s">"build a snake game"</span>
+gemini --acp</code></pre>
+
+    <p><strong>Strengths:</strong> minimum surface area. You see exactly what the agent does. Easy to debug. Great for one-shot scratch work.</p>
+    <p><strong>Weaknesses:</strong> no shared interface. If you want to drive five different harnesses, you're writing five different parsers. There's no built-in concept of "this is one ongoing thread of work." You scrape stdout and hope.</p>
+
+    <h3>Layer 2 — ACPX (and the ACP protocol underneath it)</h3>
+
+    <p>This layer exists because of a real problem: every coding harness has its own way of streaming partial output, asking for permissions, and announcing it's done. Tooling around them was a mess of glue code.</p>
+
+    <p>So Zed Industries (the editor company) defined a small JSON-RPC contract called the <strong>Agent Client Protocol</strong> — ACP for short. Any agent that speaks ACP exposes the same standardized hooks: <em>start a session, send a turn, stream a response, request a tool permission, end the session</em>. Codex ships an ACP adapter. Claude ships one. Gemini ships <code>--acp</code>. So does Copilot, Cursor, OpenCode, Pi, Qwen, Kimi, and others.</p>
+
+    <p><code>acpx</code> is a small CLI on top of ACP. It gives every harness a uniform shell interface. One command, one set of flags, swap the agent name as a parameter:</p>
+
+    <pre><code><span class="c"># Same shape, different agents</span>
+acpx codex sessions new --name oc-codex-1234
+acpx codex -s oc-codex-1234 --cwd ~/project --format quiet <span class="s">"fix the auth bug"</span>
+
+acpx claude sessions new --name oc-claude-1234
+acpx claude -s oc-claude-1234 --cwd ~/project --format quiet <span class="s">"explain the schema"</span></code></pre>
+
+    <p>Notice what's now uniform: <em>named sessions</em> (so a follow-up prompt continues the same conversation), <em>working directory</em> (<code>--cwd</code>), <em>output format</em> (<code>--format quiet</code> just gives clean assistant text). You stop caring whether you're talking to Codex or Claude — the wire is identical.</p>
+
+    <div class="callout">
+      <span class="callout-title">The aha</span>
+      <p>ACP isn't a new agent. It's a <em>shape</em> — a common protocol — that makes every agent look the same to whatever's calling it. ACPX is the most ergonomic way to use that shape from a shell.</p>
+    </div>
+
+    <p><strong>Strengths:</strong> uniform interface. Persistent named sessions. Clean output. Plug in a new harness with one config line.</p>
+    <p><strong>Weaknesses:</strong> you still have to manage sessions yourself. If a session dies, you re-create it. There's no notion of "this work belongs to a thread in a Discord conversation." That's the next layer's job.</p>
+
+    <h3>Layer 3 — OpenClaw ACP runtime</h3>
+
+    <p>OpenClaw's runtime is the chief of staff. It uses <code>acpx</code> under the hood, but adds the operational layer on top: <em>threads</em>, <em>lifecycle</em>, <em>recovery</em>, <em>policy</em>, <em>relay</em>.</p>
+
+    <p>Instead of shelling out to <code>acpx</code> yourself, you call OpenClaw's <code>sessions_spawn</code> tool with a structured payload. The runtime maps your conversation to a thread, picks the right agent, opens or resumes the right session, ships the prompt, watches for completion, and routes the assistant's reply back into your chat.</p>
+
+    <pre><code>{
+  <span class="k">"task"</span>: <span class="s">"Refactor the WhatsApp adapter to use the new auth helper."</span>,
+  <span class="k">"runtime"</span>: <span class="s">"acp"</span>,
+  <span class="k">"agentId"</span>: <span class="s">"codex"</span>,
+  <span class="k">"thread"</span>: <span class="k">true</span>,
+  <span class="k">"mode"</span>: <span class="s">"session"</span>
+}</code></pre>
+
+    <p>What that single call gives you, that the lower layers don't:</p>
+
+    <ul>
+      <li><strong>Threading.</strong> The session is bound to your conversation. Follow-ups in the same thread go to the same agent automatically.</li>
+      <li><strong>Recovery.</strong> If <code>acpx</code> isn't installed or the adapter is broken, the runtime tries to repair (re-install pinned <code>acpx</code>, restart the gateway, retry once) before giving up.</li>
+      <li><strong>Policy.</strong> Not every agent is allowed in every context. The runtime enforces allow-lists.</li>
+      <li><strong>Observability.</strong> Sessions show up in <code>sessions_list</code>. You can fetch history, send messages, kill, or hand off.</li>
+      <li><strong>Channel relay.</strong> Output flows back to the surface that started the work — Discord, Telegram, web — without you wiring up a bridge.</li>
+    </ul>
+
+    <h3>When to use which</h3>
+
+    <div class="lane-grid">
+      <div class="lane">
+        <div class="lane-tag">Layer 1</div>
+        <h4>Direct CLI</h4>
+        <p>Scratch work. One-shot tasks in a temp dir. Debugging an agent's actual output. Anything where you want zero abstraction.</p>
+      </div>
+      <div class="lane">
+        <div class="lane-tag">Layer 2</div>
+        <h4>ACPX (telephone game)</h4>
+        <p>Driving harnesses from scripts or skills. Swapping models without rewriting glue. Quick programmatic relay when ACP runtime isn't needed.</p>
+      </div>
+      <div class="lane">
+        <div class="lane-tag">Layer 3</div>
+        <h4>ACP runtime</h4>
+        <p>The default for any thread-bound coding work in chat. Long sessions, observable lifecycle, automatic recovery, channel-aware replies.</p>
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th>Concern</th><th>Direct CLI</th><th>ACPX</th><th>ACP runtime</th></tr></thead>
+      <tbody>
+        <tr><td>Uniform interface across harnesses</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+        <tr><td>Persistent named sessions</td><td>You build it</td><td>Yes</td><td>Yes</td></tr>
+        <tr><td>Thread-bound to a conversation</td><td>No</td><td>No</td><td>Yes</td></tr>
+        <tr><td>Auto recovery on failure</td><td>No</td><td>No</td><td>Yes</td></tr>
+        <tr><td>Policy / allow-list enforcement</td><td>No</td><td>No</td><td>Yes</td></tr>
+        <tr><td>Output streamed back to chat surface</td><td>Manual</td><td>Manual</td><td>Automatic</td></tr>
+        <tr><td>Best blast radius</td><td>Tiny scratch</td><td>Scripts &amp; skills</td><td>Production work</td></tr>
+      </tbody>
+    </table>
+
+    <h3>The mental shortcut</h3>
+
+    <p>If someone asks you which lane to pick, the question collapses to: <em>how much state do you need OpenClaw to manage for you?</em></p>
+
+    <ul>
+      <li><strong>None</strong> → Direct CLI.</li>
+      <li><strong>A session, but I'll drive it</strong> → ACPX.</li>
+      <li><strong>A whole thread, with lifecycle and replies</strong> → ACP runtime via <code>sessions_spawn</code>.</li>
+    </ul>
+  </section>
+
+  <section class="takeaways">
+    <h2>Key Takeaways</h2>
+    <ul>
+      <li><strong>ACP is a protocol, not a tool.</strong> It's the shared shape every modern coding harness now speaks.</li>
+      <li><strong>ACPX is the CLI form of ACP.</strong> One command, swap the agent name, get persistent sessions for free.</li>
+      <li><strong>OpenClaw's ACP runtime is the orchestration layer.</strong> It uses ACPX under the hood and adds threads, recovery, policy, and channel relay.</li>
+      <li><strong>Direct CLI never goes away.</strong> It's the lowest-blast-radius option for scratch work and debugging.</li>
+      <li><strong>Default rule:</strong> if it's chat-bound coding work, use <code>sessions_spawn</code> with <code>runtime: "acp"</code>. Step down to ACPX or direct CLI only when you have a reason.</li>
+    </ul>
+  </section>
+
+</article>
+</body>
+</html>

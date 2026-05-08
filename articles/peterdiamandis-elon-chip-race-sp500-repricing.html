@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elon's TerraFab, the S&P 500 Repricing, and the End of Human Driving</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0d1117; color: #c9d1d9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; line-height: 1.7; }
+  article { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  h1 { color: #f0f6fc; font-size: 2rem; margin-bottom: 0.3rem; line-height: 1.2; }
+  .hook { color: #8b949e; font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .meta { color: #484f58; font-size: 0.85rem; margin-bottom: 2.5rem; }
+  .meta a { color: #58a6ff; text-decoration: none; }
+  h2 { color: #f0f6fc; font-size: 1.4rem; margin: 2.5rem 0 1rem; padding-bottom: 0.3rem; border-bottom: 1px solid #21262d; }
+  p { margin-bottom: 1rem; }
+  ul, ol { margin: 0.5rem 0 1.5rem 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  strong { color: #e6edf3; }
+  a { color: #58a6ff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .diagram { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; text-align: center; overflow-x: auto; }
+  .diagram svg { max-width: 100%; height: auto; }
+  .takeaways { background: #161b22; border-left: 3px solid #58a6ff; padding: 1.5rem; border-radius: 0 8px 8px 0; margin: 2rem 0; }
+  .takeaways h2 { margin-top: 0; border: none; padding: 0; }
+  .takeaways li { color: #e6edf3; }
+  .section-label { display: inline-block; background: #1f6feb22; color: #58a6ff; font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 4px; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  @media (max-width: 600px) { h1 { font-size: 1.5rem; } article { padding: 1.5rem 1rem 3rem; } }
+</style>
+</head>
+<body>
+<article>
+
+  <h1>Elon's TerraFab, the S&P 500 Repricing, and the End of Human Driving</h1>
+  <p class="hook">50x the world's chip supply. Flying cars in 18 months. And the financial framework that priced every stock for a century might be breaking.</p>
+  <p class="meta">Source: <a href="https://youtube.com/watch?v=wMLcIWLlcWg">Peter Diamandis Moonshots EP #242</a> &middot; April 2026</p>
+
+  <!-- SIMPLE VERSION -->
+  <section>
+    <span class="section-label">Simple Version</span>
+    <h2>What Happened This Week</h2>
+
+    <p>Three massive stories collided. First, <a href="https://x.com/elonmusk">Elon Musk</a> announced the <strong>TerraFab</strong> -- a plan to build his own chip factory that would produce <strong>50 times</strong> the entire world's current AI chip output. Not a little more. Fifty times more. The factory would serve <a href="https://tesla.com">Tesla</a>, <a href="https://x.ai">xAI</a>, and <a href="https://spacex.com">SpaceX</a> together, feeding chips into robots, self-driving cars, and eventually a Dyson swarm of satellites around the sun.</p>
+
+    <p>Second, autonomous vehicles crossed a major threshold. <a href="https://waymo.com">Waymo</a> passed 170 million fully autonomous miles with 92% fewer serious crashes than human drivers. <a href="https://jobyaviation.com">Joby Aviation</a> flew an electric flying car over the Golden Gate Bridge, and <a href="https://archer.com">Archer Aviation</a> achieved full FAA compliance acceptance. The panel debated when human driving will become illegal -- and the answer isn't "if" but "when."</p>
+
+    <p>Third, <a href="https://x.com/chamath">Chamath Palihapitiya</a> published a thesis arguing that AI will destroy the concept of a "moat" in business. If any startup can replicate your product in weeks using AI, why would investors value your future cash flow at 22x? He argues S&P 500 valuations could compress from 22x to as low as 2-7x free cash flow -- potentially erasing two-thirds of the index's value.</p>
+  </section>
+
+  <!-- DIAGRAM -->
+  <div class="diagram">
+    <svg viewBox="0 0 660 400" xmlns="http://www.w3.org/2000/svg">
+      <!-- TerraFab center -->
+      <rect x="230" y="155" width="200" height="70" rx="12" fill="#1f6feb" opacity="0.2" stroke="#58a6ff" stroke-width="1.5"/>
+      <text x="330" y="183" text-anchor="middle" fill="#58a6ff" font-size="14" font-weight="bold">TerraFab</text>
+      <text x="330" y="203" text-anchor="middle" fill="#8b949e" font-size="10">1 TW/year &middot; 50x global output</text>
+
+      <!-- Inputs -->
+      <rect x="10" y="20" width="140" height="40" rx="8" fill="#161b22" stroke="#f0883e" stroke-width="1"/>
+      <text x="80" y="45" text-anchor="middle" fill="#f0883e" font-size="10">$25B-$500B CapEx</text>
+      <line x1="130" y1="60" x2="260" y2="155" stroke="#484f58" stroke-width="1" stroke-dasharray="4"/>
+
+      <rect x="260" y="20" width="140" height="40" rx="8" fill="#161b22" stroke="#f0883e" stroke-width="1"/>
+      <text x="330" y="45" text-anchor="middle" fill="#f0883e" font-size="10">Vertical Integration</text>
+      <line x1="330" y1="60" x2="330" y2="155" stroke="#484f58" stroke-width="1" stroke-dasharray="4"/>
+
+      <rect x="510" y="20" width="140" height="40" rx="8" fill="#161b22" stroke="#f0883e" stroke-width="1"/>
+      <text x="580" y="45" text-anchor="middle" fill="#f0883e" font-size="10">New Materials R&amp;D</text>
+      <line x1="530" y1="60" x2="400" y2="155" stroke="#484f58" stroke-width="1" stroke-dasharray="4"/>
+
+      <!-- Outputs -->
+      <rect x="20" y="280" width="130" height="45" rx="8" fill="#161b22" stroke="#3fb950" stroke-width="1"/>
+      <text x="85" y="298" text-anchor="middle" fill="#3fb950" font-size="10">Tesla / Optimus</text>
+      <text x="85" y="313" text-anchor="middle" fill="#8b949e" font-size="9">20% of chips</text>
+      <line x1="120" y1="280" x2="270" y2="225" stroke="#484f58" stroke-width="1"/>
+
+      <rect x="180" y="310" width="130" height="45" rx="8" fill="#161b22" stroke="#3fb950" stroke-width="1"/>
+      <text x="245" y="328" text-anchor="middle" fill="#3fb950" font-size="10">CyberCab Fleet</text>
+      <text x="245" y="343" text-anchor="middle" fill="#8b949e" font-size="9">$0.10-0.30/mile</text>
+      <line x1="250" y1="310" x2="300" y2="225" stroke="#484f58" stroke-width="1"/>
+
+      <rect x="350" y="310" width="130" height="45" rx="8" fill="#161b22" stroke="#3fb950" stroke-width="1"/>
+      <text x="415" y="328" text-anchor="middle" fill="#3fb950" font-size="10">Dyson Swarm</text>
+      <text x="415" y="343" text-anchor="middle" fill="#8b949e" font-size="9">80% of chips &middot; space</text>
+      <line x1="400" y1="310" x2="360" y2="225" stroke="#484f58" stroke-width="1"/>
+
+      <rect x="510" y="280" width="130" height="45" rx="8" fill="#161b22" stroke="#3fb950" stroke-width="1"/>
+      <text x="575" y="298" text-anchor="middle" fill="#3fb950" font-size="10">Data Centers</text>
+      <text x="575" y="313" text-anchor="middle" fill="#8b949e" font-size="9">Terrestrial fallback</text>
+      <line x1="540" y1="280" x2="400" y2="225" stroke="#484f58" stroke-width="1"/>
+
+      <!-- Scale label -->
+      <text x="330" y="390" text-anchor="middle" fill="#484f58" font-size="10">SpaceX IPO prediction: $2T+ &middot; Combined ecosystem: potential $100T company</text>
+    </svg>
+  </div>
+
+  <!-- DEEP DIVE -->
+  <section>
+    <span class="section-label">Deep Dive</span>
+    <h2>The Chip Bottleneck Is the Bottleneck for Everything</h2>
+
+    <p>The TerraFab is not just a chip factory. It is a statement that the entire chip supply chain -- <a href="https://tsmc.com">TSMC</a>, <a href="https://samsung.com">Samsung</a>, <a href="https://intel.com">Intel</a> -- is moving too slowly for what's coming. Elon tried buying everything they could produce. It wasn't enough. So he's building something 50x bigger.</p>
+
+    <p>The numbers are staggering. Current global AI compute output is roughly 20 gigawatts. Elon's target: 1 terawatt, or 1,000 gigawatts. The initial $25B gets buildings started. Full realization could cost $150B to $500B. And the long-term vision extends to a <strong>petawatt</strong> of compute powered by lunar mining -- which would consume roughly 0.003% of the moon's mass. At exawatt scale, that rises to 3%.</p>
+
+    <p>This has immediate geopolitical implications. If the US controls 50x the world's chip production within 5 years, the strategic incentive for China to invade Taiwan for <a href="https://tsmc.com">TSMC</a> access drops dramatically. The <a href="https://spacex.com">SpaceX</a> IPO prediction markets have already shifted from $1.5T to $2T+ in response.</p>
+
+    <h2>The End of Human Driving -- Blocked by Chip Shortage</h2>
+
+    <p>The technology for fully autonomous driving is essentially here. <a href="https://waymo.com">Waymo</a> has proven it over 170 million miles. Tesla FSD is approaching similar safety numbers. The panel agreed the real blocker isn't software or regulation -- it's silicon. Each self-driving car burns a full GPU, and soon that GPU could instead be doing brain surgery or discovering new physics. The compute demand is headed toward infinity.</p>
+
+    <p>Meanwhile, flying cars are about to become real. <a href="https://jobyaviation.com">Joby Aviation</a> is testing FAA-conforming aircraft and has partnered with <a href="https://uber.com">Uber</a> for Uber Air. <a href="https://archer.com">Archer Aviation</a> achieved 100% FAA acceptance. First piloted flights within 18 months; full autonomy within 2-3 years after that. The implications for real estate are enormous: 60% of LA's land area is currently parking. All of it becomes available for parks, housing, and green space.</p>
+
+    <h2>The S&P 500 Repricing Thesis</h2>
+
+    <p><a href="https://x.com/chamath">Chamath's</a> argument is elegant: the entire architecture of capital markets assumes competitive advantages compound over time. Moats persist. Brands endure. But if AI makes disruption so cheap and fast that no company can project cash flow beyond 5 years, terminal value collapses. The S&P at 22x free cash flow could compress to 2-7x.</p>
+
+    <p>The panel pushed back with nuance. Dave argued the overall economy gets a 10x tailwind -- you just have to evaluate management teams and agility, not product durability. Alex called it "bemoaning the financial consequences of abundance." Capital doesn't disappear; it migrates to infrastructure, lunar mining, and new platforms. The mid-market is already at 7x and represents serious bargains for PE firms that AI-enable those companies.</p>
+
+    <p>The practical takeaway: companies will be valued on <strong>learning velocity</strong> and <strong>adaptability</strong>, not on how predictable their cash flow is over 22 years. The only surviving moat is a system that learns faster than its competitors.</p>
+
+    <h2>Other Notable Developments</h2>
+    <ul>
+      <li><strong>Mystery model:</strong> A 1-trillion parameter model called "Hunter Alpha" appeared anonymously on <a href="https://openrouter.ai">OpenRouter</a>, processed 160B+ tokens, and turned out to be <a href="https://xiaomi.com">Xiaomi</a>'s AI team. Their stock jumped 5.8%.</li>
+      <li><strong>AI designs its own chips:</strong> Verilator AI's agent built a 1.5 GHz RISC-V CPU from concept to tape-out in 12 hours. Normally 90 days. Recursive self-improvement is now eating through hardware design.</li>
+      <li><strong>Cryonics breakthrough:</strong> Nectome preserved an entire pig brain with minimal structural damage -- the first large mammalian brain preservation at this quality level.</li>
+      <li><strong>Panspermia evidence:</strong> All five nucleic acid bases (A, T, C, G, U) found on asteroid Ryugu. NASA administrator <a href="https://nasa.gov">Jared Isaacman</a> predicts 90%+ probability of finding microbial life on Mars.</li>
+      <li><strong>Nvidia H200 sales to China approved</strong> -- the export ban wasn't working and was stimulating homegrown Chinese alternatives.</li>
+    </ul>
+  </section>
+
+  <!-- KEY TAKEAWAYS -->
+  <div class="takeaways">
+    <h2>Key Takeaways</h2>
+    <ol>
+      <li><strong>The chip bottleneck is the master constraint.</strong> Self-driving, AI agents, space compute, robotics -- everything is bottlenecked on silicon. Whoever solves "more compute per gram of silicon" unlocks trillions.</li>
+      <li><strong>Real estate is about to be repriced.</strong> Autonomous vehicles eliminate garages, parking lots (60% of LA), and the need to live near urban centers. Remote/island/rural properties with good infrastructure access become massively more valuable.</li>
+      <li><strong>Terminal value is dying.</strong> AI-era companies will be valued on agility and learning speed, not on 22-year cash flow projections. Mid-cap companies with high cash flow and low multiples are PE targets for AI transformation.</li>
+      <li><strong>Token usage is the new productivity metric.</strong> Track it. Capture prompt history. Target 80% token cost / 20% salary. Do not reimburse employees for AI usage you cannot see.</li>
+      <li><strong>Distillation keeps working.</strong> GPT-5.4 Mini/Nano approaching full model performance at a fraction of the cost. Build with the big model, deploy with the small one. Eventually, superintelligence fits on your phone.</li>
+    </ol>
+  </div>
+
+</article>
+</body>
+</html>

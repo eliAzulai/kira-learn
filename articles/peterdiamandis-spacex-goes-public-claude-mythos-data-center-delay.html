@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peter Diamandis, SpaceX IPO, Claude Mythos, and the Data Center Squeeze</title>
+<style>
+:root { --bg:#0b1020; --card:#121934; --text:#e8ecff; --muted:#a7b1d6; --accent:#7cc7ff; --accent2:#9cffc7; --line:#26325f; }
+* { box-sizing:border-box; }
+body { margin:0; font:16px/1.6 Inter, ui-sans-serif, system-ui, sans-serif; background:linear-gradient(180deg,#0a0f1d,#0f1730 45%,#0b1020); color:var(--text); }
+main { max-width:980px; margin:0 auto; padding:32px 20px 64px; }
+section, header { background:rgba(18,25,52,.88); border:1px solid var(--line); border-radius:18px; padding:22px; margin:18px 0; box-shadow:0 14px 40px rgba(0,0,0,.25); }
+h1,h2,h3 { line-height:1.2; margin:0 0 12px; }
+p, li { color:var(--text); }
+.muted { color:var(--muted); }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; }
+.card { background:#0d1430; border:1px solid var(--line); border-radius:16px; padding:16px; }
+svg { width:100%; height:auto; display:block; }
+ul { padding-left:20px; }
+code { background:#0b1430; padding:2px 6px; border-radius:6px; }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <p class="muted">Kira Learn article</p>
+  <h1>Peter Diamandis, SpaceX IPO, Claude Mythos, and the Data Center Squeeze</h1>
+  <p>This episode was really about one idea: the future is arriving from several directions at once. Space, AI, startups, and energy are no longer separate stories. They are colliding into one giant systems story.</p>
+</header>
+<section>
+  <h2>The Simple Version</h2>
+  <p>Imagine the future as a huge amusement park being built all at once.</p>
+  <p><strong>SpaceX</strong> is building the roads to the park, <strong>Starlink</strong> is selling tickets today, <strong>AI labs</strong> are designing the rides, and <strong>data centers</strong> are the power stations that keep everything running.</p>
+  <p>The podcast’s main point was that the biggest problem is no longer “Do we have cool ideas?” It is “Can we build enough power, chips, and infrastructure fast enough?”</p>
+  <p>They also argued that one smart person with lots of AI agents may now be able to build a company that used to require a whole department. So the winning skill is becoming less about having a giant team, and more about choosing the right problem and directing the machines well.</p>
+  <div class="card">
+    <svg viewBox="0 0 640 180" role="img" aria-label="Simple flow diagram">
+      <rect x="20" y="60" width="130" height="60" rx="14" fill="#13214a" stroke="#7cc7ff"/>
+      <text x="85" y="95" text-anchor="middle" fill="#e8ecff" font-size="18">AI Models</text>
+      <rect x="255" y="60" width="130" height="60" rx="14" fill="#13214a" stroke="#9cffc7"/>
+      <text x="320" y="95" text-anchor="middle" fill="#e8ecff" font-size="18">Data Centers</text>
+      <rect x="490" y="60" width="130" height="60" rx="14" fill="#13214a" stroke="#7cc7ff"/>
+      <text x="555" y="95" text-anchor="middle" fill="#e8ecff" font-size="18">New Products</text>
+      <path d="M150 90 H255" stroke="#a7b1d6" stroke-width="3" marker-end="url(#a)"/>
+      <path d="M385 90 H490" stroke="#a7b1d6" stroke-width="3" marker-end="url(#a)"/>
+      <defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><polygon points="0,0 8,4 0,8" fill="#a7b1d6"/></marker></defs>
+    </svg>
+  </div>
+</section>
+<section>
+  <h2>How It Actually Works</h2>
+  <div class="grid">
+    <div class="card"><h3>1. SpaceX as a layered business</h3><p>They framed SpaceX less as “a rocket company” and more as a stack. Launch services matter, but Starlink generates a lot of the current business value. The longer-term upside is orbital industry: data centers, lunar logistics, refueling, and Mars infrastructure.</p></div>
+    <div class="card"><h3>2. Frontier AI is becoming a safety problem</h3><p>Anthropic’s rumored Mythos model was discussed not just as a stronger model, but as a model strong enough to raise real cyber-risk concerns. That shift matters. It means the release question is no longer only about benchmarks, it is about governance.</p></div>
+    <div class="card"><h3>3. One-person companies get real</h3><p>AI reduces coordination overhead. A founder can use models for code, support, analysis, copy, and operations. That does not remove the need for judgment. It raises the value of judgment.</p></div>
+    <div class="card"><h3>4. Infrastructure is the constraint</h3><p>The episode’s most practical insight was that AI progress is now heavily bottlenecked by electricity, transformers, land approvals, chip supply, and data-center build speed. That is why the conversation keeps drifting toward vertical integration and even space-based compute.</p></div>
+  </div>
+  <div class="card">
+    <svg viewBox="0 0 700 220" role="img" aria-label="Bottleneck diagram">
+      <text x="30" y="35" fill="#e8ecff" font-size="22">AI progress bottlenecks</text>
+      <rect x="30" y="70" width="120" height="44" rx="12" fill="#13214a" stroke="#7cc7ff"/><text x="90" y="98" text-anchor="middle" fill="#e8ecff">Models</text>
+      <rect x="180" y="70" width="120" height="44" rx="12" fill="#13214a" stroke="#7cc7ff"/><text x="240" y="98" text-anchor="middle" fill="#e8ecff">Chips</text>
+      <rect x="330" y="70" width="120" height="44" rx="12" fill="#13214a" stroke="#7cc7ff"/><text x="390" y="98" text-anchor="middle" fill="#e8ecff">Power</text>
+      <rect x="480" y="70" width="160" height="44" rx="12" fill="#13214a" stroke="#7cc7ff"/><text x="560" y="98" text-anchor="middle" fill="#e8ecff">Permits / buildout</text>
+      <path d="M150 92 H180 M300 92 H330 M450 92 H480" stroke="#a7b1d6" stroke-width="3" marker-end="url(#b)"/>
+      <text x="30" y="165" fill="#a7b1d6" font-size="16">Takeaway: smarter models alone do not win if the physical stack cannot keep up.</text>
+      <defs><marker id="b" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><polygon points="0,0 8,4 0,8" fill="#a7b1d6"/></marker></defs>
+    </svg>
+  </div>
+</section>
+<section>
+  <h2>Key Takeaways</h2>
+  <ul>
+    <li>Space, AI, and energy are merging into one infrastructure story.</li>
+    <li>Agent-based entrepreneurship is shrinking the minimum viable team.</li>
+    <li>Model capability now has to be matched by security discipline.</li>
+    <li>Compute bottlenecks may matter more than model hype over the next phase.</li>
+    <li>The best builders will combine vision, orchestration, and operational restraint.</li>
+  </ul>
+</section>
+</main>
+</body>
+</html>

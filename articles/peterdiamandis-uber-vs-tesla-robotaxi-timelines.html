@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Robotaxi Race: Why Uber Bets on Being the Middleman</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0d1117; color: #c9d1d9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; line-height: 1.7; }
+  article { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  h1 { color: #f0f6fc; font-size: 2rem; margin-bottom: 0.3rem; line-height: 1.2; }
+  .hook { color: #8b949e; font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .meta { color: #484f58; font-size: 0.85rem; margin-bottom: 2.5rem; }
+  .meta a { color: #58a6ff; text-decoration: none; }
+  h2 { color: #f0f6fc; font-size: 1.4rem; margin: 2.5rem 0 1rem; padding-bottom: 0.3rem; border-bottom: 1px solid #21262d; }
+  p { margin-bottom: 1rem; }
+  ul { margin: 0.5rem 0 1.5rem 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  strong { color: #e6edf3; }
+  a { color: #58a6ff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .diagram { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; text-align: center; overflow-x: auto; }
+  .diagram svg { max-width: 100%; height: auto; }
+  .takeaways { background: #161b22; border-left: 3px solid #58a6ff; padding: 1.5rem; border-radius: 0 8px 8px 0; margin: 2rem 0; }
+  .takeaways h2 { margin-top: 0; border: none; padding: 0; }
+  .takeaways li { color: #e6edf3; }
+  @media (max-width: 600px) { h1 { font-size: 1.5rem; } article { padding: 1.5rem 1rem 3rem; } }
+</style>
+</head>
+<body>
+<article>
+  <h1>The Robotaxi Race: Why Uber Bets on Being the Middleman</h1>
+  <p class="hook">Uber's CEO explains why they won't build a self-driving car — and why that might be the smartest move in the race.</p>
+  <p class="meta">Source: <a href="https://youtube.com/watch?v=fzKVYNBg50E">Peter Diamandis &times; Dara Khosrowshahi (Uber CEO)</a> &middot; April 2026</p>
+
+  <section class="simple">
+    <h2>The Simple Version</h2>
+    <p>Think about how hotels work. <a href="https://www.marriott.com/">Marriott</a> is one of the biggest hotel companies in the world, but they don't actually <em>own</em> most of the buildings. Banks and investment firms own them. Marriott just manages everything — the booking, the cleaning, the experience.</p>
+    <p><a href="https://www.uber.com/">Uber</a> wants to do exactly that with self-driving cars. They're not trying to build their own robotaxi. Instead, they're saying: "We already have the customers. We already know where people want to go. Let all the smart companies — <a href="https://waymo.com/">Waymo</a>, <a href="https://www.nvidia.com/">Nvidia</a>, <a href="https://www.tesla.com/">Tesla</a>, and 20 others — build the robot drivers. We'll be the platform that connects them to riders."</p>
+    <p>Right now, cities will have a <strong>mix</strong> of human drivers and robot drivers for a long time. Uber's bet is that they're the best at managing that messy middle period — and that by the time everything is autonomous, they'll be too embedded to replace.</p>
+  </section>
+
+  <div class="diagram">
+    <svg viewBox="0 0 660 380" xmlns="http://www.w3.org/2000/svg">
+      <!-- Title -->
+      <text x="330" y="25" text-anchor="middle" fill="#8b949e" font-size="12" font-weight="bold">UBER'S AUTONOMOUS ECOSYSTEM</text>
+
+      <!-- Layer 1: Demand -->
+      <rect x="200" y="45" width="260" height="50" rx="10" fill="#1f6feb" opacity="0.25" stroke="#58a6ff" stroke-width="1.5"/>
+      <text x="330" y="67" text-anchor="middle" fill="#58a6ff" font-size="13" font-weight="bold">DEMAND AGGREGATION</text>
+      <text x="330" y="83" text-anchor="middle" fill="#8b949e" font-size="10">Uber &middot; Riders &middot; Eats &middot; Delivery</text>
+
+      <!-- Layer 2: Software -->
+      <rect x="80" y="115" width="500" height="50" rx="10" fill="#161b22" stroke="#3fb950" stroke-width="1"/>
+      <text x="330" y="137" text-anchor="middle" fill="#3fb950" font-size="12" font-weight="bold">AUTONOMOUS SOFTWARE</text>
+      <text x="330" y="153" text-anchor="middle" fill="#8b949e" font-size="9.5">Waymo &middot; Nvidia &middot; Wave &middot; Pony.ai &middot; WeRide &middot; Nuro &middot; Avride &middot; Wabi</text>
+
+      <!-- Layer 3: Hardware -->
+      <rect x="140" y="185" width="380" height="50" rx="10" fill="#161b22" stroke="#f0883e" stroke-width="1"/>
+      <text x="330" y="207" text-anchor="middle" fill="#f0883e" font-size="12" font-weight="bold">VEHICLE HARDWARE</text>
+      <text x="330" y="223" text-anchor="middle" fill="#8b949e" font-size="9.5">Lucid &middot; Tesla &middot; GM &middot; Toyota &middot; OEMs</text>
+
+      <!-- Layer 4: Fleet Finance -->
+      <rect x="180" y="255" width="300" height="50" rx="10" fill="#161b22" stroke="#bc8cff" stroke-width="1"/>
+      <text x="330" y="277" text-anchor="middle" fill="#bc8cff" font-size="12" font-weight="bold">FLEET OWNERSHIP</text>
+      <text x="330" y="293" text-anchor="middle" fill="#8b949e" font-size="9.5">Blackstone-type investors &middot; REITs &middot; ~9% yield</text>
+
+      <!-- Layer 5: Fleet Ops -->
+      <rect x="200" y="325" width="260" height="50" rx="10" fill="#1f6feb" opacity="0.15" stroke="#58a6ff" stroke-width="1" stroke-dasharray="5,3"/>
+      <text x="330" y="347" text-anchor="middle" fill="#58a6ff" font-size="12" font-weight="bold">FLEET MANAGEMENT</text>
+      <text x="330" y="363" text-anchor="middle" fill="#8b949e" font-size="9.5">Uber &middot; Cleaning &middot; Repair &middot; Charging</text>
+
+      <!-- Connecting lines -->
+      <line x1="330" y1="95" x2="330" y2="115" stroke="#30363d" stroke-width="1.5"/>
+      <line x1="330" y1="165" x2="330" y2="185" stroke="#30363d" stroke-width="1.5"/>
+      <line x1="330" y1="235" x2="330" y2="255" stroke="#30363d" stroke-width="1.5"/>
+      <line x1="330" y1="305" x2="330" y2="325" stroke="#30363d" stroke-width="1.5"/>
+
+      <!-- Uber bookends label -->
+      <text x="25" y="75" text-anchor="start" fill="#58a6ff" font-size="9" opacity="0.7">UBER</text>
+      <line x1="40" y1="82" x2="40" y2="340" stroke="#58a6ff" stroke-width="0.5" stroke-dasharray="3,4" opacity="0.3"/>
+      <text x="25" y="355" text-anchor="start" fill="#58a6ff" font-size="9" opacity="0.7">UBER</text>
+    </svg>
+  </div>
+
+  <section class="deep">
+    <h2>How It Actually Works</h2>
+
+    <p><strong>The turnaround.</strong> When <a href="https://en.wikipedia.org/wiki/Dara_Khosrowshahi">Dara Khosrowshahi</a> took over Uber in 2017, the company was losing $4.5 billion a year. He walked away from a $200 million stock package at <a href="https://www.expedia.com/">Expedia</a> to take the job. His approach was ruthless focus: kill projects, say no to good ideas, point the company in one direction. Today Uber earns over $10 billion a year.</p>
+
+    <p><strong>The hybrid period is the strategy.</strong> There won't be a switch-flip moment where every car goes autonomous. For years, cities will run mixed fleets — some robot drivers, many human drivers. Uber is uniquely positioned here because they already manage millions of human drivers. As autonomy rolls in, they slow down recruiting new human drivers (20% churn naturally each year) and backfill with robots. No mass layoffs needed.</p>
+
+    <p><strong>20+ autonomous partners.</strong> Uber has signed deals with <a href="https://waymo.com/">Waymo</a> (Austin, Atlanta), <a href="https://www.weride.ai/">WeRide</a> (Abu Dhabi), <a href="https://pony.ai/">Pony.ai</a>, <a href="https://nuro.ai/">Nuro</a>, <a href="https://avride.ai/">Avride</a>, <a href="https://www.nvidia.com/">Nvidia</a>, and others. They plan to be in 15 cities by year-end and facilitate more autonomous rides than anyone globally by 2029.</p>
+
+    <p><strong>The Tesla question.</strong> Uber already has tens of thousands of Teslas on its platform, some using FSD. Dara says they'd welcome Tesla's robotaxis, but <a href="https://www.tesla.com/">Tesla</a>'s vertical approach (Elon "doesn't play well with others") makes partnership uncertain. Meanwhile, the Cybercab targets $30K versus Waymo's ~$150K per vehicle — a massive cost gap that will shape who wins on unit economics.</p>
+
+    <p><strong>The Marriott model.</strong> Early on, Uber will buy cars. Long term, financial players (<a href="https://www.blackstone.com/">Blackstone</a>-type firms) will own the fleets for a ~9% yield, while Uber manages operations — cleaning, repair, charging, dispatch. Asset-light, high-margin, massive scale.</p>
+
+    <p><strong>Beyond cars.</strong> Uber sold its flying-car division (Elevate) to <a href="https://www.jobyaviation.com/">Joby Aviation</a> — a focus decision that paid off. Now they're partnered: Abu Dhabi will get Uber-to-vertiport-to-Joby-to-Uber trips by year-end. For delivery, drones handle suburbs (food in 10-15 minutes), sidewalk robots like <a href="https://www.cocodelivery.com/">Coco</a> handle urban areas, and Uber Eats is expanding from food into all retail — grocery, Best Buy, Sephora. "Never underestimate the power of human laziness."</p>
+
+    <p><strong>Market expansion, not replacement.</strong> In Austin and Atlanta, where Waymo operates on Uber, markets are growing faster than the national average. Autonomous isn't just replacing human rides — it's creating new demand. If prices drop further, the market could expand dramatically, making car ownership pointless for many. An electric autonomous ride could be four times cheaper than owning a car.</p>
+  </section>
+
+  <section class="takeaways">
+    <h2>Key Takeaways</h2>
+    <ul>
+      <li><strong>Uber is betting on aggregation, not technology.</strong> Let others build the self-driving stack. Own the demand, the fleet management, and the messy hybrid transition.</li>
+      <li><strong>The Marriott model for cars.</strong> Uber operates, financial players own. Asset-light is the endgame.</li>
+      <li><strong>Autonomous expands the market.</strong> Early data from Austin and Atlanta shows robotaxis bring in new riders, not just replace existing ones — critical for the displacement narrative.</li>
+      <li><strong>10-year new-car timeline, 20+ year full transition.</strong> Every new car will be autonomous-ready within a decade, but the existing fleet takes much longer to turn over, and developing markets lag further.</li>
+      <li><strong>Focus is the real superpower.</strong> Selling Uber Elevate to Joby, killing side projects, saying no — that discipline turned a $4.5B loss into $10B+ earnings.</li>
+    </ul>
+  </section>
+</article>
+</body>
+</html>

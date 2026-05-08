@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Moved to the Command Line</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0d1117; color: #c9d1d9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; line-height: 1.7; }
+  article { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  h1 { color: #f0f6fc; font-size: 2rem; margin-bottom: 0.3rem; line-height: 1.2; }
+  .hook { color: #8b949e; font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .meta { color: #484f58; font-size: 0.85rem; margin-bottom: 2.5rem; }
+  .meta a { color: #58a6ff; text-decoration: none; }
+  h2 { color: #f0f6fc; font-size: 1.4rem; margin: 2.5rem 0 1rem; padding-bottom: 0.3rem; border-bottom: 1px solid #21262d; }
+  h3 { color: #e6edf3; font-size: 1.15rem; margin: 1.5rem 0 0.5rem; }
+  p { margin-bottom: 1rem; }
+  ul { margin: 0.5rem 0 1.5rem 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  strong { color: #e6edf3; }
+  a { color: #58a6ff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .diagram { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; text-align: center; overflow-x: auto; }
+  .diagram svg { max-width: 100%; height: auto; }
+  .takeaways { background: #161b22; border-left: 3px solid #58a6ff; padding: 1.5rem; border-radius: 0 8px 8px 0; margin: 2rem 0; }
+  .takeaways h2 { margin-top: 0; border: none; padding: 0; }
+  .takeaways li { color: #e6edf3; }
+  .tool-card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1.2rem; margin: 1rem 0; }
+  .tool-card h3 { margin-top: 0; color: #58a6ff; }
+  .tool-card .stat { color: #3fb950; font-size: 0.9em; }
+  @media (max-width: 600px) { h1 { font-size: 1.5rem; } article { padding: 1.5rem 1rem 3rem; } }
+</style>
+</head>
+<body>
+<article>
+  <h1>Design Moved to the Command Line</h1>
+  <p class="hook">Three tools — Google Stitch, Remotion, and Blender MCP — just collapsed the cost of creative work. Here's what that means.</p>
+  <p class="meta">Source: <a href="https://youtube.com/watch?v=CDClFY-R0dI">Nate B Jones — AI News & Strategy Daily</a> · March 2026</p>
+
+  <section class="simple">
+    <h2>The Simple Version</h2>
+    <p>Imagine you wanted to build a treehouse. In the old days, you'd need to draw blueprints (a designer), find someone to build it (an engineer), and someone to decide what kind of treehouse the kids actually want (a product person). Each person would wait for the other, and if one got it wrong, everyone started over.</p>
+    <p>Now imagine you could just <strong>say out loud</strong> what you want — "a treehouse with a rope ladder, a slide, and a lookout window" — and it appears in front of you. You can change it by talking. You can try five versions at once. And it costs basically nothing.</p>
+    <p>That's what just happened to design. Three new tools let you describe what you want in plain English — app screens, videos, even 3D worlds — and they build it. The secret connector between all three is something called <strong>MCP</strong> (Model Context Protocol), which is becoming the universal plug that lets AI tools talk to creative software.</p>
+  </section>
+
+  <div class="diagram">
+    <svg viewBox="0 0 680 350" xmlns="http://www.w3.org/2000/svg">
+      <!-- Center: MCP -->
+      <circle cx="340" cy="175" r="50" fill="#1f6feb" opacity="0.15" stroke="#58a6ff" stroke-width="1.5"/>
+      <text x="340" y="170" text-anchor="middle" fill="#58a6ff" font-size="14" font-weight="bold">MCP</text>
+      <text x="340" y="188" text-anchor="middle" fill="#8b949e" font-size="10">"USB plug for AI"</text>
+
+      <!-- Left: Stitch -->
+      <rect x="30" y="40" width="180" height="80" rx="10" fill="#161b22" stroke="#3fb950" stroke-width="1.5"/>
+      <text x="120" y="65" text-anchor="middle" fill="#3fb950" font-size="13" font-weight="bold">Google Stitch</text>
+      <text x="120" y="82" text-anchor="middle" fill="#c9d1d9" font-size="10">Words / Voice → UI Screens</text>
+      <text x="120" y="100" text-anchor="middle" fill="#8b949e" font-size="9">Free · 350 gen/mo · design.md export</text>
+      <line x1="210" y1="80" x2="290" y2="160" stroke="#30363d" stroke-width="1.2"/>
+
+      <!-- Right: Remotion -->
+      <rect x="470" y="40" width="180" height="80" rx="10" fill="#161b22" stroke="#f0883e" stroke-width="1.5"/>
+      <text x="560" y="65" text-anchor="middle" fill="#f0883e" font-size="13" font-weight="bold">Remotion</text>
+      <text x="560" y="82" text-anchor="middle" fill="#c9d1d9" font-size="10">Text → React → MP4 Video</text>
+      <text x="560" y="100" text-anchor="middle" fill="#8b949e" font-size="9">150K installs · Programmable video</text>
+      <line x1="470" y1="80" x2="390" y2="160" stroke="#30363d" stroke-width="1.2"/>
+
+      <!-- Bottom: Blender MCP -->
+      <rect x="240" y="270" width="200" height="70" rx="10" fill="#161b22" stroke="#bc8cff" stroke-width="1.5"/>
+      <text x="340" y="295" text-anchor="middle" fill="#bc8cff" font-size="13" font-weight="bold">Blender MCP</text>
+      <text x="340" y="312" text-anchor="middle" fill="#c9d1d9" font-size="10">Text → 3D Scenes</text>
+      <text x="340" y="327" text-anchor="middle" fill="#8b949e" font-size="9">17K stars · 1,500 operators via chat</text>
+      <line x1="340" y1="225" x2="340" y2="270" stroke="#30363d" stroke-width="1.2"/>
+
+      <!-- Input: You -->
+      <rect x="255" y="0" width="170" height="30" rx="6" fill="#21262d" stroke="#484f58" stroke-width="1"/>
+      <text x="340" y="20" text-anchor="middle" fill="#e6edf3" font-size="11">You → plain English</text>
+      <line x1="340" y1="30" x2="340" y2="125" stroke="#484f58" stroke-width="1" stroke-dasharray="4"/>
+
+      <!-- Arrow marker -->
+      <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#484f58"/></marker></defs>
+    </svg>
+  </div>
+
+  <section class="deep">
+    <h2>How It Actually Works</h2>
+
+    <div class="tool-card">
+      <h3>Google Stitch — Vibe Design</h3>
+      <p class="stat">Free · 350 generations/month · Voice + text input</p>
+      <p>Google relaunched <a href="https://stitch.withgoogle.com">Stitch</a> in March 2026 around "vibe design" — the design equivalent of vibe coding. You describe a business objective, user feeling, or product concept in natural language (or just talk to it), and Stitch generates multiple high-fidelity UI screens simultaneously on an infinite canvas.</p>
+      <p>The killer feature most coverage missed: <strong>design.md export</strong>. Stitch outputs a markdown file capturing your entire design system — colors, typography, spacing rules, component patterns. Any coding agent (Claude Code, ChatGPT, Google's Antigravity) can read this file and start building directly. No Figma export. No handoff document. No "the developer got the design doc wrong."</p>
+      <p>Google even shipped official <a href="https://claude.ai/code">Claude Code</a> skills for Stitch — a sign of how dominant Claude is when Google has to ship skills for a competitor's tool.</p>
+    </div>
+
+    <div class="tool-card">
+      <h3>Remotion — Video as Code</h3>
+      <p class="stat">150,000+ installs on <a href="https://skills.sh">skills.sh</a> · #1 non-corporate skill</p>
+      <p><a href="https://www.remotion.dev">Remotion</a> is a React framework that treats video as code. You describe a video in English, Claude writes React components defining every frame — text animations, motion graphics, data visualizations, transitions — and Remotion renders it to MP4 locally.</p>
+      <p><strong>This is not AI-generated video.</strong> Tools like <a href="https://openai.com/sora">Sora</a> and <a href="https://runwayml.com">Runway</a> generate pixels from prompts. Remotion generates <em>code</em> that renders video. Every element is a React component you can modify, version control, and parameterize. Change one variable, re-render 100 localized versions. Update a data source, every chart in the video updates automatically.</p>
+      <p>Creator <a href="https://x.com/sababoridotdev">Sabrina.dev</a> documented a full pipeline: one prompt → Claude browses the web for real GitHub screenshots → generates promo video with headshot and background music → all from the command line. No Premiere. No After Effects.</p>
+    </div>
+
+    <div class="tool-card">
+      <h3>Blender MCP — 3D Gets a Chat Window</h3>
+      <p class="stat">~17,000 GitHub stars · Integrates with <a href="https://polyhaven.com">Polyhaven</a>, <a href="https://sketchfab.com">SketchFab</a>, Hyper 3D</p>
+      <p><a href="https://github.com/ahujasid/blender-mcp">Blender MCP</a> makes Blender's ~1,500 operators accessible via natural language. Type "create a beach scene with palm trees and sunset lighting" and watch the 3D environment assemble itself — objects appear, materials get applied, lighting adjusts. All via Claude writing and executing Blender's Python API through a socket bridge.</p>
+      <p>People who've never touched Blender are generating room walkthroughs, architectural previsualization, and game prototypes. You can describe a character, have Hyper 3D generate it, and drop it into your scene without leaving the conversation.</p>
+    </div>
+
+    <h2>The Bigger Picture</h2>
+    <p><strong>MCP is the thread connecting all three.</strong> It's becoming the "USB plug for AI" — any tool that exposes itself as an MCP server becomes usable from the command line. As Nate puts it: "If you have a product, ask yourself: why isn't it an MCP? If it's not an MCP, you got problems."</p>
+    <p>The 2010s product/design/engineering triangle — where each role waited on the others — is collapsing. The old bottleneck was sequential: design the screens, find out if they're buildable, redesign. Now everything produced at the command line is buildable by definition, and you can iterate at the speed of language instead of the speed of Figma.</p>
+    <p><strong>The floor dropped, but the ceiling didn't move.</strong> Anyone can now generate good-enough designs for free. But excellence — taste, polish, judgment about what the customer actually needs to feel — that still requires a skilled human. The new designer skill isn't execution; it's the ability to look at five AI-generated options and know which one is right, and why.</p>
+  </section>
+
+  <section class="takeaways">
+    <h2>Key Takeaways</h2>
+    <ul>
+      <li><strong>Design is moving to the command line</strong> — Stitch (UI), Remotion (video), and Blender MCP (3D) all work via natural language through MCP</li>
+      <li><strong>MCP is the growth hack of 2026</strong> — if your product isn't an MCP server, you're missing the distribution channel</li>
+      <li><strong>Programmable video ≠ AI video</strong> — Remotion generates editable, version-controllable code; Sora/Runway generate locked pixels</li>
+      <li><strong>The cost of creative exploration collapsed</strong> — prototyping that cost thousands is now free (Stitch) or included in your Claude Code subscription (Remotion)</li>
+      <li><strong>Excellence still requires humans</strong> — the floor dropped, but taste, polish, and judgment are more valuable than ever</li>
+    </ul>
+  </section>
+</article>
+</body>
+</html>

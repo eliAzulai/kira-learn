@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What I'm Stealing From The Claude Code Tools Video — Kira Learn</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-marketing: #08090a;
+    --bg-panel: #0f1011;
+    --bg-surface: #191a1b;
+    --bg-elevated: #28282c;
+    --text-primary: #f7f8f8;
+    --text-body: #d0d6e0;
+    --text-muted: #8a8f98;
+    --text-dim: #62666d;
+    --accent: #5e6ad2;
+    --accent-bright: #7170ff;
+    --accent-hover: #828fff;
+    --green: #10b981;
+    --orange: #f0a864;
+    --red: #f07070;
+    --border-subtle: rgba(255,255,255,0.05);
+    --border-standard: rgba(255,255,255,0.08);
+    --btn-bg: rgba(255,255,255,0.02);
+    --code-bg: rgba(255,255,255,0.02);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    font-feature-settings: "cv01", "ss03";
+    background: var(--bg-marketing);
+    color: var(--text-body);
+    line-height: 1.6;
+    padding: 3rem 1.5rem;
+  }
+  article { max-width: 720px; margin: 0 auto; }
+  h1 {
+    font-size: 3rem;
+    font-weight: 500;
+    letter-spacing: -1.056px;
+    line-height: 1.0;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+  .hook {
+    font-size: 1.125rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-bottom: 3rem;
+    line-height: 1.6;
+    letter-spacing: -0.165px;
+    border-left: 2px solid var(--accent);
+    padding-left: 1rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: -0.288px;
+    margin: 3rem 0 1rem;
+    color: var(--text-primary);
+  }
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.24px;
+    margin: 2rem 0 0.75rem;
+    color: var(--text-primary);
+  }
+  p {
+    margin-bottom: 1rem;
+    font-size: 0.9375rem;
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: -0.165px;
+    color: var(--text-body);
+  }
+  strong { font-weight: 600; color: var(--text-primary); }
+  ul, ol { margin: 0 0 1rem 1.5rem; }
+  li {
+    margin-bottom: 0.5rem;
+    font-size: 0.9375rem;
+    letter-spacing: -0.165px;
+    color: var(--text-body);
+  }
+  code {
+    font-family: ui-monospace, 'SF Mono', 'Menlo', monospace;
+    font-size: 0.875rem;
+    background: var(--code-bg);
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    border: 1px solid var(--border-standard);
+    color: var(--text-primary);
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border-standard);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    overflow-x: auto;
+    margin: 1.25rem 0 1.75rem;
+  }
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+  }
+  .tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent-bright);
+    margin-bottom: 1rem;
+  }
+  .diagram { margin: 2.5rem 0; display: flex; justify-content: center; }
+  .diagram svg { max-width: 100%; height: auto; }
+  .steal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .steal-card {
+    background: var(--btn-bg);
+    border: 1px solid var(--border-standard);
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+  .steal-card .card-title {
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: -0.24px;
+    color: var(--text-primary);
+    margin-bottom: 0.4rem;
+  }
+  .steal-card .card-desc {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    letter-spacing: -0.165px;
+  }
+  .steal-card .gap {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 0.75rem;
+    color: var(--accent-bright);
+  }
+  .quote {
+    border-left: 2px solid var(--accent);
+    padding: 0.25rem 0 0.25rem 1.25rem;
+    margin: 1.75rem 0;
+    color: var(--text-primary);
+    font-size: 1.0625rem;
+    line-height: 1.5;
+    letter-spacing: -0.2px;
+  }
+  .takeaways {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-standard);
+    border-radius: 12px;
+    padding: 1.75rem 2rem;
+    margin-top: 3rem;
+  }
+  .takeaways h2 { margin-top: 0; }
+  .takeaways li { color: var(--text-muted); }
+  .takeaways li strong { color: var(--text-primary); }
+  .source {
+    font-size: 0.8125rem;
+    color: var(--text-dim);
+    margin-bottom: 2rem;
+  }
+  .source a { color: var(--text-muted); text-decoration: none; border-bottom: 1px solid var(--border-standard); }
+  .source a:hover { color: var(--accent-bright); }
+  footer {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.8125rem;
+    font-weight: 400;
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+  @media (max-width: 560px) {
+    .steal-grid { grid-template-columns: 1fr; }
+    h1 { font-size: 2rem; letter-spacing: -0.704px; }
+    body { padding: 2rem 1rem; }
+  }
+</style>
+</head>
+<body>
+<article>
+  <span class="tag">Kira Learn · Adaptation</span>
+  <h1>What I'm Stealing From The Claude Code Tools Video</h1>
+  <p class="hook">Watched a 40-minute tour of every shiny Claude Code add-on. Here's the short list I'm actually installing — and the mental model behind the cuts.</p>
+  <p class="source">Source: <a href="https://youtu.be/KjEFy5wjFQg">youtu.be/KjEFy5wjFQg</a> · Adapted 2026-04-10</p>
+
+  <section class="simple">
+    <h2>The Short Version</h2>
+    <p>Imagine your brain is a kitchen. Every time someone releases a new kitchen gadget, you could cram it into a drawer. Some will save you real time — a sharper knife, a timer you can actually hear. Others will sit there forever, smug and shiny, taking up room you wish you had for flour.</p>
+    <p>New Claude Code tools come out every week. The temptation is to install them all, because they're free and they look cool in a demo. But a drawer full of gadgets you never use is worse than no gadgets — it slows you down every time you go looking for the knife.</p>
+    <p>So the rule I landed on is simple: <strong>only keep a tool if it patches a place where my workflow actually bleeds.</strong> If I never cut myself, I don't need a fancier bandage.</p>
+    <p>The brutal part: most tools are bandages for bleeding that isn't happening. You just didn't notice, because the demo made the wound look real.</p>
+  </section>
+
+  <div class="diagram">
+    <svg viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="loopGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#5e6ad2;stop-opacity:0.30"/>
+          <stop offset="100%" style="stop-color:#5e6ad2;stop-opacity:0.05"/>
+        </linearGradient>
+      </defs>
+      <!-- loop circles -->
+      <circle cx="140" cy="120" r="58" fill="url(#loopGrad)" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
+      <circle cx="320" cy="120" r="58" fill="url(#loopGrad)" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
+      <circle cx="500" cy="120" r="58" fill="url(#loopGrad)" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
+      <!-- labels -->
+      <text x="140" y="115" fill="#f7f8f8" font-size="13" font-weight="500" font-family="Inter, system-ui" text-anchor="middle" dominant-baseline="central">WRITE</text>
+      <text x="140" y="132" fill="#8a8f98" font-size="10" font-family="Inter, system-ui" text-anchor="middle" dominant-baseline="central">first pass</text>
+      <text x="320" y="115" fill="#f7f8f8" font-size="13" font-weight="500" font-family="Inter, system-ui" text-anchor="middle" dominant-baseline="central">REVIEW</text>
+      <text x="320" y="132" fill="#8a8f98" font-size="10" font-family="Inter, system-ui" text-anchor="middle" dominant-baseline="central">where tools win</text>
+      <text x="500" y="115" fill="#f7f8f8" font-size="13" font-weight="500" font-family="Inter, system-ui" text-anchor="middle" dominant-baseline="central">SHIP</text>
+      <text x="500" y="132" fill="#8a8f98" font-size="10" font-family="Inter, system-ui" text-anchor="middle" dominant-baseline="central">measured, not vibed</text>
+      <!-- arrows -->
+      <path d="M198 120 L262 120" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+      <path d="M378 120 L442 120" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(255,255,255,0.35)"/>
+        </marker>
+      </defs>
+      <!-- top label -->
+      <text x="320" y="30" fill="#62666d" font-size="11" font-weight="500" font-family="Inter, system-ui" letter-spacing="0.08em" text-anchor="middle">THE LOOP</text>
+      <!-- bottom annotation -->
+      <text x="320" y="210" fill="#7170ff" font-size="11" font-weight="500" font-family="Inter, system-ui" text-anchor="middle">tools only belong where the loop leaks</text>
+    </svg>
+  </div>
+
+  <section class="deep">
+    <h2>The Cuts I'm Making</h2>
+    <p>The video walked through dozens of tools. I'm writing this to force myself to commit: here's the short list, and for each one, the specific leak it's plugging in <em>my</em> loop. Everything else gets left in the drawer.</p>
+
+    <div class="steal-grid">
+      <div class="steal-card">
+        <div class="card-title">Adversarial Review (Codex pattern)</div>
+        <div class="card-desc">A second pass with a different reviewer prompt that argues against the first pass. My weak spot: I ship Claude's first draft when it looks right. This is the single highest-leverage addition.</div>
+        <div class="gap">Gap: review fatigue</div>
+      </div>
+      <div class="steal-card">
+        <div class="card-title">Obsidian + Markdown Vault</div>
+        <div class="card-desc">Keep every note, brief, and project doc as plain <code>.md</code>. Claude can already grep it. No parsers, no APIs, no lock-in. Already how I work — just doubling down.</div>
+        <div class="gap">Gap: scattered context</div>
+      </div>
+      <div class="steal-card">
+        <div class="card-title">awesome-design-md Pattern</div>
+        <div class="card-desc">Drop a <code>DESIGN.md</code> into a project and agents generate brand-matched UI. Already rewired kira-learn and Mission Control this way. The markdown-file-as-design-system move is underrated.</div>
+        <div class="gap">Gap: UI drift</div>
+      </div>
+      <div class="steal-card">
+        <div class="card-title">Playwright CLI</div>
+        <div class="card-desc">Claude writes a test, runs it, sees the browser output, iterates. Closes the "does it actually render?" gap that burns me on every frontend task.</div>
+        <div class="gap">Gap: blind frontends</div>
+      </div>
+      <div class="steal-card">
+        <div class="card-title">NotebookLM Bridge</div>
+        <div class="card-desc">Programmatic notebooks, sources, audio overviews. Already installed via the <code>/notebooklm</code> CLI — underused. Commit to running one a week on active research.</div>
+        <div class="gap">Gap: research decay</div>
+      </div>
+      <div class="steal-card">
+        <div class="card-title">Skill Benchmarking</div>
+        <div class="card-desc">Graded test cases for each custom skill. Replaces "it worked once" with "it passes 14 of 15." Until I have this, every skill is superstition.</div>
+        <div class="gap">Gap: vibes-based trust</div>
+      </div>
+    </div>
+
+    <h3>What I'm Deliberately Not Installing</h3>
+    <p>Google Workspace CLI sounds useful and is a hat for me right now — Marline already handles calendar and mail in the loop where they matter. Adding a second path would just be a place to forget updates. Same with multi-model orchestrators: interesting in demos, but I only have one use case (Claude), and routing between three models optimizes a problem I don't have.</p>
+    <p class="quote">The best tools are the ones that reduce weak spots in the loop. Everything else is plugin vanity.</p>
+
+    <h3>The Filter Question</h3>
+    <p>Before installing anything new, the question is no longer "is this cool?" It's:</p>
+    <ol>
+      <li><strong>Which step of my loop is this patching?</strong> — name it out loud. Write, review, ship, research, docs. If you can't name the step, the tool doesn't get installed.</li>
+      <li><strong>What does the leak look like today?</strong> — a bug I missed, a context I lost, a test I skipped. If you can't describe the leak, there isn't one.</li>
+      <li><strong>Can I measure the before and after?</strong> — even crudely. "I caught 3 regressions last week vs 0 before." If not, I'm buying vibes.</li>
+    </ol>
+
+    <h3>The Audit I Actually Ran</h3>
+    <p>This framing isn't just for new tools. I ran the same three questions against every Claude Code skill and MCP server I already have installed. Uninstalled four of them. Nothing broke. That's the test — if removing a tool doesn't break anything, it wasn't earning its drawer space.</p>
+
+    <pre><code># For each installed skill / MCP server:
+# 1. Which loop step does this patch?
+#    → If you can't name it in 3 seconds: uninstall
+#
+# 2. When did I last use it on real work?
+#    → "Can't remember" means no.
+#
+# 3. If I removed it right now, what breaks?
+#    → "Nothing really" → gone.
+#
+# Run this monthly. The drawer fills up faster than you think.</code></pre>
+
+    <h3>Why Markdown-First Keeps Winning</h3>
+    <p>One principle the video reinforced and that I keep seeing play out: the knowledge structures that pay off long-term are plain markdown. Design systems, project briefs, research notes, meeting summaries — all <code>.md</code>, all greppable, all Claude-native. The moment a tool demands its own format, you're adding friction that compounds for years. <strong>Markdown is the one format that never becomes legacy.</strong></p>
+  </section>
+
+  <section class="takeaways">
+    <h2>Key Takeaways</h2>
+    <ul>
+      <li><strong>Patch leaks, don't collect gadgets.</strong> A tool only earns its spot if you can name the specific step of your loop it's fixing.</li>
+      <li><strong>Adversarial review is the highest-leverage install.</strong> It catches the class of bugs that human + AI collaboration is worst at.</li>
+      <li><strong>Markdown-first is a compounding bet.</strong> Vaults, design systems, briefs — plain <code>.md</code> never becomes legacy.</li>
+      <li><strong>Benchmark, don't vibe.</strong> If you can't measure a skill's output against test cases, you're trusting it for the wrong reasons.</li>
+      <li><strong>Audit monthly.</strong> Ask what breaks if you remove each tool. Usually nothing. That's your answer.</li>
+    </ul>
+  </section>
+</article>
+
+<footer>Kira Learn — April 2026 · Adaptation Note</footer>
+</body>
+</html>

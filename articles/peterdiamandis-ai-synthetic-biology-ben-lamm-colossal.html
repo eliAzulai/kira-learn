@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI + Synthetic Biology: Programming Life Itself</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0d1117; color: #c9d1d9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; line-height: 1.7; }
+  article { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  h1 { color: #f0f6fc; font-size: 2rem; margin-bottom: 0.3rem; line-height: 1.2; }
+  .hook { color: #8b949e; font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .meta { color: #484f58; font-size: 0.85rem; margin-bottom: 2.5rem; }
+  .meta a { color: #58a6ff; text-decoration: none; }
+  h2 { color: #f0f6fc; font-size: 1.4rem; margin: 2.5rem 0 1rem; padding-bottom: 0.3rem; border-bottom: 1px solid #21262d; }
+  p { margin-bottom: 1rem; }
+  ul { margin: 0.5rem 0 1.5rem 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  strong { color: #e6edf3; }
+  .diagram { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; text-align: center; overflow-x: auto; }
+  .diagram svg { max-width: 100%; height: auto; }
+  .takeaways { background: #161b22; border-left: 3px solid #58a6ff; padding: 1.5rem; border-radius: 0 8px 8px 0; margin: 2rem 0; }
+  .takeaways h2 { margin-top: 0; border: none; padding: 0; }
+  .takeaways li { color: #e6edf3; }
+  code { background: #161b22; color: #79c0ff; padding: 0.15em 0.4em; border-radius: 4px; font-size: 0.9em; font-family: 'SF Mono', 'Fira Code', monospace; }
+  @media (max-width: 600px) { h1 { font-size: 1.5rem; } article { padding: 1.5rem 1rem 3rem; } }
+</style>
+</head>
+<body>
+<article>
+  <h1>AI + Synthetic Biology: Programming Life Itself</h1>
+  <p class="hook">One company is using AI to design living organisms — from woolly mammoths to plastic-eating microbes.</p>
+  <p class="meta">Source: <a href="https://youtube.com/watch?v=Goa6c6Qz__I">Peter Diamandis × Ben Lamm (Colossal)</a> · April 2026</p>
+
+  <section class="simple">
+    <h2>The Simple Version</h2>
+    <p>Imagine you had a recipe book for building any living thing. Not just reading the recipe (that's what we've done with DNA for decades), but actually <strong>writing new recipes</strong> and cooking them up.</p>
+    <p>That's what a company called Colossal is doing. They started with a wild goal: bring back the woolly mammoth. Sounds like a movie, right? But here's the trick — to figure out how to build a mammoth, they had to solve some of the hardest puzzles in biology. And those same puzzle-solving tools can do other things too.</p>
+    <p>Think of it like building a really powerful kitchen. You built it to make one incredible dish (the mammoth), but now that kitchen can make <em>anything</em>: microbes that eat plastic, animals resistant to disease, even better ways to help families have babies through IVF.</p>
+    <p>The secret ingredient? <strong>AI</strong>. Without artificial intelligence crunching through billions of genetic combinations, none of this would be possible. AI designs the recipes, and synthetic biology cooks them into real, living things.</p>
+  </section>
+
+  <div class="diagram">
+    <svg viewBox="0 0 660 320" xmlns="http://www.w3.org/2000/svg">
+      <!-- Central platform -->
+      <rect x="220" y="120" width="220" height="70" rx="12" fill="#1f6feb" opacity="0.2" stroke="#58a6ff" stroke-width="1.5"/>
+      <text x="330" y="150" text-anchor="middle" fill="#58a6ff" font-size="13" font-weight="bold">AI + Synthetic Biology</text>
+      <text x="330" y="170" text-anchor="middle" fill="#8b949e" font-size="11">Platform Engine</text>
+
+      <!-- Input -->
+      <rect x="10" y="135" width="160" height="45" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+      <text x="90" y="162" text-anchor="middle" fill="#c9d1d9" font-size="11">Genome Data + AI Models</text>
+      <line x1="170" y1="157" x2="218" y2="157" stroke="#484f58" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- Outputs -->
+      <rect x="30" y="10" width="140" height="38" rx="8" fill="#161b22" stroke="#3fb950" stroke-width="1"/>
+      <text x="100" y="34" text-anchor="middle" fill="#3fb950" font-size="10.5">Woolly Mammoth</text>
+
+      <rect x="200" y="10" width="140" height="38" rx="8" fill="#161b22" stroke="#3fb950" stroke-width="1"/>
+      <text x="270" y="34" text-anchor="middle" fill="#3fb950" font-size="10.5">Plastic-Eating Microbes</text>
+
+      <rect x="370" y="10" width="140" height="38" rx="8" fill="#161b22" stroke="#3fb950" stroke-width="1"/>
+      <text x="440" y="34" text-anchor="middle" fill="#3fb950" font-size="10.5">Disease-Resistant Animals</text>
+
+      <rect x="540" y="10" width="110" height="38" rx="8" fill="#161b22" stroke="#3fb950" stroke-width="1"/>
+      <text x="595" y="34" text-anchor="middle" fill="#3fb950" font-size="10.5">Better IVF</text>
+
+      <!-- Lines from platform to outputs -->
+      <line x1="280" y1="120" x2="100" y2="50" stroke="#30363d" stroke-width="1"/>
+      <line x1="310" y1="120" x2="270" y2="50" stroke="#30363d" stroke-width="1"/>
+      <line x1="360" y1="120" x2="440" y2="50" stroke="#30363d" stroke-width="1"/>
+      <line x1="400" y1="120" x2="595" y2="50" stroke="#30363d" stroke-width="1"/>
+
+      <!-- Bottom: Invasive species -->
+      <rect x="80" y="240" width="180" height="55" rx="8" fill="#161b22" stroke="#f0883e" stroke-width="1"/>
+      <text x="170" y="262" text-anchor="middle" fill="#f0883e" font-size="10.5">Gene Drives</text>
+      <text x="170" y="278" text-anchor="middle" fill="#8b949e" font-size="9.5">Invasive Species Control</text>
+
+      <rect x="310" y="240" width="180" height="55" rx="8" fill="#161b22" stroke="#f0883e" stroke-width="1"/>
+      <text x="400" y="262" text-anchor="middle" fill="#f0883e" font-size="10.5">Cloning (Viagen)</text>
+      <text x="400" y="278" text-anchor="middle" fill="#8b949e" font-size="9.5">78% Efficiency · Endangered Species</text>
+
+      <line x1="280" y1="190" x2="170" y2="238" stroke="#30363d" stroke-width="1"/>
+      <line x1="380" y1="190" x2="400" y2="238" stroke="#30363d" stroke-width="1"/>
+
+      <!-- Arrow marker -->
+      <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#484f58"/></marker></defs>
+    </svg>
+  </div>
+
+  <section class="deep">
+    <h2>How It Actually Works</h2>
+
+    <p><strong>The origin story is beautifully simple.</strong> Ben Lamm asked Harvard geneticist George Church: "If you had one project with unlimited capital for the rest of your life, what would it be?" Church didn't hesitate — bring back the woolly mammoth, and use the technology to save endangered species and advance human healthcare.</p>
+
+    <p>Lamm took that and built <strong>Colossal Biosciences</strong>, which hit a $10 billion valuation in four years with 260 scientists. But the mammoth was never really the point. It was the <em>forcing function</em>.</p>
+
+    <p><strong>The platform play:</strong> To de-extinct a mammoth, you need to solve genotype-to-phenotype prediction, ancestral shape reconstruction, comparative genomics, advanced gene editing, cellular engineering, and eventually artificial wombs. Solve those problems, and you've built a general-purpose engine for designing any living organism.</p>
+
+    <p><strong>AI is the backbone.</strong> Without AI processing billions of genetic combinations, predicting which gene edits produce which physical traits, and optimizing across massive search spaces, none of this works. The AI doesn't just assist — it's what makes the entire field feasible at scale.</p>
+
+    <h2>The Spinouts</h2>
+
+    <p><strong>Breaking</strong> — a plastic degradation company. Not making smaller microplastics (which is what most competitors do), but engineering microbial consortia that actually break the chemical bonds of plastic. The same computational biology that designs a mammoth designs these microbes.</p>
+
+    <p><strong>Viagen</strong> (acquired) — the world's leading cloning company at 78% efficiency vs. the 2% industry standard. 15 of the 18 species ever cloned on Earth were cloned by Viagen, including the only endangered species ever cloned (black-footed ferret).</p>
+
+    <p><strong>Gene drives for invasive species</strong> — this might be the sleeper application. Invasive species cause $500B+ in annual economic damage in the US alone. Current solutions: poison and kill. Colossal's approach: engineer gene drives that produce all-male offspring, humanely reducing populations over generations. They claim rollback capability — a key safety differentiator over previous gene drive attempts (which failed with mosquitoes because mosquitoes are part of the food web; invasive species, by definition, are not).</p>
+
+    <p><strong>IVF reinvention</strong> — current IVF still uses archaic morphological grading to select embryos. Colossal's research shows that embryos graded "losers" at day 3 can be the healthiest by day 5+. AI-driven embryo assessment could dramatically improve outcomes.</p>
+  </section>
+
+  <section class="takeaways">
+    <h2>Key Takeaways</h2>
+    <ul>
+      <li><strong>Build the hardest thing first.</strong> The mammoth forced Colossal to solve problems that created a general-purpose platform — the products are spinouts of the capability, not the other way around.</li>
+      <li><strong>AI is the unlock.</strong> Synthetic biology existed before AI, but the combination makes it possible to design living organisms like we design software — iteratively, at scale.</li>
+      <li><strong>99% of biotech talent focuses on human healthcare.</strong> The bigger economic and ecological opportunities (agriculture, conservation, bio-control) are wide open.</li>
+      <li><strong>Invasive species are a $500B+ problem</strong> being solved with poison and traps. Engineered gene drives are the precision alternative.</li>
+      <li><strong>Platform beats product.</strong> Colossal's value isn't any single organism — it's the engine that can design and build any of them.</li>
+    </ul>
+  </section>
+</article>
+</body>
+</html>

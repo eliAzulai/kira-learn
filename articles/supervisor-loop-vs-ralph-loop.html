@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Supervisor Loop vs Ralph Loop</title>
+  <style>
+    :root {
+      --bg: #f7f3ea;
+      --ink: #221f1a;
+      --muted: #6d6458;
+      --card: #fffaf0;
+      --line: #d8c8ae;
+      --gold: #c48a2c;
+      --blue: #315a7d;
+      --green: #4f7b56;
+      --red: #9f4a3f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top left, #fff8e8 0, var(--bg) 42%, #eee5d5 100%);
+      color: var(--ink);
+      font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+      line-height: 1.62;
+    }
+    main {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 48px 20px 64px;
+    }
+    article {
+      background: rgba(255, 250, 240, 0.86);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: 0 22px 70px rgba(76, 55, 29, 0.13);
+      overflow: hidden;
+    }
+    header {
+      padding: 40px 38px 24px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(196,138,44,.16), rgba(49,90,125,.09));
+    }
+    h1, h2, h3 { line-height: 1.1; margin: 0 0 14px; }
+    h1 { font-size: clamp(2.1rem, 7vw, 4rem); letter-spacing: -0.045em; }
+    h2 { font-size: clamp(1.45rem, 4vw, 2.1rem); margin-top: 34px; }
+    h3 { font-size: 1.1rem; margin-top: 22px; color: var(--blue); }
+    .dek { max-width: 700px; color: var(--muted); font-size: 1.16rem; margin: 0; }
+    .content { padding: 28px 38px 42px; }
+    .pill {
+      display: inline-block;
+      margin-bottom: 18px;
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255,255,255,.48);
+      font: 700 .78rem/1 ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+    .callout {
+      margin: 22px 0;
+      padding: 18px 20px;
+      border-left: 5px solid var(--gold);
+      background: #fff4d8;
+      border-radius: 16px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin: 22px 0;
+    }
+    .card {
+      padding: 18px;
+      background: #fffdf7;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+    }
+    .card strong { color: var(--ink); }
+    .label {
+      font: 800 .76rem/1 ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .diagram {
+      margin: 28px 0;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: #fffdf7;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
+    }
+    .lane { display: grid; grid-template-columns: 150px 1fr; gap: 14px; align-items: center; margin: 14px 0; }
+    .lane-title { font-weight: 800; color: var(--ink); }
+    .flow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .node { padding: 10px 12px; border-radius: 14px; color: white; font-weight: 800; font-size: .9rem; }
+    .supervisor { background: var(--blue); }
+    .ralph { background: var(--green); }
+    .arrow { color: var(--muted); font-weight: 900; }
+    .stack {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border: 1px dashed var(--line);
+      border-radius: 16px;
+      color: var(--muted);
+      background: #fff8ea;
+    }
+    ul { padding-left: 22px; }
+    li { margin: 8px 0; }
+    footer { margin-top: 30px; color: var(--muted); font-size: .95rem; }
+    @media (max-width: 720px) {
+      header, .content { padding-left: 22px; padding-right: 22px; }
+      .grid { grid-template-columns: 1fr; }
+      .lane { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <article>
+      <header>
+        <div class="pill">Kira Learn</div>
+        <h1>Supervisor Loop vs Ralph Loop</h1>
+        <p class="dek">Two useful control patterns for agent systems: one makes work finish; the other makes noisy information usable.</p>
+      </header>
+
+      <section class="content">
+        <h2>First pass: explain it like you’re 10</h2>
+        <p>Imagine you are building a Lego spaceship while your room is full of toys, books, and random notes.</p>
+        <p>A <strong>Supervisor loop</strong> is like a careful coach standing next to you. The coach says: “Build the wing. Check if it fits. If it doesn’t, try again. When it’s good, move on.” Its job is to make sure a task gets completed properly.</p>
+        <p>A <strong>Ralph loop</strong> is like a smart friend cleaning the table before you start. Ralph looks at the messy room, ignores the stuff that does not matter, groups the useful pieces, and says: “These are the parts you should pay attention to.” Its job is to turn noise into signal.</p>
+
+        <div class="grid">
+          <div class="card">
+            <div class="label">Supervisor loop</div>
+            <p><strong>Do → evaluate → retry → done.</strong><br />Best when the question is: “Did the agent finish the job correctly?”</p>
+          </div>
+          <div class="card">
+            <div class="label">Ralph loop</div>
+            <p><strong>Scan → filter → compress → decide.</strong><br />Best when the question is: “What deserves attention in this mess?”</p>
+          </div>
+        </div>
+
+        <p>So the difference is simple: <strong>Supervisor controls completion</strong>. <strong>Ralph controls attention</strong>.</p>
+
+        <div class="diagram" aria-label="Diagram comparing Supervisor loop and Ralph loop">
+          <div class="lane">
+            <div class="lane-title">Supervisor</div>
+            <div class="flow">
+              <span class="node supervisor">Do</span><span class="arrow">→</span>
+              <span class="node supervisor">Evaluate</span><span class="arrow">→</span>
+              <span class="node supervisor">Retry</span><span class="arrow">→</span>
+              <span class="node supervisor">Done</span>
+            </div>
+          </div>
+          <div class="lane">
+            <div class="lane-title">Ralph</div>
+            <div class="flow">
+              <span class="node ralph">Scan</span><span class="arrow">→</span>
+              <span class="node ralph">Filter</span><span class="arrow">→</span>
+              <span class="node ralph">Compress</span><span class="arrow">→</span>
+              <span class="node ralph">Decide</span>
+            </div>
+          </div>
+          <div class="stack"><strong>Stacked together:</strong> Ralph chooses the right thing to work on; Supervisor makes sure that work actually gets finished.</div>
+        </div>
+
+        <h2>Second pass: deeper technical version</h2>
+        <p>Agent systems fail in two different ways. Sometimes they know the task but do not complete it reliably. Sometimes they are surrounded by too much input and choose badly. These are different failure modes, so they need different loops.</p>
+
+        <h3>1. The Supervisor loop is completion control</h3>
+        <p>The Supervisor loop wraps an action with judgment. An agent attempts the work, an evaluator checks the result against criteria, and the system either accepts it or sends it back for another pass. The loop ends when the output satisfies the standard or hits a stop condition.</p>
+        <p>Typical stop conditions include: success, retry limit, time limit, budget limit, or “needs human decision.” This makes the Supervisor loop useful for coding tasks, research briefs, data extraction, document drafting, QA, and any workflow where “mostly done” is not good enough.</p>
+        <p>Its central question is: <strong>Is this output acceptable yet?</strong></p>
+
+        <h3>2. The Ralph loop is signal control</h3>
+        <p>The Ralph loop sits earlier in the pipeline. It assumes the world is noisy: feeds, chats, meetings, logs, emails, screenshots, bookmarks, alerts. Ralph scans broadly, filters irrelevant material, compresses what remains into a usable representation, and decides what should become an action, artifact, brief, or ignore.</p>
+        <p>This is not just summarization. Summarization makes text shorter. Ralph makes attention sharper. It decides which signals deserve space in the operating system.</p>
+        <p>Its central question is: <strong>What is worth acting on?</strong></p>
+
+        <h3>3. Eli’s X Hotlist is a Ralph-loop artifact</h3>
+        <p>Eli’s X Hotlist is a concrete Ralph output. X is high-noise by design: many posts, mixed quality, duplicated ideas, outrage, jokes, half-formed opportunities, and occasional gems. A Ralph loop scans that stream, filters for relevance, compresses repeated themes, and turns the result into a hotlist: a small set of people, posts, ideas, or angles worth attention.</p>
+        <p>The hotlist is not the final work. It is an attention artifact. It says: “From the entire messy feed, these are the signals we should consider using.”</p>
+
+        <h3>4. How the loops stack</h3>
+        <p>The clean architecture is not Supervisor <em>versus</em> Ralph. It is Ralph <em>before</em> Supervisor, and sometimes Ralph <em>inside</em> Supervisor.</p>
+        <ul>
+          <li><strong>Ralph before Supervisor:</strong> scan the environment, pick the best opportunity, then hand it to a Supervisor loop to execute.</li>
+          <li><strong>Supervisor around Ralph:</strong> evaluate whether the hotlist itself is good enough. If it misses obvious signals or includes junk, rerun Ralph with better filters.</li>
+          <li><strong>Ralph inside Supervisor:</strong> during retries, scan failures and compress feedback so the next attempt improves intelligently.</li>
+        </ul>
+
+        <div class="callout">
+          <strong>Practical rule:</strong> use Ralph when the input is messy and the problem is attention. Use Supervisor when the goal is known and the problem is reliable completion.
+        </div>
+
+        <h2>The shortest useful distinction</h2>
+        <p><strong>Ralph finds the right target.</strong> <strong>Supervisor makes the shot land.</strong> A mature agent system usually needs both: signal control to avoid working on the wrong thing, and completion control to avoid leaving the right thing half-done.</p>
+
+        <footer>Written as a compact Kira Learn note: simple first, technical second, with the diagram doing the memory work.</footer>
+      </section>
+    </article>
+  </main>
+</body>
+</html>

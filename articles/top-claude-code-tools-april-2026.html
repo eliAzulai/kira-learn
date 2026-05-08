@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Claude Code Tools That Actually Matter — Kira Learn</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-marketing: #08090a;
+    --bg-panel: #0f1011;
+    --bg-surface: #191a1b;
+    --bg-elevated: #28282c;
+    --text-primary: #f7f8f8;
+    --text-body: #d0d6e0;
+    --text-muted: #8a8f98;
+    --text-dim: #62666d;
+    --accent: #5e6ad2;
+    --accent-bright: #7170ff;
+    --accent-hover: #828fff;
+    --green: #27a644;
+    --emerald: #10b981;
+    --orange: #f0a864;
+    --red: #f07070;
+    --border-subtle: rgba(255,255,255,0.05);
+    --border-standard: rgba(255,255,255,0.08);
+    --btn-bg: rgba(255,255,255,0.02);
+    --btn-bg-hover: rgba(255,255,255,0.05);
+    --code-bg: rgba(255,255,255,0.02);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    font-feature-settings: "cv01", "ss03";
+    background: var(--bg-marketing);
+    color: var(--text-body);
+    line-height: 1.6;
+    padding: 3rem 1.5rem;
+  }
+  article {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 3rem;
+    font-weight: 500;
+    letter-spacing: -1.056px;
+    line-height: 1.0;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+  .hook {
+    font-size: 1.125rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-bottom: 3rem;
+    line-height: 1.6;
+    letter-spacing: -0.165px;
+    border-left: 2px solid var(--accent);
+    padding-left: 1rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: -0.288px;
+    margin: 3rem 0 1rem;
+    color: var(--text-primary);
+  }
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.24px;
+    margin: 2rem 0 0.75rem;
+    color: var(--text-primary);
+  }
+  p {
+    margin-bottom: 1rem;
+    font-size: 0.9375rem;
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: -0.165px;
+    color: var(--text-body);
+  }
+  strong { font-weight: 600; color: var(--text-primary); }
+  ul, ol { margin: 0 0 1rem 1.5rem; }
+  li {
+    margin-bottom: 0.5rem;
+    font-size: 0.9375rem;
+    letter-spacing: -0.165px;
+    color: var(--text-body);
+  }
+  code {
+    font-family: ui-monospace, 'SF Mono', 'Menlo', monospace;
+    font-size: 0.875rem;
+    background: var(--code-bg);
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    border: 1px solid var(--border-standard);
+    color: var(--text-primary);
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border-standard);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    overflow-x: auto;
+    margin: 1.25rem 0 1.75rem;
+  }
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+  }
+  .tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent-bright);
+    margin-bottom: 1rem;
+    background: transparent;
+    padding: 0 10px 0 0;
+  }
+  .diagram {
+    margin: 2.5rem 0;
+    display: flex;
+    justify-content: center;
+  }
+  .diagram svg { max-width: 100%; height: auto; }
+  .tool-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .tool-card {
+    background: var(--btn-bg);
+    border: 1px solid var(--border-standard);
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+  .tool-card .card-title {
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: -0.24px;
+    color: var(--text-primary);
+    margin-bottom: 0.4rem;
+  }
+  .tool-card .card-desc {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    letter-spacing: -0.165px;
+  }
+  .verdict {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 0.75rem;
+  }
+  .verdict.keep { color: var(--emerald); }
+  .verdict.skip { color: var(--red); }
+  .verdict.watch { color: var(--orange); }
+  .takeaways {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-standard);
+    border-radius: 12px;
+    padding: 1.75rem 2rem;
+    margin-top: 3rem;
+  }
+  .takeaways h2 { margin-top: 0; }
+  .takeaways li { color: var(--text-muted); }
+  .takeaways li strong { color: var(--text-primary); }
+  footer {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.8125rem;
+    font-weight: 400;
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+  @media (max-width: 560px) {
+    .tool-grid { grid-template-columns: 1fr; }
+    h1 { font-size: 2rem; letter-spacing: -0.704px; }
+    body { padding: 2rem 1rem; }
+  }
+</style>
+</head>
+<body>
+<article>
+  <span class="tag">Kira Learn</span>
+  <h1>The Claude Code Tools That Actually Matter</h1>
+  <p class="hook">There are dozens of Claude Code plugins and skills floating around. Most are noise. Here's how to tell the difference.</p>
+
+  <section class="simple">
+    <h2>The Short Version</h2>
+    <p>Imagine you have a really smart robot helper that can write code, search the internet, and manage your files. Now imagine a marketplace full of add-ons for that robot — extra arms, laser eyes, a funny hat.</p>
+    <p>Some of those add-ons make the robot genuinely better at its job. An extra arm means it can hold a flashlight while it fixes the sink. Laser eyes mean it can cut things precisely. But the funny hat? That's just... a hat.</p>
+    <p>Claude Code tools work the same way. Some of them close a real gap — something Claude can't do well on its own, or something that takes five manual steps and could take one. Others just look cool in a demo.</p>
+    <p>The trick: <strong>a good tool fixes your weakest link.</strong> If you never review your own code, a tool that reviews it for you is gold. If you already have perfect type safety, a type-checking plugin is just a hat.</p>
+  </section>
+
+  <div class="diagram">
+    <svg viewBox="0 0 640 220" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="funnel" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#5e6ad2;stop-opacity:0.25"/>
+          <stop offset="100%" style="stop-color:#5e6ad2;stop-opacity:0.03"/>
+        </linearGradient>
+      </defs>
+      <polygon points="40,30 320,80 320,140 40,190" fill="url(#funnel)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+      <polygon points="320,80 600,100 600,120 320,140" fill="url(#funnel)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+      <text x="50" y="22" fill="#62666d" font-size="11" font-weight="500" font-family="Inter, system-ui" letter-spacing="0.04em">ALL TOOLS</text>
+      <text x="100" y="105" fill="#f7f8f8" font-size="14" font-weight="500" font-family="Inter, system-ui" dominant-baseline="central">Does it close a gap</text>
+      <text x="100" y="125" fill="#f7f8f8" font-size="14" font-weight="500" font-family="Inter, system-ui" dominant-baseline="central">in YOUR workflow?</text>
+      <text x="440" y="100" fill="#8a8f98" font-size="11" font-family="Inter, system-ui" dominant-baseline="central">Can you measure</text>
+      <text x="440" y="115" fill="#8a8f98" font-size="11" font-family="Inter, system-ui" dominant-baseline="central">the improvement?</text>
+      <text x="440" y="135" fill="#62666d" font-size="11" font-family="Inter, system-ui" font-style="italic" dominant-baseline="central">(not vibes)</text>
+      <rect x="560" y="90" width="70" height="36" rx="6" fill="none" stroke="#10b981" stroke-width="1"/>
+      <text x="595" y="108" fill="#10b981" font-size="12" font-weight="500" font-family="Inter, system-ui" letter-spacing="0.04em" text-anchor="middle" dominant-baseline="central">KEEP</text>
+      <text x="240" y="210" fill="#f07070" font-size="10" font-weight="500" font-family="Inter, system-ui">noise &#x2193;</text>
+      <text x="480" y="175" fill="#f07070" font-size="10" font-weight="500" font-family="Inter, system-ui">vanity &#x2193;</text>
+    </svg>
+  </div>
+
+  <section class="deep">
+    <h2>How It Actually Works</h2>
+    <p>In April 2026, Claude Code has a mature ecosystem of MCP servers, custom skills, and third-party integrations. After testing dozens of them, a pattern emerges: the tools that survive daily use all share one trait — they reduce a specific weak spot in the human-AI loop.</p>
+
+    <h3>The Tools Worth Installing</h3>
+
+    <div class="tool-grid">
+      <div class="tool-card">
+        <div class="card-title">Adversarial Code Review</div>
+        <div class="card-desc">A second model (or same model, different prompt) tears apart the code the first pass wrote. Catches the "looks right, is wrong" bugs that slip past both you and Claude.</div>
+        <div class="verdict keep">Essential</div>
+      </div>
+      <div class="tool-card">
+        <div class="card-title">Obsidian / Markdown Vault</div>
+        <div class="card-desc">Claude reads and writes to your knowledge vault. Turns scattered notes into searchable, linked context. Markdown-first means no vendor lock-in.</div>
+        <div class="verdict keep">Essential</div>
+      </div>
+      <div class="tool-card">
+        <div class="card-title">Playwright CLI</div>
+        <div class="card-desc">Real browser automation from the terminal. Claude writes tests, runs them, sees the results. Closes the "but does it actually work in a browser?" gap.</div>
+        <div class="verdict keep">Essential</div>
+      </div>
+      <div class="tool-card">
+        <div class="card-title">NotebookLM Bridge</div>
+        <div class="card-desc">Programmatic access to Google NotebookLM — create notebooks, add sources, generate audio overviews. Turns research into shareable content without leaving the terminal.</div>
+        <div class="verdict keep">High value</div>
+      </div>
+      <div class="tool-card">
+        <div class="card-title">Google Workspace CLI</div>
+        <div class="card-desc">Calendar, Gmail, Docs from the command line. Useful when your AI assistant needs to actually schedule things or send emails — not just talk about it.</div>
+        <div class="verdict watch">Situational</div>
+      </div>
+      <div class="tool-card">
+        <div class="card-title">Skill Benchmarking</div>
+        <div class="card-desc">Test your custom skills against known inputs and grade the outputs. Replaces "feels like it works" with "passes 14 of 15 test cases."</div>
+        <div class="verdict keep">High value</div>
+      </div>
+    </div>
+
+    <h3>The Decision Framework</h3>
+    <p>Before installing any tool, run it through three questions:</p>
+    <ol>
+      <li><strong>What's the weakest link?</strong> — Identify where your workflow breaks down. Is it code review? Testing? Context management? File a tool under the gap it fills, not the feature it advertises.</li>
+      <li><strong>Can you measure the improvement?</strong> — "It feels faster" doesn't count. "I catch 40% more bugs before push" does. Skill benchmarking exists for a reason — use it.</li>
+      <li><strong>Does it replace a manual multi-step process?</strong> — The best tools collapse five steps into one. If a tool adds a step (even a cool one), it's probably a hat.</li>
+    </ol>
+
+    <h3>The Anti-Pattern: Plugin Vanity</h3>
+    <p>Plugin vanity is when you install tools because they're impressive, not because they solve a problem you have. The tell: you demo it to friends but never use it on real work.</p>
+    <p>Common offenders include fancy visualization plugins (when you rarely need visuals), multi-model orchestrators (when one model handles your use case fine), and AI-powered tools that automate things you do once a month.</p>
+
+    <pre><code># The honest audit
+# For each tool you have installed, ask:
+
+# 1. When did I last use this on real work?
+#    → If "I can't remember" → uninstall
+
+# 2. What would break if I removed it?
+#    → If "nothing really" → uninstall
+
+# 3. Am I keeping it because it's cool or because it's useful?
+#    → Be honest.</code></pre>
+
+    <h3>Markdown-First Wins Long-Term</h3>
+    <p>One pattern that consistently pays off: keep your knowledge structures in plain markdown. Obsidian vaults, project docs, research notes — all in <code>.md</code> files that Claude can read natively. No special parsers, no API wrappers, no conversion steps. When your AI assistant can <code>grep</code> your entire brain, everything speeds up.</p>
+  </section>
+
+  <section class="takeaways">
+    <h2>Key Takeaways</h2>
+    <ul>
+      <li><strong>Tools fix weak spots.</strong> Identify your weakest link first, then find a tool that addresses it — not the other way around.</li>
+      <li><strong>Measure, don't vibe.</strong> Benchmark your skills and tools against real test cases. If you can't measure improvement, you can't trust it.</li>
+      <li><strong>Markdown-first knowledge</strong> gives your AI assistant native access to your context with zero friction.</li>
+      <li><strong>Adversarial review</strong> is the highest-value addition — it catches the exact class of bugs that human + AI collaboration is worst at spotting.</li>
+      <li><strong>Audit ruthlessly.</strong> If you haven't used a tool on real work recently, remove it. Plugin vanity slows you down.</li>
+    </ul>
+  </section>
+</article>
+
+<footer>Kira Learn — April 2026</footer>
+</body>
+</html>

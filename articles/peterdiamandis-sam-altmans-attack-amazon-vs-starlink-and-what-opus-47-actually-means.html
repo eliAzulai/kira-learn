@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peter Diamandis Digest: Sam Altman’s Attack, Amazon vs. Starlink, and What Opus 4.7 Actually Means | #248</title>
+<style>
+:root {
+  --bg:#0b1020; --panel:#121933; --panel2:#0f1530; --text:#e8ecff; --muted:#aab5e6; --accent:#7cc7ff; --accent2:#8dffb3; --line:#26315f;
+}
+* { box-sizing:border-box; }
+body { margin:0; font:16px/1.6 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:linear-gradient(180deg,#0a0f1f,#0d1430 40%,#0a0f1f); color:var(--text); }
+main { max-width:920px; margin:0 auto; padding:32px 20px 60px; }
+section { background:rgba(18,25,51,.82); border:1px solid var(--line); border-radius:18px; padding:22px; margin:18px 0; box-shadow:0 10px 30px rgba(0,0,0,.18); }
+h1,h2,h3 { line-height:1.2; margin:0 0 12px; }
+h1 { font-size:clamp(30px,5vw,48px); }
+h2 { font-size:clamp(22px,3vw,30px); color:var(--accent); }
+p, li { color:var(--text); }
+.meta, .muted { color:var(--muted); }
+ul { padding-left:20px; margin:10px 0 0; }
+.hero { padding:30px 24px; background:radial-gradient(circle at top right, rgba(124,199,255,.18), transparent 35%), radial-gradient(circle at top left, rgba(141,255,179,.12), transparent 30%), var(--panel); }
+.grid { display:grid; gap:18px; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); }
+.card { background:var(--panel2); border:1px solid var(--line); border-radius:16px; padding:16px; }
+svg { width:100%; height:auto; display:block; }
+code { background:#10182f; padding:2px 6px; border-radius:6px; }
+a { color:var(--accent2); }
+</style>
+</head>
+<body>
+<main>
+  <section class="hero">
+    <div class="meta">Peter Diamandis digest, April 18, 2026</div>
+    <h1>AI is getting stronger, people are getting spooked, and infrastructure is becoming the real battlefield.</h1>
+    <p>The episode jumps across Claude Opus 4.7, rising anti-AI backlash, data-center politics, job disruption, and Amazon's quiet move against Starlink. The big pattern is simple: AI is no longer just a software story. It is becoming a labor story, a security story, and an infrastructure story all at once.</p>
+  </section>
+
+  <section>
+    <h2>The Simple Version</h2>
+    <p>Imagine the world just got a much smarter engine. Some people want to race with it, some people are scared it will replace them, and everyone suddenly realizes the roads, gas stations, and traffic rules matter as much as the engine itself.</p>
+    <p>That is this episode. Claude Opus 4.7 is like a car that is not wildly new, but smoother and easier to drive. At the same time, Stanford's AI report says the experts are excited while regular people are nervous. That fear is starting to show up in ugly ways, including real-world attacks on AI leaders.</p>
+    <p>Then there is the hidden layer: you cannot have an AI future without data centers, electricity, and internet from space. So while people argue about chatbots, Amazon, Apple, and Starlink are fighting over the pipes underneath the future.</p>
+  </section>
+
+  <section>
+    <h2>How It Actually Works</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>1. Models are becoming easier to steer</h3>
+        <p>The hosts describe Opus 4.7 as a practical release, not a dramatic leap. The key change is interface design: fewer hard settings, more natural-language control. That matters because the winning layer may be orchestration, not raw model novelty.</p>
+      </div>
+      <div class="card">
+        <h3>2. Job loss can start as "jobs never created"</h3>
+        <p>The show highlights an important labor signal: companies may stop hiring juniors before they start firing seniors. That keeps unemployment charts deceptively calm while opportunity disappears for younger workers.</p>
+      </div>
+      <div class="card">
+        <h3>3. Infrastructure is the choke point</h3>
+        <p>Compute needs power, cooling, land, spectrum, launch, and public permission. The Amazon-Globalstar deal matters because licensed spectrum is scarce and strategic. The future is constrained by physical bottlenecks, not just model quality.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Two diagrams that make the episode click</h2>
+    <svg viewBox="0 0 860 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AI stack diagram">
+      <rect x="20" y="30" width="180" height="70" rx="14" fill="#1b2550" stroke="#7cc7ff"/>
+      <text x="110" y="70" text-anchor="middle" fill="#e8ecff" font-size="20">Model</text>
+      <rect x="240" y="30" width="180" height="70" rx="14" fill="#1b2550" stroke="#7cc7ff"/>
+      <text x="330" y="70" text-anchor="middle" fill="#e8ecff" font-size="20">Agents + Prompts</text>
+      <rect x="460" y="30" width="180" height="70" rx="14" fill="#1b2550" stroke="#7cc7ff"/>
+      <text x="550" y="70" text-anchor="middle" fill="#e8ecff" font-size="20">Workflows</text>
+      <rect x="680" y="30" width="160" height="70" rx="14" fill="#1b2550" stroke="#7cc7ff"/>
+      <text x="760" y="70" text-anchor="middle" fill="#e8ecff" font-size="20">Company</text>
+      <path d="M200 65 L240 65 M420 65 L460 65 M640 65 L680 65" stroke="#8dffb3" stroke-width="4"/>
+      <text x="430" y="160" text-anchor="middle" fill="#aab5e6" font-size="22">The argument of the episode: value is moving upward from model access to orchestration.</text>
+    </svg>
+    <svg viewBox="0 0 860 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Infrastructure bottleneck diagram">
+      <rect x="40" y="30" width="150" height="58" rx="12" fill="#192246" stroke="#8dffb3"/>
+      <text x="115" y="65" text-anchor="middle" fill="#e8ecff" font-size="18">AI demand</text>
+      <rect x="250" y="30" width="150" height="58" rx="12" fill="#192246" stroke="#8dffb3"/>
+      <text x="325" y="65" text-anchor="middle" fill="#e8ecff" font-size="18">Data centers</text>
+      <rect x="460" y="30" width="150" height="58" rx="12" fill="#192246" stroke="#8dffb3"/>
+      <text x="535" y="65" text-anchor="middle" fill="#e8ecff" font-size="18">Power + water</text>
+      <rect x="670" y="30" width="150" height="58" rx="12" fill="#192246" stroke="#8dffb3"/>
+      <text x="745" y="65" text-anchor="middle" fill="#e8ecff" font-size="18">Public approval</text>
+      <path d="M190 59 L250 59 M400 59 L460 59 M610 59 L670 59" stroke="#7cc7ff" stroke-width="4"/>
+      <text x="430" y="150" text-anchor="middle" fill="#e8ecff" font-size="24">Meanwhile, satellite networks compete for the global connection layer.</text>
+      <circle cx="250" cy="220" r="28" fill="#1b2550" stroke="#7cc7ff"/><text x="250" y="227" text-anchor="middle" fill="#e8ecff" font-size="15">Apple</text>
+      <circle cx="430" cy="220" r="36" fill="#1b2550" stroke="#7cc7ff"/><text x="430" y="227" text-anchor="middle" fill="#e8ecff" font-size="15">Amazon</text>
+      <circle cx="640" cy="220" r="48" fill="#1b2550" stroke="#7cc7ff"/><text x="640" y="227" text-anchor="middle" fill="#e8ecff" font-size="15">Starlink</text>
+      <text x="430" y="265" text-anchor="middle" fill="#aab5e6" font-size="18">Spectrum, launch cadence, and device access decide who reaches users.</text>
+    </svg>
+  </section>
+
+  <section>
+    <h2>Why this matters for us</h2>
+    <p>For OpenClaw and Kira-style systems, the useful takeaway is not just "better models are coming." It is that the control layer is getting more human. As models absorb more complexity, the leverage shifts toward memory, orchestration, prompting, and operational judgment.</p>
+    <p>For Base Income and broader strategy work, the labor point is the sharpest one: AI may first remove apprenticeships, not careers. That means more people will need a way to create value without waiting for a traditional ladder to accept them.</p>
+  </section>
+
+  <section>
+    <h2>Key Takeaways</h2>
+    <ul>
+      <li>Opus 4.7 looks more like a workflow upgrade than a civilization-jump release, but that still matters.</li>
+      <li>The bigger AI risk in the near term may be social backlash and silent entry-level job collapse, not just model behavior.</li>
+      <li>Data centers, energy, spectrum, and satellites are becoming the real strategic battlegrounds.</li>
+      <li>People who can orchestrate AI systems will outperform people who only execute one narrow task.</li>
+    </ul>
+    <p class="muted">Source video: <a href="https://youtube.com/watch?v=LVvleNtllPk">YouTube</a></p>
+  </section>
+</main>
+</body>
+</html>

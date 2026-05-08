@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Webhooks — How Apps Talk to Each Other in Real Time</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0f172a;
+    color: #cbd5e1;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    line-height: 1.7;
+    padding: 2rem 1rem;
+  }
+  article { max-width: 720px; margin: 0 auto; }
+  h1 {
+    font-size: 2.2rem;
+    color: #f1f5f9;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards;
+  }
+  .hook {
+    font-size: 1.1rem;
+    color: #a78bfa;
+    margin-bottom: 2.5rem;
+    font-style: italic;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.2s forwards;
+  }
+  h2 {
+    font-size: 1.4rem;
+    color: #f1f5f9;
+    margin: 2.5rem 0 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #1e293b;
+  }
+  h3 { font-size: 1.1rem; color: #e2e8f0; margin: 1.5rem 0 0.5rem; }
+  p { margin-bottom: 1rem; }
+  strong { color: #f1f5f9; }
+  code {
+    background: #1e293b;
+    color: #a78bfa;
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  }
+  pre {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    overflow-x: auto;
+    margin: 1rem 0 1.5rem;
+    position: relative;
+  }
+  pre code { background: none; padding: 0; font-size: 0.85rem; color: #e2e8f0; }
+  pre .copy-btn {
+    position: absolute; top: 0.5rem; right: 0.5rem;
+    background: #334155; border: none; color: #94a3b8;
+    padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.7rem;
+    cursor: pointer; opacity: 0; transition: opacity 0.2s, background 0.2s;
+    font-family: inherit;
+  }
+  pre:hover .copy-btn { opacity: 1; }
+  pre .copy-btn:hover { background: #475569; color: #f1f5f9; }
+  pre .copy-btn.copied { background: #22c55e; color: #fff; }
+  ul, ol { margin: 0.5rem 0 1.5rem 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0); }
+    50% { box-shadow: 0 0 12px 2px rgba(167, 139, 250, 0.15); }
+  }
+
+  /* Diagram base */
+  .diagram {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    margin: 2rem 0;
+  }
+  .diagram-title {
+    text-align: center;
+    font-size: 1rem;
+    color: #a78bfa;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+  .diagram-hint { font-size: 0.75rem; color: #64748b; }
+
+  /* Polling vs Webhook comparison */
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+    margin: 1.5rem 0;
+  }
+  .compare-card {
+    background: #0f172a;
+    border-radius: 10px;
+    padding: 1.2rem;
+    border: 1px solid #334155;
+    text-align: center;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+  .compare-card:hover { transform: scale(1.02); }
+  .compare-card.bad { border-color: #ef4444; }
+  .compare-card.good { border-color: #22c55e; }
+  .compare-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+  .compare-title { font-weight: 600; color: #f1f5f9; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .compare-line { font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.2rem; }
+  .compare-line span { color: #f1f5f9; font-weight: 600; }
+
+  /* Animated message flow */
+  .flow-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1.5rem 0;
+    position: relative;
+    min-height: 120px;
+  }
+  .flow-entity {
+    background: #0f172a;
+    border: 2px solid #334155;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    min-width: 120px;
+    transition: border-color 0.3s;
+    z-index: 1;
+  }
+  .flow-entity-icon { font-size: 1.8rem; margin-bottom: 0.3rem; }
+  .flow-entity-name { font-size: 0.85rem; font-weight: 600; color: #f1f5f9; }
+  .flow-entity-sub { font-size: 0.7rem; color: #64748b; }
+  .flow-entity.sender.active { border-color: #a78bfa; }
+  .flow-entity.receiver.active { border-color: #22c55e; }
+
+  .flow-line {
+    flex: 1;
+    height: 3px;
+    background: #334155;
+    position: relative;
+    border-radius: 2px;
+    overflow: visible;
+  }
+  .flow-packet {
+    position: absolute;
+    top: -8px;
+    left: -20px;
+    width: 20px;
+    height: 20px;
+    background: #a78bfa;
+    border-radius: 50%;
+    opacity: 0;
+    transition: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+  }
+  .flow-packet.flying {
+    opacity: 1;
+    animation: flyAcross 0.8s ease-in-out forwards;
+  }
+  @keyframes flyAcross {
+    0% { left: -10px; opacity: 1; }
+    90% { opacity: 1; }
+    100% { left: calc(100% - 10px); opacity: 0; }
+  }
+  .flow-label {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 0.3rem;
+  }
+  .flow-btn {
+    display: block;
+    margin: 0.8rem auto 0;
+    background: #334155;
+    border: 1px solid #475569;
+    color: #e2e8f0;
+    padding: 0.5rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.2s;
+    font-family: inherit;
+  }
+  .flow-btn:hover { background: #475569; }
+
+  /* Real world examples - clickable cards */
+  .examples-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+    margin: 1.5rem 0;
+  }
+  .example-card {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+  }
+  .example-card:hover {
+    transform: translateY(-3px);
+    border-color: #a78bfa;
+    box-shadow: 0 6px 20px rgba(167, 139, 250, 0.1);
+  }
+  .example-card.active { border-color: #a78bfa; }
+  .example-icon { font-size: 1.6rem; margin-bottom: 0.4rem; }
+  .example-name { font-size: 0.85rem; font-weight: 600; color: #f1f5f9; }
+  .example-detail {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.4s ease, margin 0.3s;
+    font-size: 0.78rem; color: #94a3b8; line-height: 1.5; text-align: left;
+  }
+  .example-card.active .example-detail { max-height: 150px; margin-top: 0.6rem; }
+
+  /* Anatomy of a webhook */
+  .anatomy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .anatomy-row {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateX(-15px);
+    transition: opacity 0.4s, transform 0.4s;
+  }
+  .anatomy-row.visible { opacity: 1; transform: translateX(0); }
+  .anatomy-row:hover .anatomy-box { border-color: #a78bfa; background: #162032; }
+  .anatomy-label {
+    width: 80px;
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #a78bfa;
+    padding-top: 0.6rem;
+    text-align: right;
+  }
+  .anatomy-box {
+    flex: 1;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .anatomy-key { font-size: 0.85rem; font-weight: 600; color: #f1f5f9; font-family: 'SF Mono', monospace; }
+  .anatomy-val { font-size: 0.8rem; color: #94a3b8; margin-top: 0.15rem; }
+
+  /* Security checklist */
+  .checklist {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    margin: 1.5rem 0;
+  }
+  .check-item {
+    background: #1e293b;
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    border: 1px solid #334155;
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    cursor: pointer;
+    transition: border-color 0.3s, background 0.3s, transform 0.2s;
+  }
+  .check-item:hover { border-color: #22c55e; background: #162032; transform: translateX(4px); }
+  .check-item.checked { border-color: #22c55e; background: rgba(34, 197, 94, 0.05); }
+  .check-icon { color: #334155; font-weight: 700; flex-shrink: 0; font-size: 1.1rem; transition: color 0.3s, transform 0.3s; }
+  .check-item.checked .check-icon { color: #22c55e; transform: scale(1.2); }
+  .check-text { font-size: 0.82rem; color: #cbd5e1; line-height: 1.4; }
+  .check-text strong { color: #f1f5f9; }
+  .progress-bar { height: 4px; background: #334155; border-radius: 2px; margin-bottom: 1rem; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #a78bfa); border-radius: 2px; width: 0%; transition: width 0.5s ease; }
+
+  /* Takeaways */
+  .takeaways {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin-top: 2rem;
+    border-left: 3px solid #22c55e;
+  }
+  .takeaways h2 { border: none; margin-top: 0; color: #22c55e; }
+  .takeaways li { color: #e2e8f0; }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 1.6rem; }
+    .comparison { grid-template-columns: 1fr; }
+    .examples-grid { grid-template-columns: 1fr; }
+    .checklist { grid-template-columns: 1fr; }
+    .anatomy-label { width: 60px; font-size: 0.65rem; }
+  }
+</style>
+</head>
+<body>
+<article>
+
+<h1>Webhooks</h1>
+<p class="hook">Instead of constantly asking "anything new?" — just get a tap on the shoulder when something happens.</p>
+
+<h2>The Simple Version</h2>
+
+<p>You order a package online. You could check the front door every 5 minutes to see if it arrived. That's annoying and wasteful — most of the time there's nothing there.</p>
+
+<p>Or you could give the delivery driver your phone number and say: <strong>"Text me when you drop it off."</strong> Now you go about your day, and the moment the package arrives, you get a notification. No checking, no wasting time.</p>
+
+<p>That's a <strong>webhook</strong>. It's one app saying to another: "When this thing happens, send me a message at this address." The address is a URL — a specific page on your server that's listening for incoming data.</p>
+
+<p>The "checking every 5 minutes" approach is called <strong>polling</strong>. Webhooks replace that. Instead of you asking over and over, the other app tells you when something changes.</p>
+
+<!-- Polling vs Webhook comparison -->
+<div class="comparison">
+  <div class="compare-card bad">
+    <div class="compare-icon">🔄</div>
+    <div class="compare-title">Polling</div>
+    <div class="compare-line">"Is there anything new?"</div>
+    <div class="compare-line">"No." &times; 99</div>
+    <div class="compare-line">"Yes!" &times; 1</div>
+    <div class="compare-line" style="margin-top:0.5rem;"><span>Wastes requests</span></div>
+  </div>
+  <div class="compare-card good">
+    <div class="compare-icon">📩</div>
+    <div class="compare-title">Webhook</div>
+    <div class="compare-line">You wait quietly.</div>
+    <div class="compare-line">Something happens...</div>
+    <div class="compare-line"><em>*knock knock*</em> "Here's the data."</div>
+    <div class="compare-line" style="margin-top:0.5rem;"><span>Instant & efficient</span></div>
+  </div>
+</div>
+
+<!-- Animated webhook flow -->
+<div class="diagram">
+  <div class="diagram-title">Watch a Webhook Fire <span class="diagram-hint">— click the button</span></div>
+  <div class="flow-container">
+    <div class="flow-entity sender" id="sender">
+      <div class="flow-entity-icon">🛒</div>
+      <div class="flow-entity-name">Stripe</div>
+      <div class="flow-entity-sub">Payment received</div>
+    </div>
+    <div class="flow-line" id="flow-line">
+      <div class="flow-packet" id="flow-packet">📦</div>
+    </div>
+    <div class="flow-entity receiver" id="receiver">
+      <div class="flow-entity-icon">🖥️</div>
+      <div class="flow-entity-name">Your Server</div>
+      <div class="flow-entity-sub">/webhooks/stripe</div>
+    </div>
+  </div>
+  <div class="flow-label" id="flow-status">Waiting for event...</div>
+  <button class="flow-btn" onclick="fireWebhook()">Trigger payment event</button>
+</div>
+
+<h2>How It Actually Works</h2>
+
+<h3>The Setup</h3>
+
+<p>You register a <strong>webhook URL</strong> with the service you want to listen to. This is just an endpoint on your server — a route that accepts incoming HTTP POST requests.</p>
+
+<pre><code># In Stripe's dashboard, you'd set:
+# Webhook URL: https://your-app.com/webhooks/stripe
+# Events: payment_intent.succeeded, charge.failed</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+<p>When the event happens (someone pays, a form is submitted, a repo gets a push), the service sends a POST request to your URL with a JSON payload describing what happened.</p>
+
+<h3>What the Data Looks Like</h3>
+
+<div class="diagram" id="anatomy-diagram">
+  <div class="diagram-title">Anatomy of a Webhook Request <span class="diagram-hint">— scroll to reveal</span></div>
+  <div class="anatomy">
+    <div class="anatomy-row" data-delay="0">
+      <div class="anatomy-label">Method</div>
+      <div class="anatomy-box">
+        <div class="anatomy-key">POST</div>
+        <div class="anatomy-val">Always POST — the sender is pushing data to you</div>
+      </div>
+    </div>
+    <div class="anatomy-row" data-delay="100">
+      <div class="anatomy-label">URL</div>
+      <div class="anatomy-box">
+        <div class="anatomy-key">/webhooks/stripe</div>
+        <div class="anatomy-val">Your endpoint — where you're listening</div>
+      </div>
+    </div>
+    <div class="anatomy-row" data-delay="200">
+      <div class="anatomy-label">Headers</div>
+      <div class="anatomy-box">
+        <div class="anatomy-key">Stripe-Signature: t=1234,v1=abc...</div>
+        <div class="anatomy-val">A signature to prove the request is legit (not spoofed)</div>
+      </div>
+    </div>
+    <div class="anatomy-row" data-delay="300">
+      <div class="anatomy-label">Body</div>
+      <div class="anatomy-box">
+        <div class="anatomy-key">{ "type": "payment_intent.succeeded", "data": { ... } }</div>
+        <div class="anatomy-val">JSON payload — what happened and the relevant data</div>
+      </div>
+    </div>
+    <div class="anatomy-row" data-delay="400">
+      <div class="anatomy-label">Response</div>
+      <div class="anatomy-box">
+        <div class="anatomy-key">200 OK</div>
+        <div class="anatomy-val">You reply with 200 to confirm you received it. Anything else = retry.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>A Real Handler</h3>
+
+<p>Here's what a basic webhook endpoint looks like in Express (Node.js):</p>
+
+<pre><code>app.post('/webhooks/stripe', (req, res) => {
+  const event = req.body;
+
+  switch (event.type) {
+    case 'payment_intent.succeeded':
+      // Unlock the user's access
+      grantAccess(event.data.object.customer);
+      break;
+    case 'charge.failed':
+      // Notify the user
+      sendFailureEmail(event.data.object.customer);
+      break;
+  }
+
+  // Always respond 200 — otherwise the sender retries
+  res.status(200).json({ received: true });
+});</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+<h3>Real World Examples</h3>
+
+<div class="diagram">
+  <div class="diagram-title">Where You'll See Webhooks <span class="diagram-hint">— click to explore</span></div>
+  <div class="examples-grid">
+    <div class="example-card" onclick="toggleExample(this)">
+      <div class="example-icon">💳</div>
+      <div class="example-name">Stripe</div>
+      <div class="example-detail">Payment succeeded, subscription cancelled, invoice created. Your app reacts to billing events without polling Stripe's API.</div>
+    </div>
+    <div class="example-card" onclick="toggleExample(this)">
+      <div class="example-icon">🐙</div>
+      <div class="example-name">GitHub</div>
+      <div class="example-detail">Push to repo, PR opened, issue commented. Triggers CI/CD pipelines, deploys, or Slack notifications automatically.</div>
+    </div>
+    <div class="example-card" onclick="toggleExample(this)">
+      <div class="example-icon">💬</div>
+      <div class="example-name">Telegram</div>
+      <div class="example-detail">New message, callback button pressed. Instead of polling getUpdates, Telegram pushes messages to your bot's URL.</div>
+    </div>
+    <div class="example-card" onclick="toggleExample(this)">
+      <div class="example-icon">📞</div>
+      <div class="example-name">Twilio</div>
+      <div class="example-detail">Incoming call or SMS. Twilio hits your webhook to ask: "What should I do with this call?" You respond with instructions.</div>
+    </div>
+    <div class="example-card" onclick="toggleExample(this)">
+      <div class="example-icon">🛍️</div>
+      <div class="example-name">Shopify</div>
+      <div class="example-detail">Order placed, product updated, refund issued. Your fulfillment system reacts in real time without scraping the store.</div>
+    </div>
+    <div class="example-card" onclick="toggleExample(this)">
+      <div class="example-icon">📧</div>
+      <div class="example-name">SendGrid</div>
+      <div class="example-detail">Email delivered, opened, bounced, or marked spam. Track email engagement without repeatedly checking send status.</div>
+    </div>
+  </div>
+</div>
+
+<h3>Security: Don't Trust Blindly</h3>
+
+<p>Anyone can send a POST request to your webhook URL. If you don't verify it, an attacker could fake events — like telling your app a payment succeeded when it didn't.</p>
+
+<div class="diagram">
+  <div class="diagram-title">Webhook Security Checklist <span class="diagram-hint">— click to check off</span></div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="checklist" id="checklist">
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-icon">○</div>
+      <div class="check-text"><strong>Verify signatures</strong><br>Check the HMAC header against your secret key</div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-icon">○</div>
+      <div class="check-text"><strong>Use HTTPS</strong><br>Never expose a webhook over plain HTTP</div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-icon">○</div>
+      <div class="check-text"><strong>Respond fast (200 OK)</strong><br>Do heavy work async — just acknowledge receipt</div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-icon">○</div>
+      <div class="check-text"><strong>Handle retries</strong><br>Make your handler idempotent — same event twice = same result</div>
+    </div>
+  </div>
+</div>
+
+<div class="takeaways">
+  <h2>Key Takeaways</h2>
+  <ul>
+    <li><strong>Webhooks are reverse APIs</strong> — instead of you asking for data, the data comes to you</li>
+    <li><strong>They replace polling</strong> — no more "anything new?" every 5 seconds</li>
+    <li><strong>Always verify the signature</strong> — anyone can POST to your URL</li>
+    <li><strong>Respond 200 immediately</strong> — do the real work in the background, or the sender retries</li>
+    <li><strong>Make handlers idempotent</strong> — you might receive the same event more than once</li>
+  </ul>
+</div>
+
+</article>
+
+<script>
+// Animate anatomy rows on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const delay = entry.target.dataset.delay || 0;
+      setTimeout(() => entry.target.classList.add('visible'), delay);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.anatomy-row').forEach(el => observer.observe(el));
+
+// Fire webhook animation
+function fireWebhook() {
+  const sender = document.getElementById('sender');
+  const receiver = document.getElementById('receiver');
+  const packet = document.getElementById('flow-packet');
+  const status = document.getElementById('flow-status');
+
+  // Reset
+  packet.classList.remove('flying');
+  sender.classList.remove('active');
+  receiver.classList.remove('active');
+  void packet.offsetWidth; // force reflow
+
+  // Step 1: sender lights up
+  sender.classList.add('active');
+  status.textContent = 'Event triggered: payment_intent.succeeded';
+  status.style.color = '#a78bfa';
+
+  // Step 2: packet flies
+  setTimeout(() => {
+    packet.classList.add('flying');
+    status.textContent = 'POST /webhooks/stripe → sending payload...';
+  }, 400);
+
+  // Step 3: receiver lights up
+  setTimeout(() => {
+    receiver.classList.add('active');
+    status.textContent = '200 OK — webhook received and processed';
+    status.style.color = '#22c55e';
+  }, 1400);
+
+  // Reset after
+  setTimeout(() => {
+    sender.classList.remove('active');
+    receiver.classList.remove('active');
+    packet.classList.remove('flying');
+    status.textContent = 'Waiting for event...';
+    status.style.color = '#64748b';
+  }, 3500);
+}
+
+// Example cards
+function toggleExample(el) {
+  const wasActive = el.classList.contains('active');
+  document.querySelectorAll('.example-card').forEach(c => c.classList.remove('active'));
+  if (!wasActive) el.classList.add('active');
+}
+
+// Security checklist
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  const icon = el.querySelector('.check-icon');
+  icon.textContent = el.classList.contains('checked') ? '✓' : '○';
+  updateProgress();
+}
+function updateProgress() {
+  const total = document.querySelectorAll('.check-item').length;
+  const checked = document.querySelectorAll('.check-item.checked').length;
+  document.getElementById('progress-fill').style.width = ((checked / total) * 100) + '%';
+}
+
+// Copy code
+function copyCode(btn) {
+  const code = btn.parentElement.querySelector('code').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+</script>
+</body>
+</html>
