@@ -9,6 +9,7 @@
 # Allowlist deploy files & folders
 !/.gitignore
 !/.gitattributes
+!/.vercelignore
 !/README.md
 !/DESIGN.md
 !/index.html
