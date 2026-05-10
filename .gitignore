@@ -9,18 +9,20 @@
 # Allowlist deploy files & folders
 !/.gitignore
 !/.gitattributes
-!/.vercelignore
+!/.nojekyll
+!/CNAME
 !/README.md
 !/DESIGN.md
 !/index.html
-!/sharp.html
 !/build-index.js
 !/package.json
 !/package-lock.json
-!/vercel.json
 
 !/articles/
 !/articles/**
+
+!/sharp/
+!/sharp/**
 
 !/favicon.svg
 !/robots.txt

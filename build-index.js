@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 /**
- * Scan articles/, extract metadata, regenerate index.html and sharp.html.
+ * Scan articles/, extract metadata, regenerate index.html and sharp/index.html.
  * Called by the /kira-learn skill after writing a new article.
+ *
+ * Output paths chosen for GitHub Pages clean-URL conventions:
+ *   /        → index.html
+ *   /sharp/  → sharp/index.html
  */
-import { readdir, readFile, writeFile, stat } from 'node:fs/promises';
+import { readdir, readFile, writeFile, stat, mkdir } from 'node:fs/promises';
 import { join, basename, extname, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { extractMetadata } from './lib/extract-metadata.js';
@@ -13,7 +17,8 @@ import { renderSharp } from './lib/render-sharp.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ARTICLES_DIR = join(__dirname, 'articles');
 const OUT_INDEX = join(__dirname, 'index.html');
-const OUT_SHARP = join(__dirname, 'sharp.html');
+const SHARP_DIR = join(__dirname, 'sharp');
+const OUT_SHARP = join(SHARP_DIR, 'index.html');
 
 async function main() {
   const entries = await readdir(ARTICLES_DIR);
@@ -32,10 +37,11 @@ async function main() {
     }
   }
 
+  await mkdir(SHARP_DIR, { recursive: true });
   await writeFile(OUT_INDEX, renderIndex(articles), 'utf-8');
   await writeFile(OUT_SHARP, renderSharp(articles), 'utf-8');
 
-  console.log(`built index.html and sharp.html from ${articles.length} articles`);
+  console.log(`built index.html and sharp/index.html from ${articles.length} articles`);
 }
 
 main().catch((err) => {
