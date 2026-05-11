@@ -39,11 +39,11 @@
     --size-page: 92.5rem;
     --size-search: 20.625rem;
     --size-hero-copy-min: 18.125rem;
-    --size-hero-copy-max: 24.375rem;
-    --size-map-min: 30rem;
+    --size-hero-copy-max: 30rem;
+    --size-map-min: 40rem;
     --size-rail-min: 14.375rem;
     --size-rail-max: 17.5rem;
-    --size-map-height: 26.875rem;
+    --size-map-height: 28rem;
     --size-map-height-tablet: 23.75rem;
     --size-map-height-mobile: 28.75rem;
     --size-map-height-small: 26.25rem;
@@ -56,6 +56,7 @@
     --size-path-glyph: 2.125rem;
     --size-progress-dot: 0.3125rem;
     --size-diagram-min: 11.875rem;
+    --size-mobile-measure: 22rem;
     --space-0: 0;
     --space-hairline: 1px;
     --space-3xs: 0.0625rem;
@@ -84,8 +85,8 @@
     --type-2xl: 1rem;
     --type-3xl: 1.0625rem;
     --type-4xl: 1.125rem;
-    --type-display-min: 2.45rem;
-    --type-display: clamp(2.6rem, 5vw, 4.6rem);
+    --type-display-min: 2rem;
+    --type-display: clamp(2.35rem, 3vw, 2.8rem);
     --line-tight: 1.04;
     --line-copy: 1.65;
     --line-body: 1.5;
@@ -197,9 +198,14 @@
     align-items: center;
     padding: 1.875rem var(--space-0) var(--space-6xl);
   }
+  .hero > *,
+  .panel,
+  .notes-index {
+    min-width: var(--space-0);
+  }
   .hero-copy h1 {
     margin: var(--space-0);
-    max-width: 27.5rem;
+    max-width: 30rem;
     font-size: var(--type-display);
     line-height: var(--line-tight);
     letter-spacing: var(--space-0);
@@ -733,8 +739,21 @@
     }
   }
   @media (max-width: 33.75rem) {
+    .search-control,
+    .nav-links,
+    .hero-copy,
+    .system-map,
+    .question-rail,
+    .panel,
+    .notes-index {
+      max-width: var(--size-mobile-measure);
+    }
     .hero-copy h1 {
       font-size: var(--type-display-min);
+      max-width: var(--size-full);
+    }
+    .hero-copy p {
+      max-width: var(--size-full);
     }
     .hero-actions {
       flex-direction: column;
