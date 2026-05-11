@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /**
- * Scan articles/, extract metadata, regenerate index.html and sharp.html.
- * Called by the /kira-learn skill after writing a new article.
+ * Scan articles/, extract metadata, write a deploy-ready dist/ tree.
+ * Called by the /kira-learn skill after writing a new article, and by Vercel
+ * via the buildCommand in vercel.json.
  */
-import { readdir, readFile, writeFile, stat } from 'node:fs/promises';
+import { readdir, readFile, writeFile, stat, mkdir, rm, cp } from 'node:fs/promises';
 import { join, basename, extname, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { extractMetadata } from './lib/extract-metadata.js';
@@ -12,8 +13,8 @@ import { renderSharp } from './lib/render-sharp.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ARTICLES_DIR = join(__dirname, 'articles');
-const OUT_INDEX = join(__dirname, 'index.html');
-const OUT_SHARP = join(__dirname, 'sharp.html');
+const DIST_DIR = join(__dirname, 'dist');
+const STATIC_ASSETS = ['favicon.svg', 'robots.txt'];
 
 async function main() {
   const entries = await readdir(ARTICLES_DIR);
@@ -32,10 +33,19 @@ async function main() {
     }
   }
 
-  await writeFile(OUT_INDEX, renderIndex(articles), 'utf-8');
-  await writeFile(OUT_SHARP, renderSharp(articles), 'utf-8');
+  // Rebuild dist/ from scratch so removed articles don't linger.
+  await rm(DIST_DIR, { recursive: true, force: true });
+  await mkdir(DIST_DIR, { recursive: true });
 
-  console.log(`built index.html and sharp.html from ${articles.length} articles`);
+  await cp(ARTICLES_DIR, join(DIST_DIR, 'articles'), { recursive: true });
+  for (const asset of STATIC_ASSETS) {
+    await cp(join(__dirname, asset), join(DIST_DIR, asset));
+  }
+
+  await writeFile(join(DIST_DIR, 'index.html'), renderIndex(articles), 'utf-8');
+  await writeFile(join(DIST_DIR, 'sharp.html'), renderSharp(articles), 'utf-8');
+
+  console.log(`built dist/ from ${articles.length} articles`);
 }
 
 main().catch((err) => {

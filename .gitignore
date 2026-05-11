@@ -9,11 +9,8 @@
 # Allowlist deploy files & folders
 !/.gitignore
 !/.gitattributes
-!/.vercelignore
 !/README.md
 !/DESIGN.md
-!/index.html
-!/sharp.html
 !/build-index.js
 !/package.json
 !/package-lock.json
