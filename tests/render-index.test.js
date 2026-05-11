@@ -41,6 +41,35 @@ test('renderIndex links to /sharp variant', () => {
   assert.match(html, /href="\/sharp"/);
 });
 
+test('renderIndex renders the live study console shell', () => {
+  const html = renderIndex(sampleArticles);
+  assert.match(html, /Mapping the agentic systems stack/);
+  assert.match(html, /A public study console for AI agents, orchestration, systems design, and the architecture patterns behind the tools\./);
+  assert.match(html, /Open current map/);
+  assert.match(html, /Read latest note/);
+  assert.match(html, /Current question/);
+  assert.match(html, /When does agent orchestration become product architecture\?/);
+});
+
+test('renderIndex renders system map labels', () => {
+  const html = renderIndex(sampleArticles);
+  for (const label of ['Agent loops', 'Orchestration', 'Tool protocols', 'Memory', 'Evaluation', 'Product systems']) {
+    assert.ok(html.includes(label), `missing map label: ${label}`);
+  }
+});
+
+test('renderIndex renders learning and research sections', () => {
+  const html = renderIndex(sampleArticles);
+  for (const label of ['Current mapping', 'Learning paths', 'Article clusters', 'Evolving diagrams', 'Notes index']) {
+    assert.ok(html.includes(label), `missing section: ${label}`);
+  }
+});
+
+test('renderIndex latest note CTA links to newest article', () => {
+  const html = renderIndex(sampleArticles);
+  assert.match(html, /href="\/articles\/how-dns-works"[^>]*>Read latest note/);
+});
+
 test('renderIndex escapes HTML in title and hook', () => {
   const articles = [{ title: '<script>alert(1)</script>', hook: 'a & b', date: '2026-05-01', slug: 'xss' }];
   const html = renderIndex(articles);
