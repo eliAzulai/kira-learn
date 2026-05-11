@@ -58,6 +58,13 @@ test('renderIndex renders system map labels', () => {
   }
 });
 
+test('renderIndex renders the first-concept map legend', () => {
+  const html = renderIndex(sampleArticles);
+  for (const label of ['depends on', 'influences', 'observes']) {
+    assert.ok(html.includes(label), `missing map legend label: ${label}`);
+  }
+});
+
 test('renderIndex renders learning and research sections', () => {
   const html = renderIndex(sampleArticles);
   for (const label of ['Current mapping', 'Learning paths', 'Article clusters', 'Evolving diagrams', 'Notes index']) {

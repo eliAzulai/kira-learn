@@ -2,16 +2,16 @@
 
 ## Status
 
-Approved visual direction: **Spatial Atlas / Live Map First with Research Desk support**.
+Approved visual direction: **First concept / Live Map Command Center with Research Desk support**.
 
 Visual source of truth:
-`/Users/eliHome/.codex/generated_images/019e17b7-7f43-7ea3-af6d-952590e48480/ig_02b4110e3de0382b016a01fd54f8008194963b1c3063b720e3.png`
+`/Users/eliHome/.codex/generated_images/019e17b7-7f43-7ea3-af6d-952590e48480/ig_02b4110e3de0382b016a01fbac33408194848de2b07b6348ea.png`
 
 ## Goal
 
 Redesign the Kira Learn homepage from a simple article grid into a futuristic public study console for AI agents, orchestration, systems design, and architecture patterns.
 
-The site should still work as a public blog, but the first impression should be: this is a refined spatial learning atlas where articles are connected to maps, learning paths, open questions, and evolving system diagrams.
+The site should still work as a public blog, but the first impression should be: this is a live learning command center where articles are connected to maps, learning paths, open questions, and evolving system diagrams.
 
 ## Audience
 
@@ -20,7 +20,7 @@ The site should still work as a public blog, but the first impression should be:
 
 ## First Viewport
 
-The first viewport should lead with the current map, not a generic publication intro. The composition should be visual-first and less text-heavy than a dashboard: a concise left intro, a large central/right map, and one restrained current-question rail.
+The first viewport should lead with the current map, not a generic publication intro. The composition should match the first generated concept: a concise left intro, a large framed map console on the right, map legend, embedded current-question panel, mini-map preview, and visible lower dashboard sections.
 
 Required elements:
 
@@ -36,10 +36,12 @@ Required elements:
   - `Memory`
   - `Evaluation`
   - `Product systems`
-- A detail panel titled `Current question` containing: `When does agent orchestration become product architecture?`
+- A detail panel embedded inside the map titled `Current question` containing: `When does agent orchestration become product architecture?`
+- A map legend with `depends on`, `influences`, and `observes`.
+- A small mini-map preview inside the map panel.
 - A small latest-note area under the hero copy, using `Orchestration boundary playbook v0.2`.
 
-The map should feel like a live research interface and a systems observatory, but it can be implemented as semantic HTML/CSS/SVG in this static site. It must not be shipped as a screenshot.
+The map should feel like a live research interface and a systems command center, but it can be implemented as semantic HTML/CSS/SVG in this static site. It must not be shipped as a screenshot.
 
 ## Homepage Sections
 
@@ -98,7 +100,7 @@ The diagram preview can be implemented with inline SVG and code-native labels.
 
 ## Visual System
 
-Use the second generated concept as the styling source.
+Use the first generated concept as the styling source.
 
 Design characteristics:
 
@@ -109,11 +111,11 @@ Design characteristics:
 - Fine borders and grid lines.
 - Compact 6-8px radii.
 - Precise technical typography using the existing Inter import.
-- Spacious, visual-first atlas composition.
-- Dense where useful below the hero, but never visually overloaded.
+- Dense, refined command-center composition.
+- Lower dashboard sections visible immediately below the hero.
 - No decorative gradient orbs, bokeh, oversized marketing panels, or generic hero wallpaper.
 
-The page should feel futuristic, calm, and useful: a systems architect's learning observatory rather than a cyberpunk poster or SaaS admin dashboard.
+The page should feel futuristic, calm, and useful: a systems architect's learning command center rather than a cyberpunk poster.
 
 ## Implementation Constraints
 
@@ -143,8 +145,9 @@ Required interactions for the first implementation:
 
 Desktop:
 
-- Hero uses an asymmetric atlas layout: copy/actions/latest note on the left, live system map across the center/right, current-question rail on the far right when space allows.
-- Lower sections use a refined research-desk layout matching the second concept, with clear dividers and restrained panels.
+- Hero uses a two-column command-center layout: copy/actions/latest note on the left, framed live system map on the right.
+- The current-question panel, legend, map controls, and mini-map live inside the framed map panel.
+- Lower sections use the denser dashboard layout from the first concept, with Current Mapping and Learning Paths first, then Article Clusters and Evolving Diagrams.
 
 Tablet:
 
