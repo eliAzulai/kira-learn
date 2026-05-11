@@ -17,6 +17,7 @@
 !/build-index.js
 !/package.json
 !/package-lock.json
+!/stylelint.config.mjs
 !/vercel.json
 
 !/articles/
@@ -33,6 +34,9 @@
 
 !/tests/
 !/tests/**
+
+!/tools/
+!/tools/**
 
 # Inside allowlisted folders, still ignore noise
 **/.DS_Store
