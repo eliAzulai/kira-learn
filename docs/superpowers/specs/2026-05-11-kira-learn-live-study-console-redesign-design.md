@@ -2,16 +2,16 @@
 
 ## Status
 
-Approved visual direction: **Live Map First with Research Desk support**.
+Approved visual direction: **Spatial Atlas / Live Map First with Research Desk support**.
 
 Visual source of truth:
-`/Users/eliHome/.codex/generated_images/019e17b7-7f43-7ea3-af6d-952590e48480/ig_02b4110e3de0382b016a01fbac33408194848de2b07b6348ea.png`
+`/Users/eliHome/.codex/generated_images/019e17b7-7f43-7ea3-af6d-952590e48480/ig_02b4110e3de0382b016a01fd54f8008194963b1c3063b720e3.png`
 
 ## Goal
 
 Redesign the Kira Learn homepage from a simple article grid into a futuristic public study console for AI agents, orchestration, systems design, and architecture patterns.
 
-The site should still work as a public blog, but the first impression should be: this is a live learning tool where articles are connected to maps, learning paths, open questions, and evolving system diagrams.
+The site should still work as a public blog, but the first impression should be: this is a refined spatial learning atlas where articles are connected to maps, learning paths, open questions, and evolving system diagrams.
 
 ## Audience
 
@@ -20,7 +20,7 @@ The site should still work as a public blog, but the first impression should be:
 
 ## First Viewport
 
-The first viewport should lead with the current map, not a generic publication intro.
+The first viewport should lead with the current map, not a generic publication intro. The composition should be visual-first and less text-heavy than a dashboard: a concise left intro, a large central/right map, and one restrained current-question rail.
 
 Required elements:
 
@@ -29,7 +29,7 @@ Required elements:
 - Supporting copy: `A public study console for AI agents, orchestration, systems design, and the architecture patterns behind the tools.`
 - Primary action: `Open current map`.
 - Secondary action: `Read latest note`.
-- Large system-map visualization with connected nodes:
+- Large system-map visualization with connected nodes. This is the visual anchor of the page and should occupy more attention than the surrounding text:
   - `Agent loops`
   - `Orchestration`
   - `Tool protocols`
@@ -37,8 +37,9 @@ Required elements:
   - `Evaluation`
   - `Product systems`
 - A detail panel titled `Current question` containing: `When does agent orchestration become product architecture?`
+- A small latest-note area under the hero copy, using `Orchestration boundary playbook v0.2`.
 
-The map should feel like a live research interface, but it can be implemented as semantic HTML/CSS/SVG in this static site. It must not be shipped as a screenshot.
+The map should feel like a live research interface and a systems observatory, but it can be implemented as semantic HTML/CSS/SVG in this static site. It must not be shipped as a screenshot.
 
 ## Homepage Sections
 
@@ -97,7 +98,7 @@ The diagram preview can be implemented with inline SVG and code-native labels.
 
 ## Visual System
 
-Use the generated concept as the styling source.
+Use the second generated concept as the styling source.
 
 Design characteristics:
 
@@ -108,10 +109,11 @@ Design characteristics:
 - Fine borders and grid lines.
 - Compact 6-8px radii.
 - Precise technical typography using the existing Inter import.
-- Dense but readable dashboard-like sections.
+- Spacious, visual-first atlas composition.
+- Dense where useful below the hero, but never visually overloaded.
 - No decorative gradient orbs, bokeh, oversized marketing panels, or generic hero wallpaper.
 
-The page should feel futuristic, but calm and useful: a systems architect's learning console rather than a cyberpunk poster.
+The page should feel futuristic, calm, and useful: a systems architect's learning observatory rather than a cyberpunk poster or SaaS admin dashboard.
 
 ## Implementation Constraints
 
@@ -141,8 +143,8 @@ Required interactions for the first implementation:
 
 Desktop:
 
-- Hero uses a two-column layout: copy/actions on the left, live system map on the right.
-- Lower sections use a dashboard grid matching the concept.
+- Hero uses an asymmetric atlas layout: copy/actions/latest note on the left, live system map across the center/right, current-question rail on the far right when space allows.
+- Lower sections use a refined research-desk layout matching the second concept, with clear dividers and restrained panels.
 
 Tablet:
 
