@@ -6,16 +6,192 @@
 
 **Architecture:** Keep the project pure static and continue generating `index.html` from article metadata through `lib/render-index.js`. The renderer will derive the latest note, cluster/path links, and a compact notes index from the existing article list, then output code-native HTML/CSS/SVG with no client framework. Tests will lock the new homepage landmarks while preserving existing article discoverability and escaping behavior.
 
-**Tech Stack:** Node.js ESM, `node:test`, static HTML, CSS, inline SVG, existing Inter font import.
+**Tech Stack:** Node.js ESM, `node:test`, static HTML, CSS, inline SVG, existing Inter font import, Stylelint for design-token enforcement, custom static checks for generated HTML accessibility/class discipline/token usage.
 
 ---
 
 ## File Structure
 
+- Modify `package.json`: add lint scripts for style token checks and static generated-HTML checks.
+- Modify `package-lock.json`: update when installing Stylelint and `postcss-html`.
+- Create `stylelint.config.mjs`: lint built HTML style blocks with project design-token rules.
+- Create `tools/stylelint-design-token-rule.mjs`: custom Stylelint plugin that rejects hardcoded hex/rgb/hsl/px values outside CSS custom property declarations.
+- Create `tools/check-rendered-html-quality.mjs`: custom generated-HTML check for basic a11y constraints, class arbitrary-value bans, and unused CSS token detection.
 - Modify `tests/render-index.test.js`: add assertions for the new study-console shell, latest-note CTA, system-map labels, cluster/path sections, and compact full notes index.
 - Modify `lib/render-index.js`: replace the old card-grid template with a structured live study console renderer; add small pure helper functions for latest article, article lookup, cluster/topic data, and notes-index rendering.
 - Regenerate `index.html`: run `npm run build` after renderer changes.
 - No changes to `build-index.js`, `lib/extract-metadata.js`, `lib/render-sharp.js`, or article files.
+
+## Task 0: Add Repo-Native Quality Gates
+
+**Files:**
+- Modify: `package.json`
+- Modify: `package-lock.json`
+- Create: `stylelint.config.mjs`
+- Create: `tools/stylelint-design-token-rule.mjs`
+- Create: `tools/check-rendered-html-quality.mjs`
+
+- [ ] **Step 1: Install CSS lint dependencies**
+
+Run:
+
+```bash
+npm install --save-dev stylelint postcss-html
+```
+
+Expected: `package.json` and `package-lock.json` include `stylelint` and `postcss-html` as dev dependencies.
+
+- [ ] **Step 2: Add lint scripts**
+
+Update `package.json` scripts to include:
+
+```json
+{
+  "build": "node build-index.js",
+  "test": "node --test 'tests/*.test.js'",
+  "lint:styles": "stylelint index.html --config stylelint.config.mjs",
+  "lint:html": "node tools/check-rendered-html-quality.mjs",
+  "lint": "npm run lint:styles && npm run lint:html"
+}
+```
+
+- [ ] **Step 3: Add the Stylelint config**
+
+Create `stylelint.config.mjs`:
+
+```js
+export default {
+  customSyntax: 'postcss-html',
+  plugins: ['./tools/stylelint-design-token-rule.mjs'],
+  rules: {
+    'kira/no-raw-design-values': true,
+  },
+};
+```
+
+- [ ] **Step 4: Add the design-token Stylelint plugin**
+
+Create `tools/stylelint-design-token-rule.mjs`:
+
+```js
+import stylelint from 'stylelint';
+
+const ruleName = 'kira/no-raw-design-values';
+const messages = stylelint.utils.ruleMessages(ruleName, {
+  rejected: (value) => `Use a design token instead of raw design value "${value}".`,
+});
+
+const RAW_VALUE_PATTERN = /#[0-9a-f]{3,8}\b|\b(?:rgb|rgba|hsl|hsla)\(|(?:^|[\s,(])-?\d*\.?\d+px\b/i;
+
+const plugin = stylelint.createPlugin(ruleName, (enabled) => {
+  return (root, result) => {
+    if (!enabled) return;
+
+    root.walkDecls((decl) => {
+      if (decl.prop.startsWith('--')) return;
+
+      const match = decl.value.match(RAW_VALUE_PATTERN);
+      if (!match) return;
+
+      stylelint.utils.report({
+        message: messages.rejected(match[0].trim()),
+        node: decl,
+        result,
+        ruleName,
+      });
+    });
+  };
+});
+
+plugin.ruleName = ruleName;
+plugin.messages = messages;
+
+export default plugin;
+```
+
+- [ ] **Step 5: Add the generated HTML quality check**
+
+Create `tools/check-rendered-html-quality.mjs`:
+
+```js
+#!/usr/bin/env node
+import { readFile } from 'node:fs/promises';
+
+const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+const failures = [];
+
+if (/\sonclick=/i.test(html)) {
+  failures.push('Do not use inline onclick handlers in generated HTML.');
+}
+
+for (const match of html.matchAll(/<img\b([^>]*)>/gi)) {
+  if (!/\salt=(["']).*?\1/i.test(match[1])) {
+    failures.push(`Image missing alt text: ${match[0]}`);
+  }
+}
+
+for (const match of html.matchAll(/<input\b([^>]*)>/gi)) {
+  const attrs = match[1];
+  if (!/\s(?:aria-label|aria-labelledby|id)=/i.test(attrs)) {
+    failures.push(`Input missing accessible label hook: ${match[0]}`);
+  }
+}
+
+for (const match of html.matchAll(/\srole=(["'])(.*?)\1/gi)) {
+  const role = match[2];
+  if (['button', 'link'].includes(role)) {
+    failures.push(`Avoid redundant/misused interactive role="${role}" in generated HTML.`);
+  }
+}
+
+for (const match of html.matchAll(/\sclass=(["'])(.*?)\1/gi)) {
+  const classValue = match[2];
+  if (/\[[^\]]+\]/.test(classValue)) {
+    failures.push(`Arbitrary utility-style class is not allowed: ${classValue}`);
+  }
+}
+
+const css = [...html.matchAll(/<style>([\s\S]*?)<\/style>/gi)].map((match) => match[1]).join('\n');
+const declaredTokens = new Set([...css.matchAll(/--([a-z0-9-]+)\s*:/gi)].map((match) => match[1]));
+const usedTokens = new Set([...css.matchAll(/var\(--([a-z0-9-]+)\)/gi)].map((match) => match[1]));
+
+for (const token of declaredTokens) {
+  if (!usedTokens.has(token)) {
+    failures.push(`Unused CSS token: --${token}`);
+  }
+}
+
+for (const token of usedTokens) {
+  if (!declaredTokens.has(token)) {
+    failures.push(`CSS token used but not declared: --${token}`);
+  }
+}
+
+if (failures.length > 0) {
+  console.error(failures.map((failure) => `- ${failure}`).join('\n'));
+  process.exit(1);
+}
+
+console.log('generated HTML quality checks passed');
+```
+
+- [ ] **Step 6: Run the quality gates against the current homepage and verify they fail**
+
+Run:
+
+```bash
+npm run build
+npm run lint
+```
+
+Expected: FAIL on `npm run lint:styles` because the current homepage still contains raw hex and px values. This is the correct red state before implementing the tokenized redesign.
+
+- [ ] **Step 7: Commit the quality gate checkpoint**
+
+```bash
+git add package.json package-lock.json stylelint.config.mjs tools/stylelint-design-token-rule.mjs tools/check-rendered-html-quality.mjs
+git commit -m "test: add homepage design quality gates"
+```
 
 ## Task 1: Lock The New Homepage Contract In Tests
 
@@ -460,6 +636,8 @@ Expected: FAIL with `renderStyles is not defined`. The markup helpers should par
 
 - [ ] **Step 1: Add the `renderStyles` function**
 
+Important: because Task 0 adds token enforcement, the final implemented CSS must define raw color/spacing values only inside CSS custom properties. All normal declarations should use `var(--*)` values or non-design keywords. If any copied CSS below contains raw hex/rgb/hsl/px outside token definitions, convert it to tokens during implementation before committing.
+
 Insert this function after `renderFooter`:
 
 ```js
@@ -695,9 +873,10 @@ Run:
 
 ```bash
 npm test
+npm run lint
 ```
 
-Expected: PASS for all tests.
+Expected: PASS for all tests and quality gates. If `npm run lint:styles` fails, replace raw non-token design values in the generated homepage CSS with CSS custom properties before continuing.
 
 - [ ] **Step 3: Commit renderer implementation**
 
@@ -733,9 +912,10 @@ Run:
 
 ```bash
 npm test
+npm run lint
 ```
 
-Expected: PASS for all tests.
+Expected: PASS for all tests and quality gates.
 
 - [ ] **Step 3: Inspect git diff for intended files only**
 
@@ -830,6 +1010,7 @@ If defects are found, edit `lib/render-index.js`, run:
 
 ```bash
 npm test
+npm run lint
 npm run build
 ```
 
@@ -845,6 +1026,8 @@ git commit -m "fix: tune live study console fidelity"
 Spec coverage:
 
 - Live map first viewport: Task 4 and Task 5.
+- Design-token quality gates: Task 0 and Task 5.
+- Generated HTML accessibility/class/token discipline: Task 0, Task 5, and Task 6.
 - Less overloaded, refined spatial atlas direction: Task 5 and Task 7.
 - Current mapping, learning paths, article clusters, evolving diagrams: Task 4.
 - Static site constraints through `lib/render-index.js` and `npm run build`: Task 3 through Task 6.
