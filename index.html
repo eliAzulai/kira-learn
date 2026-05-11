@@ -3,232 +3,1007 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kira Learn — Notes on the systems behind tools you use</title>
-<meta name="description" content="Plain-English explainers on the systems behind tools you use, by Kira.">
+<title>Kira Learn — Mapping the agentic systems stack</title>
+<meta name="description" content="A public study console for AI agents, orchestration, systems design, and the architecture patterns behind the tools.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --color-bg: #03070b;
+    --color-panel: rgba(8, 17, 27, 0.72);
+    --color-panel-strong: rgba(11, 22, 34, 0.88);
+    --color-line: rgba(137, 207, 230, 0.16);
+    --color-line-soft: rgba(255, 255, 255, 0.08);
+    --color-line-faint: rgba(255, 255, 255, 0.055);
+    --color-grid-line: rgba(255, 255, 255, 0.018);
+    --color-text: #f4f7fb;
+    --color-text-soft: #dbe4ef;
+    --color-muted: #a4afbd;
+    --color-faint: #667281;
+    --color-cyan: #48d9ff;
+    --color-cyan-dark: #031017;
+    --color-cyan-soft: rgba(72, 217, 255, 0.12);
+    --color-cyan-halo: rgba(72, 217, 255, 0.34);
+    --color-indigo: #8f84ff;
+    --color-indigo-line: rgba(143, 132, 255, 0.55);
+    --color-green: #a6e675;
+    --color-green-line: rgba(166, 230, 117, 0.5);
+    --color-transparent: transparent;
+    --button-bg: linear-gradient(180deg, #5bdfff, #26bde8);
+    --map-glow: radial-gradient(ellipse at center, rgba(72, 217, 255, 0.11), transparent 58%);
+    --page-glow: radial-gradient(circle at 55% 20%, rgba(72, 217, 255, 0.08), transparent 34rem);
+    --shadow-map: 0 0 1.625rem rgba(72, 217, 255, 0.08);
+    --shadow-map-active: 0 0 2.125rem rgba(72, 217, 255, 0.3), inset 0 0 1.125rem rgba(72, 217, 255, 0.08);
+    --size-full: 100%;
+    --size-page: 92.5rem;
+    --size-search: 20.625rem;
+    --size-hero-copy-min: 18.125rem;
+    --size-hero-copy-max: 24.375rem;
+    --size-map-min: 30rem;
+    --size-rail-min: 14.375rem;
+    --size-rail-max: 17.5rem;
+    --size-map-height: 26.875rem;
+    --size-map-height-tablet: 23.75rem;
+    --size-map-height-mobile: 28.75rem;
+    --size-map-height-small: 26.25rem;
+    --size-node-min: 9.25rem;
+    --size-node-tablet: 7.875rem;
+    --size-node-mobile: 7rem;
+    --size-icon: 1rem;
+    --size-brand-mark: 0.875rem;
+    --size-control: 2.125rem;
+    --size-path-glyph: 2.125rem;
+    --size-progress-dot: 0.3125rem;
+    --size-diagram-min: 11.875rem;
+    --space-0: 0;
+    --space-hairline: 1px;
+    --space-3xs: 0.0625rem;
+    --space-2xs: 0.125rem;
+    --space-xs: 0.25rem;
+    --space-sm: 0.3125rem;
+    --space-md: 0.5rem;
+    --space-lg: 0.625rem;
+    --space-xl: 0.75rem;
+    --space-2xl: 0.875rem;
+    --space-3xl: 1rem;
+    --space-4xl: 1.125rem;
+    --space-5xl: 1.25rem;
+    --space-6xl: 1.5rem;
+    --space-7xl: 1.75rem;
+    --space-8xl: 2.125rem;
+    --space-9xl: 2.625rem;
+    --radius-sm: 0.25rem;
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --type-xs: 0.625rem;
+    --type-sm: 0.6875rem;
+    --type-md: 0.75rem;
+    --type-lg: 0.8125rem;
+    --type-xl: 0.9375rem;
+    --type-2xl: 1rem;
+    --type-3xl: 1.0625rem;
+    --type-4xl: 1.125rem;
+    --type-display-min: 2.45rem;
+    --type-display: clamp(2.6rem, 5vw, 4.6rem);
+    --line-tight: 1.04;
+    --line-copy: 1.65;
+    --line-body: 1.5;
+    --tracking-label: 0.12em;
+    --tracking-small: 0.08em;
+    --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+    --duration-fast: 0.15s;
+    --lift-hover: -0.125rem;
+    --grid-size: 3.375rem;
+    --columns-notes: 3 16.25rem;
+    --x: 50%;
+    --y: 50%;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
-    background: #08090a;
-    color: #d0d6e0;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-feature-settings: "cv01", "ss03";
-    line-height: 1.6;
+    margin: var(--space-0);
     min-height: 100vh;
+    background:
+      linear-gradient(var(--color-grid-line) var(--space-hairline), var(--color-transparent) var(--space-hairline)),
+      linear-gradient(90deg, var(--color-grid-line) var(--space-hairline), var(--color-transparent) var(--space-hairline)),
+      var(--page-glow),
+      var(--color-bg);
+    background-size: var(--grid-size) var(--grid-size), var(--grid-size) var(--grid-size), auto, auto;
+    color: var(--color-text);
+    font-family: var(--font-ui);
+    font-feature-settings: "cv01", "ss03";
+    line-height: var(--line-body);
   }
-  .container { max-width: 1200px; margin: 0 auto; padding: 5rem 1.5rem; }
-  header { margin-bottom: 4rem; }
-  h1 {
-    font-size: clamp(2rem, 5vw, 2.75rem);
-    font-weight: 600;
-    color: #f7f8f8;
-    letter-spacing: -0.02em;
-    margin-bottom: 0.75rem;
-  }
-  .subtitle { color: #8a8f98; font-size: 1.05rem; }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-  }
-  .card {
-    display: block;
-    text-decoration: none;
+  a {
     color: inherit;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.05);
-    border-radius: 12px;
-    padding: 1.5rem;
-    transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    text-decoration: none;
   }
-  .card:hover {
-    transform: translateY(-2px);
-    border-color: rgba(94,106,210,0.4);
-    background: rgba(255,255,255,0.04);
+  a:focus-visible {
+    outline: var(--space-hairline) solid var(--color-cyan);
+    outline-offset: var(--space-xs);
   }
-  .card .date {
-    font-size: 0.78rem;
-    color: #8a8f98;
-    font-variant-numeric: tabular-nums;
-    margin-bottom: 0.75rem;
+  .page-shell {
+    width: min(var(--size-full), var(--size-page));
+    margin: var(--space-0) auto;
+    padding: var(--space-0) var(--space-5xl) var(--space-7xl);
   }
-  .card h2 {
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: #f7f8f8;
-    margin-bottom: 0.5rem;
-    line-height: 1.35;
+  .topbar {
+    min-height: 3.625rem;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--space-6xl);
+    border-bottom: var(--space-hairline) solid var(--color-line-soft);
   }
-  .card p {
-    color: #8a8f98;
-    font-size: 0.92rem;
-    line-height: 1.5;
-  }
-  footer {
-    margin-top: 6rem;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(255,255,255,0.05);
-    color: #8a8f98;
-    font-size: 0.88rem;
+  .brand,
+  .nav-links,
+  .search-control,
+  .site-footer nav {
     display: flex;
-    gap: 2rem;
+    align-items: center;
   }
-  footer a { color: #7170ff; text-decoration: none; }
-  footer a:hover { color: #5e6ad2; }
+  .brand {
+    gap: var(--space-lg);
+    font-size: var(--type-3xl);
+    font-weight: 600;
+  }
+  .brand-mark {
+    width: var(--size-brand-mark);
+    height: var(--size-brand-mark);
+    border-left: var(--space-2xs) solid var(--color-cyan);
+    border-bottom: var(--space-2xs) solid var(--color-cyan);
+    transform: rotate(45deg);
+  }
+  .nav-links {
+    gap: clamp(var(--space-4xl), 4vw, var(--space-9xl));
+    color: var(--color-text-soft);
+    font-size: var(--type-lg);
+  }
+  .nav-links a:hover,
+  .site-footer a:hover,
+  .section-heading a:hover {
+    color: var(--color-cyan);
+  }
+  .search-control {
+    justify-self: end;
+    gap: var(--space-lg);
+    min-width: min(var(--size-search), var(--size-full));
+    padding: var(--space-md) var(--space-lg);
+    border: var(--space-hairline) solid var(--color-line-soft);
+    border-radius: var(--radius-md);
+    color: var(--color-faint);
+    font-size: var(--type-md);
+    background: var(--color-panel);
+  }
+  kbd {
+    margin-left: auto;
+    color: var(--color-muted);
+    border: var(--space-hairline) solid var(--color-line-soft);
+    border-radius: var(--radius-sm);
+    padding: var(--space-3xs) var(--space-md);
+    font: inherit;
+  }
+  .hero {
+    min-height: 32.5rem;
+    display: grid;
+    grid-template-columns: minmax(var(--size-hero-copy-min), var(--size-hero-copy-max)) minmax(var(--size-map-min), 1fr) minmax(var(--size-rail-min), var(--size-rail-max));
+    gap: var(--space-7xl);
+    align-items: center;
+    padding: 1.875rem var(--space-0) var(--space-6xl);
+  }
+  .hero-copy h1 {
+    margin: var(--space-0);
+    max-width: 27.5rem;
+    font-size: var(--type-display);
+    line-height: var(--line-tight);
+    letter-spacing: var(--space-0);
+    font-weight: 500;
+  }
+  .hero-copy p {
+    max-width: 25.625rem;
+    color: var(--color-muted);
+    font-size: var(--type-2xl);
+    line-height: var(--line-copy);
+    margin: 1.375rem var(--space-0) var(--space-7xl);
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xl);
+  }
+  .button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xl);
+    min-height: 2.625rem;
+    padding: var(--space-0) var(--space-4xl);
+    border-radius: var(--radius-md);
+    border: var(--space-hairline) solid var(--color-line);
+    font-size: var(--type-lg);
+    font-weight: 500;
+  }
+  .button.primary {
+    background: var(--button-bg);
+    color: var(--color-cyan-dark);
+    border-color: var(--color-transparent);
+  }
+  .button.secondary {
+    color: var(--color-muted);
+    background: var(--color-panel);
+  }
+  .latest-note {
+    display: grid;
+    gap: var(--space-sm);
+    margin-top: var(--space-9xl);
+    font-size: var(--type-lg);
+  }
+  .latest-note span,
+  .section-heading,
+  .question-rail span,
+  .artifact-card > span,
+  .related-notes h3 {
+    color: var(--color-faint);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    font-size: var(--type-sm);
+  }
+  .latest-note a {
+    color: var(--color-text);
+  }
+  .latest-note time {
+    color: var(--color-faint);
+    font-size: var(--type-md);
+  }
+  .system-map {
+    position: relative;
+    min-height: var(--size-map-height);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .system-map::before {
+    content: "";
+    position: absolute;
+    inset: var(--space-0);
+    background: var(--map-glow);
+    pointer-events: none;
+  }
+  .map-lines {
+    position: absolute;
+    inset: var(--space-0);
+    width: var(--size-full);
+    height: var(--size-full);
+  }
+  .map-lines ellipse,
+  .map-lines path {
+    fill: none;
+    stroke: var(--color-line);
+    stroke-width: 1.2;
+  }
+  .map-lines path {
+    stroke: var(--color-cyan);
+  }
+  .map-lines .soft-line {
+    stroke: var(--color-muted);
+    stroke-dasharray: 7 8;
+  }
+  .map-node {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    transform: translate(-50%, -50%);
+    min-width: var(--size-node-min);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-lg);
+    padding: var(--space-xl) var(--space-3xl);
+    border: var(--space-hairline) solid var(--color-line);
+    border-radius: var(--radius-lg);
+    background: var(--color-panel-strong);
+    box-shadow: var(--shadow-map);
+    font-size: var(--type-xl);
+    white-space: nowrap;
+  }
+  .map-node.is-active {
+    border-color: var(--color-cyan);
+    color: var(--color-text);
+    box-shadow: var(--shadow-map-active);
+  }
+  .tone-indigo {
+    border-color: var(--color-indigo-line);
+  }
+  .tone-green {
+    border-color: var(--color-green-line);
+  }
+  .node-icon {
+    width: var(--size-icon);
+    height: var(--size-icon);
+    border: var(--space-hairline) solid currentColor;
+    border-radius: var(--radius-sm);
+    color: var(--color-cyan);
+  }
+  .tone-green .node-icon {
+    color: var(--color-green);
+  }
+  .tone-indigo .node-icon {
+    color: var(--color-indigo);
+  }
+  .map-controls {
+    position: absolute;
+    left: 50%;
+    bottom: var(--space-xl);
+    transform: translateX(-50%);
+    display: flex;
+    border: var(--space-hairline) solid var(--color-line-soft);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    color: var(--color-muted);
+  }
+  .map-controls span {
+    width: var(--size-control);
+    height: 1.875rem;
+    display: grid;
+    place-items: center;
+    border-right: var(--space-hairline) solid var(--color-line-soft);
+    background: var(--color-panel);
+  }
+  .map-controls span:last-child {
+    border-right: var(--space-0);
+  }
+  .question-rail,
+  .panel,
+  .notes-index {
+    border: var(--space-hairline) solid var(--color-line-soft);
+    border-radius: var(--radius-lg);
+    background: var(--color-panel);
+    backdrop-filter: blur(0.625rem);
+  }
+  .question-rail {
+    padding: var(--space-6xl) var(--space-5xl);
+  }
+  .question-rail p {
+    font-size: var(--type-4xl);
+    line-height: 1.4;
+    margin: var(--space-2xl) var(--space-0) var(--space-5xl);
+  }
+  .question-rail dl {
+    margin: var(--space-0);
+    display: grid;
+    gap: var(--space-4xl);
+    border-top: var(--space-hairline) solid var(--color-line-soft);
+    padding-top: var(--space-4xl);
+  }
+  .question-rail dt {
+    color: var(--color-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: var(--type-xs);
+  }
+  .question-rail dd {
+    margin: var(--space-sm) var(--space-0) var(--space-0);
+    color: var(--color-muted);
+    font-size: var(--type-lg);
+  }
+  .question-rail a {
+    display: inline-block;
+    margin-top: var(--space-4xl);
+    color: var(--color-cyan);
+    font-size: var(--type-lg);
+  }
+  .console-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.05fr;
+    gap: var(--space-2xl) var(--space-7xl);
+    border-top: var(--space-hairline) solid var(--color-line-soft);
+    padding-top: var(--space-xl);
+  }
+  .panel {
+    padding: var(--space-3xl);
+  }
+  .section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3xl);
+    margin-bottom: var(--space-3xl);
+  }
+  .section-heading a {
+    color: var(--color-muted);
+    text-transform: none;
+    letter-spacing: var(--space-0);
+    font-size: var(--type-md);
+  }
+  .mapping-content,
+  .diagram-wrap {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: var(--space-7xl);
+  }
+  .panel h2 {
+    margin: var(--space-0) var(--space-0) var(--space-xl);
+    color: var(--color-faint);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    font-size: var(--type-sm);
+    font-weight: 500;
+  }
+  .question-card,
+  .artifact-card,
+  .path-row,
+  .topic-row,
+  .note-link,
+  .related-notes a {
+    transition: border-color var(--duration-fast) ease, background var(--duration-fast) ease, color var(--duration-fast) ease, transform var(--duration-fast) ease;
+  }
+  .question-card {
+    display: grid;
+    gap: var(--space-sm);
+    padding: var(--space-lg) var(--space-2xl);
+    border: var(--space-hairline) solid var(--color-line-soft);
+    border-left-color: var(--color-cyan);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-lg);
+  }
+  .question-card strong {
+    font-size: var(--type-lg);
+    font-weight: 500;
+  }
+  .question-card span {
+    color: var(--color-faint);
+    font-size: var(--type-md);
+  }
+  .artifact-card {
+    padding: var(--space-4xl);
+    border: var(--space-hairline) solid var(--color-line-soft);
+    border-radius: var(--radius-md);
+    background: var(--color-panel);
+  }
+  .artifact-card h3 {
+    margin: var(--space-xl) var(--space-0) var(--space-md);
+    font-size: var(--type-3xl);
+    line-height: 1.3;
+    font-weight: 500;
+  }
+  .artifact-card p {
+    color: var(--color-faint);
+    margin: var(--space-0) var(--space-0) var(--space-3xl);
+    font-size: var(--type-md);
+  }
+  .artifact-card a,
+  .all-related {
+    color: var(--color-cyan);
+    font-size: var(--type-lg);
+  }
+  .path-list {
+    display: grid;
+    gap: var(--space-md);
+  }
+  .path-row {
+    display: grid;
+    grid-template-columns: 2.625rem minmax(10rem, 1fr) minmax(9.375rem, 16.25rem) 3rem 2.75rem 1.125rem;
+    align-items: center;
+    gap: var(--space-2xl);
+    padding: var(--space-xl);
+    border: var(--space-hairline) solid var(--color-line-soft);
+    border-radius: var(--radius-md);
+  }
+  .path-glyph {
+    width: var(--size-path-glyph);
+    height: var(--size-path-glyph);
+    border: var(--space-hairline) solid var(--color-cyan);
+    border-radius: var(--radius-md);
+    background: var(--color-cyan-soft);
+  }
+  .path-row strong,
+  .cluster-column h3 {
+    display: block;
+    font-size: var(--type-lg);
+    font-weight: 500;
+  }
+  .path-row small,
+  .cluster-column small,
+  .related-notes small {
+    display: block;
+    color: var(--color-faint);
+    font-size: var(--type-sm);
+    margin-top: var(--space-2xs);
+    font-weight: 400;
+  }
+  .progress-track {
+    display: flex;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+  .progress-dot {
+    width: var(--size-progress-dot);
+    height: var(--size-progress-dot);
+    border-radius: 50%;
+    border: var(--space-hairline) solid var(--color-muted);
+  }
+  .progress-dot.is-active {
+    background: var(--color-cyan);
+    border-color: var(--color-cyan);
+    box-shadow: var(--shadow-map);
+  }
+  .path-count,
+  .path-estimate {
+    color: var(--color-muted);
+    font-size: var(--type-md);
+    text-align: right;
+  }
+  .cluster-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-0);
+  }
+  .cluster-column {
+    padding: var(--space-0) var(--space-3xl);
+    border-left: var(--space-hairline) solid var(--color-line-soft);
+  }
+  .cluster-column:first-child {
+    border-left: var(--space-0);
+    padding-left: var(--space-0);
+  }
+  .cluster-column h3 {
+    margin: var(--space-0) var(--space-0) var(--space-xl);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-small);
+    font-size: var(--type-sm);
+  }
+  .topic-row {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-xl);
+    padding: var(--space-md) var(--space-0);
+    border-bottom: var(--space-hairline) solid var(--color-line-faint);
+    color: var(--color-muted);
+    font-size: var(--type-md);
+  }
+  .diagram-wrap {
+    grid-template-columns: 1fr minmax(11.25rem, 15.625rem);
+  }
+  .layer-diagram {
+    width: var(--size-full);
+    min-height: var(--size-diagram-min);
+  }
+  .layer-diagram path,
+  .layer-diagram rect {
+    fill: var(--color-panel);
+    stroke: var(--color-line);
+  }
+  .layer-diagram .is-active path {
+    stroke: var(--color-cyan);
+    fill: var(--color-cyan-soft);
+  }
+  .layer-diagram text {
+    fill: var(--color-muted);
+    font-size: var(--type-2xl);
+  }
+  .layer-diagram .diagram-label {
+    fill: var(--color-text);
+    font-size: var(--type-lg);
+  }
+  .diagram-link {
+    stroke: var(--color-cyan) !important;
+    stroke-dasharray: 5 7;
+    fill: none !important;
+  }
+  .related-notes {
+    border-left: var(--space-hairline) solid var(--color-line-soft);
+    padding-left: var(--space-4xl);
+  }
+  .related-notes a {
+    display: grid;
+    gap: var(--space-2xs);
+    padding: var(--space-md) var(--space-0);
+    border-bottom: var(--space-hairline) solid var(--color-line-faint);
+    font-size: var(--type-lg);
+  }
+  .notes-index {
+    margin-top: var(--space-2xl);
+    padding: var(--space-3xl);
+  }
+  .notes-list {
+    columns: var(--columns-notes);
+    column-gap: var(--space-6xl);
+  }
+  .note-link {
+    break-inside: avoid;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-xl);
+    padding: var(--space-md) var(--space-0);
+    border-bottom: var(--space-hairline) solid var(--color-line-faint);
+    color: var(--color-muted);
+    font-size: var(--type-md);
+  }
+  .note-link strong {
+    display: block;
+    color: var(--color-text-soft);
+    font-weight: 500;
+  }
+  .note-link small {
+    display: block;
+    color: var(--color-faint);
+    margin-top: var(--space-2xs);
+  }
+  .note-link time {
+    color: var(--color-faint);
+    white-space: nowrap;
+  }
+  .question-card:hover,
+  .artifact-card:hover,
+  .path-row:hover,
+  .topic-row:hover,
+  .note-link:hover,
+  .related-notes a:hover {
+    border-color: var(--color-cyan-halo);
+    color: var(--color-text);
+    transform: translateY(var(--lift-hover));
+  }
+  .site-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4xl);
+    padding: var(--space-7xl) var(--space-0) var(--space-0);
+    color: var(--color-muted);
+    font-size: var(--type-md);
+  }
+  .site-footer p {
+    margin: var(--space-0);
+    font-family: var(--font-mono);
+  }
+  .site-footer p span {
+    color: var(--color-green);
+  }
+  .site-footer nav {
+    gap: var(--space-6xl);
+  }
+  @media (max-width: 73.75rem) {
+    .hero {
+      grid-template-columns: 1fr;
+    }
+    .system-map {
+      min-height: var(--size-map-height-tablet);
+    }
+    .question-rail {
+      max-width: none;
+    }
+    .console-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 51.25rem) {
+    .page-shell {
+      padding-inline: var(--space-2xl);
+    }
+    .topbar {
+      grid-template-columns: 1fr;
+      padding: var(--space-2xl) var(--space-0);
+      gap: var(--space-xl);
+    }
+    .nav-links {
+      order: 3;
+      justify-content: space-between;
+      width: var(--size-full);
+      gap: var(--space-lg);
+    }
+    .search-control {
+      justify-self: stretch;
+      min-width: var(--space-0);
+    }
+    .hero {
+      min-height: auto;
+      padding-top: var(--space-8xl);
+    }
+    .system-map {
+      min-height: var(--size-map-height-mobile);
+    }
+    .map-node {
+      min-width: var(--size-node-tablet);
+      padding: var(--space-lg) var(--space-sm);
+      font-size: var(--type-md);
+    }
+    .mapping-content,
+    .diagram-wrap {
+      grid-template-columns: 1fr;
+    }
+    .path-row {
+      grid-template-columns: 2.125rem 1fr 1.125rem;
+    }
+    .progress-track,
+    .path-count,
+    .path-estimate {
+      display: none;
+    }
+    .cluster-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4xl) var(--space-0);
+    }
+    .site-footer {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+  @media (max-width: 33.75rem) {
+    .hero-copy h1 {
+      font-size: var(--type-display-min);
+    }
+    .hero-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .button {
+      justify-content: center;
+    }
+    .system-map {
+      min-height: var(--size-map-height-small);
+    }
+    .map-node {
+      min-width: var(--size-node-mobile);
+      white-space: normal;
+      text-align: center;
+    }
+    .cluster-grid {
+      grid-template-columns: 1fr;
+    }
+    .cluster-column,
+    .cluster-column:first-child {
+      border-left: var(--space-0);
+      padding: var(--space-0);
+    }
+    .notes-list {
+      columns: 1;
+    }
+  }
 </style>
 </head>
 <body>
-<div class="container">
-  <header>
-    <h1>Kira Learn</h1>
-    <p class="subtitle">Plain-English notes on the systems behind tools you use.</p>
+<div class="page-shell">
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Kira Learn home"><span class="brand-mark" aria-hidden="true"></span>Kira Learn</a>
+    <nav class="nav-links" aria-label="Primary navigation">
+      <a href="#maps">Maps</a>
+      <a href="#paths">Paths</a>
+      <a href="#notes-index">Notes</a>
+      <a href="/sharp">Sharp view</a>
+    </nav>
+    <a class="search-control" href="#notes-index" aria-label="Search notes, maps, and topics">
+      <span aria-hidden="true">⌕</span>
+      <span>Search notes, maps, topics...</span>
+      <kbd>/</kbd>
+    </a>
   </header>
-  <main class="grid">
-    <a class="card" href="/articles/operator-hotlist-vs-ralph-look">
-      <div class="date">May 3, 2026</div>
-      <h2>Operator Hotlist vs. Ralph Look</h2>
-      
-    </a>
-    <a class="card" href="/articles/supervisor-loop-vs-ralph-loop">
-      <div class="date">May 3, 2026</div>
-      <h2>Supervisor Loop vs Ralph Loop</h2>
-      
-    </a>
-    <a class="card" href="/articles/macos-background-items-daemon-tracing">
-      <div class="date">Apr 28, 2026</div>
-      <h2>macOS Background Items, Daemons, and Tracing Reinstallers</h2>
-      <p>A weird Background Item name is not the same thing as active malware. The work is to separate a real runnable daemon from stale macOS bookkeeping.</p>
-    </a>
-    <a class="card" href="/articles/acp-vs-acpx-vs-cli-routing">
-      <div class="date">Apr 25, 2026</div>
-      <h2>ACP vs ACPX vs Direct CLI Routing — Kira Learn</h2>
-      <p>Three ways to talk to coding agents. They look similar. They aren't.</p>
-    </a>
-    <a class="card" href="/articles/prompting-claude-thinking-partner">
-      <div class="date">Apr 25, 2026</div>
-      <h2>Turn Claude Into a Thinking Partner — Kira Learn</h2>
-      <p>The gap between &quot;meh&quot; and &quot;wow&quot; outputs isn't the model. It's eight principles you can stack on every prompt.</p>
-    </a>
-    <a class="card" href="/articles/peterdiamandis-elons-60b-cursor-bet-claude-kills-saas-and-openais-mass-departures">
-      <div class="date">Apr 24, 2026</div>
-      <h2>Peter Diamandis Digest: Elon&amp;apos;s $60B Cursor Bet, Claude kills SaaS, and OpenAI&amp;apos;s Mass Departures | EP #249</h2>
-      
-    </a>
-    <a class="card" href="/articles/gemini-notebooklm-human-intelligence-system">
-      <div class="date">Apr 20, 2026</div>
-      <h2>The Four-Floor AI System That Actually Makes You Smarter — Kira Learn</h2>
-      <p>Most people use AI as one giant shortcut. That often makes their thinking weaker. The better move is to split the stack into distinct layers so truth, reasoning, specialization, and execution do different jobs.</p>
-    </a>
-    <a class="card" href="/articles/peterdiamandis-sam-altmans-attack-amazon-vs-starlink-and-what-opus-47-actually-means">
-      <div class="date">Apr 19, 2026</div>
-      <h2>Peter Diamandis Digest: Sam Altman’s Attack, Amazon vs. Starlink, and What Opus 4.7 Actually Means | #248</h2>
-      
-    </a>
-    <a class="card" href="/articles/peterdiamandis-elon-musk-vs-sam-altman-ai-job-loss-and-openais-852b-valuation">
-      <div class="date">Apr 16, 2026</div>
-      <h2>Peter Diamandis Digest: Elon vs Altman, AI Jobs, and OpenAI's $852B Valuation</h2>
-      
-    </a>
-    <a class="card" href="/articles/peterdiamandis-spacex-goes-public-claude-mythos-data-center-delay">
-      <div class="date">Apr 12, 2026</div>
-      <h2>Peter Diamandis, SpaceX IPO, Claude Mythos, and the Data Center Squeeze</h2>
-      
-    </a>
-    <a class="card" href="/articles/rabbishimonrussell-crisis-chinuch-panel-part-1">
-      <div class="date">Apr 11, 2026</div>
-      <h2>Crisis Chinuch Panel Part 1 &amp;mdash; Russell &amp;amp; Jacobson</h2>
-      
-    </a>
-    <a class="card" href="/articles/rabbishimonrussell-crisis-chinuch-panel-part-2">
-      <div class="date">Apr 11, 2026</div>
-      <h2>Crisis Chinuch Panel Part 2 &amp;mdash; Russell &amp;amp; Jacobson</h2>
-      
-    </a>
-    <a class="card" href="/articles/rabbishimonrussell-navigating-yom-tov-for-our-children">
-      <div class="date">Apr 11, 2026</div>
-      <h2>Navigating Yom Tov for Our Children — Rabbi Shimon Russell</h2>
-      
-    </a>
-    <a class="card" href="/articles/top-claude-code-tools-april-2026-adaptation">
-      <div class="date">Apr 11, 2026</div>
-      <h2>What I'm Stealing From The Claude Code Tools Video — Kira Learn</h2>
-      <p>Watched a 40-minute tour of every shiny Claude Code add-on. Here's the short list I'm actually installing — and the mental model behind the cuts.</p>
-    </a>
-    <a class="card" href="/articles/natebjones-3-trillion-ipo-trap">
-      <div class="date">Apr 10, 2026</div>
-      <h2>The $3 Trillion IPO Trap Nobody's Talking About</h2>
-      <p>Three AI giants are about to go public. Your retirement fund is the exit liquidity.</p>
-    </a>
-    <a class="card" href="/articles/natebjones-512k-lines-leaked-code-ai-tools">
-      <div class="date">Apr 10, 2026</div>
-      <h2>Conway: The Always-On Agent Hidden in Anthropic's Leaked Code</h2>
-      <p>A packaging error pushed 512,000 lines of Claude Code source to a public registry. Buried inside was something Anthropic never announced: an always-on agent called Conway that reveals a platform lock-in strategy we haven't seen before.</p>
-    </a>
-    <a class="card" href="/articles/natebjones-6-6-billion-ai-company-one-week-moat">
-      <div class="date">Apr 10, 2026</div>
-      <h2>The One-Week Moat: Why $6.6 Billion AI Companies Are Built on Sand</h2>
-      <p>Lovable just raised $330 million. But anyone with Claude Code could rebuild their product in a week. So what actually matters?</p>
-    </a>
-    <a class="card" href="/articles/natebjones-markdown-file-replaced-design-meeting-google-stitch">
-      <div class="date">Apr 10, 2026</div>
-      <h2>Design Moved to the Command Line</h2>
-      <p>Three tools — Google Stitch, Remotion, and Blender MCP — just collapsed the cost of creative work. Here's what that means.</p>
-    </a>
-    <a class="card" href="/articles/natebjones-missing-orchestration-layer-destroying-teams">
-      <div class="date">Apr 10, 2026</div>
-      <h2>The Missing Orchestration Layer Destroying Teams Right Now</h2>
-      <p>AI agents can think and code. But they still can't reliably work together -- and that gap is where billions of dollars will be won or lost.</p>
-    </a>
-    <a class="card" href="/articles/natebjones-polymarket-bot-438k-30-days">
-      <div class="date">Apr 10, 2026</div>
-      <h2>A Bot Made $438K in 30 Days -- And It's a Warning for Every Industry</h2>
-      <p>A simple trading bot on Polymarket reveals the hidden force reshaping every business: AI is collapsing the inefficiencies your industry was built on.</p>
-    </a>
-    <a class="card" href="/articles/peterdiamandis-ai-synthetic-biology-ben-lamm-colossal">
-      <div class="date">Apr 10, 2026</div>
-      <h2>AI + Synthetic Biology: Programming Life Itself</h2>
-      <p>One company is using AI to design living organisms — from woolly mammoths to plastic-eating microbes.</p>
-    </a>
-    <a class="card" href="/articles/peterdiamandis-elon-chip-race-sp500-repricing">
-      <div class="date">Apr 10, 2026</div>
-      <h2>Elon's TerraFab, the S&amp;P 500 Repricing, and the End of Human Driving</h2>
-      <p>50x the world's chip supply. Flying cars in 18 months. And the financial framework that priced every stock for a century might be breaking.</p>
-    </a>
-    <a class="card" href="/articles/peterdiamandis-eric-schmidt-robotics-singularity-energy">
-      <div class="date">Apr 10, 2026</div>
-      <h2>Eric Schmidt: The Robotics Race, Singularity Timeline, and the 92-Gigawatt Problem</h2>
-      <p>The former Google CEO lays out why the US is 10% into an AI revolution, why China is winning robotics, and why the real bottleneck is electricity — not talent or capital.</p>
-    </a>
-    <a class="card" href="/articles/peterdiamandis-uber-robotaxi-dara-khosrowshahi">
-      <div class="date">Apr 10, 2026</div>
-      <h2>Uber's Robotaxi Playbook: The End of Human Driving</h2>
-      <p>Uber's CEO explains why your kids probably won't need a driver's license -- and how Uber plans to orchestrate a world of robot cars, flying taxis, and AI gig work.</p>
-    </a>
-    <a class="card" href="/articles/peterdiamandis-uber-vs-tesla-robotaxi-timelines">
-      <div class="date">Apr 10, 2026</div>
-      <h2>The Robotaxi Race: Why Uber Bets on Being the Middleman</h2>
-      <p>Uber's CEO explains why they won't build a self-driving car — and why that might be the smartest move in the race.</p>
-    </a>
-    <a class="card" href="/articles/top-claude-code-tools-april-2026">
-      <div class="date">Apr 10, 2026</div>
-      <h2>The Claude Code Tools That Actually Matter — Kira Learn</h2>
-      <p>There are dozens of Claude Code plugins and skills floating around. Most are noise. Here's how to tell the difference.</p>
-    </a>
-    <a class="card" href="/articles/ssh-keys-vps-security-and-server-hardening">
-      <div class="date">Apr 5, 2026</div>
-      <h2>SSH Keys, VPS Security &amp; Server Hardening</h2>
-      <p>Your server is on the internet 24/7. Here's how to make sure only you can get in.</p>
-    </a>
-    <a class="card" href="/articles/webhooks">
-      <div class="date">Apr 5, 2026</div>
-      <h2>Webhooks — How Apps Talk to Each Other in Real Time</h2>
-      <p>Instead of constantly asking &quot;anything new?&quot; — just get a tap on the shoulder when something happens.</p>
-    </a>
+  <main>
+    <section class="hero" id="maps">
+    <div class="hero-copy">
+      <h1>Mapping the agentic systems stack</h1>
+      <p>A public study console for AI agents, orchestration, systems design, and the architecture patterns behind the tools.</p>
+      <div class="hero-actions">
+        <a href="#current-map" class="button primary">Open current map <span aria-hidden="true">→</span></a>
+        <a href="/articles/operator-hotlist-vs-ralph-look" class="button secondary">Read latest note</a>
+      </div>
+      <aside class="latest-note" aria-label="Latest note">
+        <span>Latest note</span>
+        <a href="/articles/operator-hotlist-vs-ralph-look">Operator Hotlist vs. Ralph Look</a>
+        <time datetime="2026-05-03">May 3, 2026</time>
+      </aside>
+    </div>
+    <section class="system-map" id="current-map" aria-label="Current system map">
+    <svg class="map-lines" viewBox="0 0 1000 560" role="img" aria-label="Connected system map lines">
+      <ellipse cx="500" cy="280" rx="390" ry="174"></ellipse>
+      <ellipse cx="500" cy="280" rx="250" ry="105"></ellipse>
+      <path d="M500 120 L500 245 M260 235 L430 255 M570 255 L760 235 M465 310 L365 392 M535 310 L640 392"></path>
+      <path class="soft-line" d="M500 120 C620 145 710 168 760 235 M260 235 C314 315 338 353 365 392 M640 392 C676 350 708 301 760 235"></path>
+    </svg>
+    <div class="map-node tone-blue" style="--x:50%;--y:18%">
+      <span class="node-icon" aria-hidden="true"></span>
+      <span>Agent loops</span>
+    </div><div class="map-node tone-cyan" style="--x:20%;--y:42%">
+      <span class="node-icon" aria-hidden="true"></span>
+      <span>Tool protocols</span>
+    </div><div class="map-node tone-cyan is-active" style="--x:50%;--y:44%">
+      <span class="node-icon" aria-hidden="true"></span>
+      <span>Orchestration</span>
+    </div><div class="map-node tone-green" style="--x:79%;--y:42%">
+      <span class="node-icon" aria-hidden="true"></span>
+      <span>Memory</span>
+    </div><div class="map-node tone-indigo" style="--x:35%;--y:70%">
+      <span class="node-icon" aria-hidden="true"></span>
+      <span>Evaluation</span>
+    </div><div class="map-node tone-blue" style="--x:66%;--y:70%">
+      <span class="node-icon" aria-hidden="true"></span>
+      <span>Product systems</span>
+    </div>
+    <div class="map-controls" aria-hidden="true"><span>−</span><span>＋</span><span>⛶</span><span>⌂</span></div>
+  </section>
+    <aside class="question-rail">
+      <span>Current question</span>
+      <p>When does agent orchestration become product architecture?</p>
+      <dl>
+        <div><dt>Focus area</dt><dd>Orchestration boundaries, interfaces, and responsibilities.</dd></div>
+        <div><dt>Last updated</dt><dd>May 11, 2026</dd></div>
+      </dl>
+      <a href="#current-mapping">View full history →</a>
+    </aside>
+  </section>
+    <div class="console-grid" aria-label="Kira Learn study console">
+      <section class="panel current-mapping" id="current-mapping">
+    <div class="section-heading"><span>1. Current mapping</span><a href="#notes-index">View all →</a></div>
+    <div class="mapping-content">
+      <div>
+        <h2>Open questions</h2>
+        <a class="question-card" href="#current-map"><strong>How do we design durable agent loops?</strong><span>Exploring patterns for supervision, reflection, and iteration at scale.</span></a>
+        <a class="question-card" href="#current-map"><strong>What is the minimal viable orchestration layer?</strong><span>Defining the smallest set of responsibilities before productization.</span></a>
+      </div>
+      <article class="artifact-card">
+        <span>Latest artifact</span>
+        <h3>Orchestration boundary playbook v0.2</h3>
+        <p>Research note · May 3, 2026</p>
+        <a href="/articles/operator-hotlist-vs-ralph-look">Open note →</a>
+      </article>
+    </div>
+  </section>
+      <section class="panel learning-paths" id="paths">
+    <div class="section-heading"><span>2. Learning paths</span><a href="#notes-index">View all paths →</a></div>
+    <div class="path-list"><a class="path-row" href="/articles/supervisor-loop-vs-ralph-loop">
+      <span class="path-glyph" aria-hidden="true"></span>
+      <span><strong>Agentic architecture</strong><small>Designing intelligent systems that act.</small></span>
+      <span class="progress-track" aria-label="6 of 10 notes"><span class="progress-dot is-active" aria-hidden="true"></span><span class="progress-dot is-active" aria-hidden="true"></span><span class="progress-dot is-active" aria-hidden="true"></span><span class="progress-dot is-active" aria-hidden="true"></span><span class="progress-dot is-active" aria-hidden="true"></span><span class="progress-dot is-active" aria-hidden="true"></span><span class="progress-dot" aria-hidden="true"></span><span class="progress-dot" aria-hidden="true"></span><span class="progress-dot" aria-hidden="true"></span><span class="progress-dot" aria-hidden="true"></span></span>
+      <span class="path-count">6 / 10</span>
+      <span class="path-estimate">~5h</span>
+      <span aria-hidden="true">→</span>
+    </a><a class="path-row" href="/articles/gemini-notebooklm-human-intelligence-system">
+      <span class="path-glyph" aria-hidden="true"></span>
+      <span><strong>Systems design</strong><small>From components to resilient systems.</small></span>
+      <span class="progress-track" aria-label="4 of 9 notes"><span class="progress-dot is-active" aria-hidden="true"></span><span class="progress-dot is-active" aria-hidden="true"></span><span class="progress-dot is-active" aria-hidden="true"></span><span class="progress-dot is-active" aria-hidden="true"></span><span class="progress-dot" aria-hidden="true"></span><span class="progress-dot" aria-hidden="true"></span><span class="progress-dot" aria-hidden="true"></span><span class="progress-dot" aria-hidden="true"></span><span class="progress-dot" aria-hidden="true"></span></span>
+      <span class="path-count">4 / 9</span>
+      <span class="path-estimate">~4h</span>
+      <span aria-hidden="true">→</span>
+    </a><a class="path-row" href="/articles/prompting-claude-thinking-partner">
+      <span class="path-glyph" aria-hidden="true"></span>
+      <span><strong>Tools for thought</strong><small>Interfaces, protocols, and human-AI collaboration.</small></span>
+      <span class="progress-track" aria-label="3 of 8 notes"><span class="progress-dot is-active" aria-hidden="true"></span><span class="progress-dot is-active" aria-hidden="true"></span><span class="progress-dot is-active" aria-hidden="true"></span><span class="progress-dot" aria-hidden="true"></span><span class="progress-dot" aria-hidden="true"></span><span class="progress-dot" aria-hidden="true"></span><span class="progress-dot" aria-hidden="true"></span><span class="progress-dot" aria-hidden="true"></span></span>
+      <span class="path-count">3 / 8</span>
+      <span class="path-estimate">~3h</span>
+      <span aria-hidden="true">→</span>
+    </a></div>
+  </section>
+      <section class="panel article-clusters">
+    <div class="section-heading"><span>3. Article clusters</span><a href="#notes-index">Browse all notes →</a></div>
+    <div class="cluster-grid"><section class="cluster-column">
+      <h3>Architecture <small>23 notes</small></h3>
+      <a class="topic-row" href="/articles/supervisor-loop-vs-ralph-loop"><span>Agent loops</span><span>6</span></a><a class="topic-row" href="/articles/natebjones-missing-orchestration-layer-destroying-teams"><span>Orchestration</span><span>7</span></a><a class="topic-row" href="/articles/operator-hotlist-vs-ralph-look"><span>Interfaces</span><span>4</span></a><a class="topic-row" href="/articles/acp-vs-acpx-vs-cli-routing"><span>Boundaries</span><span>6</span></a>
+    </section><section class="cluster-column">
+      <h3>Systems <small>18 notes</small></h3>
+      <a class="topic-row" href="/articles/ssh-keys-vps-security-and-server-hardening"><span>Reliability</span><span>5</span></a><a class="topic-row" href="/articles/gemini-notebooklm-human-intelligence-system"><span>Evaluation</span><span>5</span></a><a class="topic-row" href="/articles/macos-background-items-daemon-tracing"><span>Observability</span><span>4</span></a><a class="topic-row" href="/articles/ssh-keys-vps-security-and-server-hardening"><span>Safety</span><span>4</span></a>
+    </section><section class="cluster-column">
+      <h3>Tools <small>20 notes</small></h3>
+      <a class="topic-row" href="/articles/acp-vs-acpx-vs-cli-routing"><span>Tool protocols</span><span>6</span></a><a class="topic-row" href="/articles/prompting-claude-thinking-partner"><span>Context engineering</span><span>6</span></a><a class="topic-row" href="/articles/gemini-notebooklm-human-intelligence-system"><span>Memory systems</span><span>5</span></a><a class="topic-row" href="/articles/top-claude-code-tools-april-2026-adaptation"><span>RAG patterns</span><span>3</span></a>
+    </section><section class="cluster-column">
+      <h3>Product <small>15 notes</small></h3>
+      <a class="topic-row" href="/articles/natebjones-6-6-billion-ai-company-one-week-moat"><span>Product systems</span><span>5</span></a><a class="topic-row" href="/articles/natebjones-markdown-file-replaced-design-meeting-google-stitch"><span>Workflows</span><span>4</span></a><a class="topic-row" href="/articles/operator-hotlist-vs-ralph-look"><span>UX for AI systems</span><span>3</span></a><a class="topic-row" href="/articles/natebjones-3-trillion-ipo-trap"><span>GTM &amp; adoption</span><span>3</span></a>
+    </section></div>
+  </section>
+      <section class="panel evolving-diagrams">
+    <div class="section-heading"><span>4. Evolving diagrams</span><a href="#notes-index">View all diagrams →</a></div>
+    <div class="diagram-wrap">
+      <svg class="layer-diagram" viewBox="0 0 640 260" role="img" aria-label="Layered architecture diagram">
+    <g class="diagram-layer"><path d="M118 54h336l48 44H70z"></path><text x="28" y="86">Product systems</text></g>
+    <g class="diagram-layer is-active"><path d="M118 112h336l48 44H70z"></path><text x="28" y="144">Orchestration layer</text></g>
+    <g class="diagram-layer"><path d="M118 170h336l48 44H70z"></path><text x="28" y="202">Tool &amp; memory layer</text></g>
+    <path class="diagram-link" d="M300 76v126 M210 134h214 M250 192h154"></path>
+    <rect x="246" y="124" width="146" height="42" rx="6"></rect>
+    <text class="diagram-label" x="276" y="150">Agent runtime</text>
+  </svg>
+      <aside class="related-notes"><h3>Related notes</h3><a href="/articles/operator-hotlist-vs-ralph-look">Operator Hotlist vs. Ralph Look<small>May 3, 2026</small></a><a href="/articles/supervisor-loop-vs-ralph-loop">Supervisor Loop vs Ralph Loop<small>May 3, 2026</small></a><a href="/articles/macos-background-items-daemon-tracing">macOS Background Items, Daemons, and Tracing Reinstallers<small>Apr 28, 2026</small></a><a class="all-related" href="#notes-index">See all related notes →</a></aside>
+    </div>
+  </section>
+    </div>
+    <section class="notes-index" id="notes-index">
+    <div class="section-heading"><span>Notes index</span><span>28 articles</span></div>
+    <div class="notes-list"><a class="note-link" href="/articles/operator-hotlist-vs-ralph-look">
+    <span><strong>Operator Hotlist vs. Ralph Look</strong></span>
+    <time datetime="2026-05-03">May 3, 2026</time>
+  </a><a class="note-link" href="/articles/supervisor-loop-vs-ralph-loop">
+    <span><strong>Supervisor Loop vs Ralph Loop</strong></span>
+    <time datetime="2026-05-03">May 3, 2026</time>
+  </a><a class="note-link" href="/articles/macos-background-items-daemon-tracing">
+    <span><strong>macOS Background Items, Daemons, and Tracing Reinstallers</strong><small>A weird Background Item name is not the same thing as active malware. The work is to separate a real runnable daemon from stale macOS bookkeeping.</small></span>
+    <time datetime="2026-04-28">Apr 28, 2026</time>
+  </a><a class="note-link" href="/articles/acp-vs-acpx-vs-cli-routing">
+    <span><strong>ACP vs ACPX vs Direct CLI Routing — Kira Learn</strong><small>Three ways to talk to coding agents. They look similar. They aren't.</small></span>
+    <time datetime="2026-04-25">Apr 25, 2026</time>
+  </a><a class="note-link" href="/articles/prompting-claude-thinking-partner">
+    <span><strong>Turn Claude Into a Thinking Partner — Kira Learn</strong><small>The gap between &quot;meh&quot; and &quot;wow&quot; outputs isn't the model. It's eight principles you can stack on every prompt.</small></span>
+    <time datetime="2026-04-25">Apr 25, 2026</time>
+  </a><a class="note-link" href="/articles/peterdiamandis-elons-60b-cursor-bet-claude-kills-saas-and-openais-mass-departures">
+    <span><strong>Peter Diamandis Digest: Elon&amp;apos;s $60B Cursor Bet, Claude kills SaaS, and OpenAI&amp;apos;s Mass Departures | EP #249</strong></span>
+    <time datetime="2026-04-24">Apr 24, 2026</time>
+  </a><a class="note-link" href="/articles/gemini-notebooklm-human-intelligence-system">
+    <span><strong>The Four-Floor AI System That Actually Makes You Smarter — Kira Learn</strong><small>Most people use AI as one giant shortcut. That often makes their thinking weaker. The better move is to split the stack into distinct layers so truth, reasoning, specialization, and execution do different jobs.</small></span>
+    <time datetime="2026-04-20">Apr 20, 2026</time>
+  </a><a class="note-link" href="/articles/peterdiamandis-sam-altmans-attack-amazon-vs-starlink-and-what-opus-47-actually-means">
+    <span><strong>Peter Diamandis Digest: Sam Altman’s Attack, Amazon vs. Starlink, and What Opus 4.7 Actually Means | #248</strong></span>
+    <time datetime="2026-04-19">Apr 19, 2026</time>
+  </a><a class="note-link" href="/articles/peterdiamandis-elon-musk-vs-sam-altman-ai-job-loss-and-openais-852b-valuation">
+    <span><strong>Peter Diamandis Digest: Elon vs Altman, AI Jobs, and OpenAI's $852B Valuation</strong></span>
+    <time datetime="2026-04-16">Apr 16, 2026</time>
+  </a><a class="note-link" href="/articles/peterdiamandis-spacex-goes-public-claude-mythos-data-center-delay">
+    <span><strong>Peter Diamandis, SpaceX IPO, Claude Mythos, and the Data Center Squeeze</strong></span>
+    <time datetime="2026-04-12">Apr 12, 2026</time>
+  </a><a class="note-link" href="/articles/rabbishimonrussell-crisis-chinuch-panel-part-1">
+    <span><strong>Crisis Chinuch Panel Part 1 &amp;mdash; Russell &amp;amp; Jacobson</strong></span>
+    <time datetime="2026-04-11">Apr 11, 2026</time>
+  </a><a class="note-link" href="/articles/rabbishimonrussell-crisis-chinuch-panel-part-2">
+    <span><strong>Crisis Chinuch Panel Part 2 &amp;mdash; Russell &amp;amp; Jacobson</strong></span>
+    <time datetime="2026-04-11">Apr 11, 2026</time>
+  </a><a class="note-link" href="/articles/rabbishimonrussell-navigating-yom-tov-for-our-children">
+    <span><strong>Navigating Yom Tov for Our Children — Rabbi Shimon Russell</strong></span>
+    <time datetime="2026-04-11">Apr 11, 2026</time>
+  </a><a class="note-link" href="/articles/top-claude-code-tools-april-2026-adaptation">
+    <span><strong>What I'm Stealing From The Claude Code Tools Video — Kira Learn</strong><small>Watched a 40-minute tour of every shiny Claude Code add-on. Here's the short list I'm actually installing — and the mental model behind the cuts.</small></span>
+    <time datetime="2026-04-11">Apr 11, 2026</time>
+  </a><a class="note-link" href="/articles/natebjones-3-trillion-ipo-trap">
+    <span><strong>The $3 Trillion IPO Trap Nobody's Talking About</strong><small>Three AI giants are about to go public. Your retirement fund is the exit liquidity.</small></span>
+    <time datetime="2026-04-10">Apr 10, 2026</time>
+  </a><a class="note-link" href="/articles/natebjones-512k-lines-leaked-code-ai-tools">
+    <span><strong>Conway: The Always-On Agent Hidden in Anthropic's Leaked Code</strong><small>A packaging error pushed 512,000 lines of Claude Code source to a public registry. Buried inside was something Anthropic never announced: an always-on agent called Conway that reveals a platform lock-in strategy we haven't seen before.</small></span>
+    <time datetime="2026-04-10">Apr 10, 2026</time>
+  </a><a class="note-link" href="/articles/natebjones-6-6-billion-ai-company-one-week-moat">
+    <span><strong>The One-Week Moat: Why $6.6 Billion AI Companies Are Built on Sand</strong><small>Lovable just raised $330 million. But anyone with Claude Code could rebuild their product in a week. So what actually matters?</small></span>
+    <time datetime="2026-04-10">Apr 10, 2026</time>
+  </a><a class="note-link" href="/articles/natebjones-markdown-file-replaced-design-meeting-google-stitch">
+    <span><strong>Design Moved to the Command Line</strong><small>Three tools — Google Stitch, Remotion, and Blender MCP — just collapsed the cost of creative work. Here's what that means.</small></span>
+    <time datetime="2026-04-10">Apr 10, 2026</time>
+  </a><a class="note-link" href="/articles/natebjones-missing-orchestration-layer-destroying-teams">
+    <span><strong>The Missing Orchestration Layer Destroying Teams Right Now</strong><small>AI agents can think and code. But they still can't reliably work together -- and that gap is where billions of dollars will be won or lost.</small></span>
+    <time datetime="2026-04-10">Apr 10, 2026</time>
+  </a><a class="note-link" href="/articles/natebjones-polymarket-bot-438k-30-days">
+    <span><strong>A Bot Made $438K in 30 Days -- And It's a Warning for Every Industry</strong><small>A simple trading bot on Polymarket reveals the hidden force reshaping every business: AI is collapsing the inefficiencies your industry was built on.</small></span>
+    <time datetime="2026-04-10">Apr 10, 2026</time>
+  </a><a class="note-link" href="/articles/peterdiamandis-ai-synthetic-biology-ben-lamm-colossal">
+    <span><strong>AI + Synthetic Biology: Programming Life Itself</strong><small>One company is using AI to design living organisms — from woolly mammoths to plastic-eating microbes.</small></span>
+    <time datetime="2026-04-10">Apr 10, 2026</time>
+  </a><a class="note-link" href="/articles/peterdiamandis-elon-chip-race-sp500-repricing">
+    <span><strong>Elon's TerraFab, the S&amp;P 500 Repricing, and the End of Human Driving</strong><small>50x the world's chip supply. Flying cars in 18 months. And the financial framework that priced every stock for a century might be breaking.</small></span>
+    <time datetime="2026-04-10">Apr 10, 2026</time>
+  </a><a class="note-link" href="/articles/peterdiamandis-eric-schmidt-robotics-singularity-energy">
+    <span><strong>Eric Schmidt: The Robotics Race, Singularity Timeline, and the 92-Gigawatt Problem</strong><small>The former Google CEO lays out why the US is 10% into an AI revolution, why China is winning robotics, and why the real bottleneck is electricity — not talent or capital.</small></span>
+    <time datetime="2026-04-10">Apr 10, 2026</time>
+  </a><a class="note-link" href="/articles/peterdiamandis-uber-robotaxi-dara-khosrowshahi">
+    <span><strong>Uber's Robotaxi Playbook: The End of Human Driving</strong><small>Uber's CEO explains why your kids probably won't need a driver's license -- and how Uber plans to orchestrate a world of robot cars, flying taxis, and AI gig work.</small></span>
+    <time datetime="2026-04-10">Apr 10, 2026</time>
+  </a><a class="note-link" href="/articles/peterdiamandis-uber-vs-tesla-robotaxi-timelines">
+    <span><strong>The Robotaxi Race: Why Uber Bets on Being the Middleman</strong><small>Uber's CEO explains why they won't build a self-driving car — and why that might be the smartest move in the race.</small></span>
+    <time datetime="2026-04-10">Apr 10, 2026</time>
+  </a><a class="note-link" href="/articles/top-claude-code-tools-april-2026">
+    <span><strong>The Claude Code Tools That Actually Matter — Kira Learn</strong><small>There are dozens of Claude Code plugins and skills floating around. Most are noise. Here's how to tell the difference.</small></span>
+    <time datetime="2026-04-10">Apr 10, 2026</time>
+  </a><a class="note-link" href="/articles/ssh-keys-vps-security-and-server-hardening">
+    <span><strong>SSH Keys, VPS Security &amp; Server Hardening</strong><small>Your server is on the internet 24/7. Here's how to make sure only you can get in.</small></span>
+    <time datetime="2026-04-05">Apr 5, 2026</time>
+  </a><a class="note-link" href="/articles/webhooks">
+    <span><strong>Webhooks — How Apps Talk to Each Other in Real Time</strong><small>Instead of constantly asking &quot;anything new?&quot; — just get a tap on the shoulder when something happens.</small></span>
+    <time datetime="2026-04-05">Apr 5, 2026</time>
+  </a></div>
+  </section>
   </main>
-  <footer>
-    <a href="/sharp">Sharp view →</a>
-    <span>28 articles</span>
+  <footer class="site-footer">
+    <p><span aria-hidden="true">.</span> kira@learn:~$ keep mapping</p>
+    <nav aria-label="Footer navigation">
+      <a href="#maps">About</a>
+      <a href="#notes-index">Notes index</a>
+      <a href="/sharp">Sharp view</a>
+      <span>28 articles</span>
+    </nav>
   </footer>
 </div>
 </body>
