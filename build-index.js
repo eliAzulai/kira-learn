@@ -14,7 +14,34 @@ import { renderSharp } from './lib/render-sharp.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ARTICLES_DIR = join(__dirname, 'articles');
 const DIST_DIR = join(__dirname, 'dist');
-const STATIC_ASSETS = ['favicon.svg', 'robots.txt'];
+const STATIC_ASSETS = ['favicon.svg', 'robots.txt', 'privacy.html', 'terms.html', 'assets/og-image.png'];
+const BASE_URL = 'https://kiralearn.space';
+
+function renderSitemap(articles) {
+  const today = new Date().toISOString().slice(0, 10);
+  const staticUrls = [
+    { loc: `${BASE_URL}/`, priority: '1.0', changefreq: 'daily' },
+    { loc: `${BASE_URL}/sharp`, priority: '0.6', changefreq: 'weekly' },
+    { loc: `${BASE_URL}/privacy`, priority: '0.2', changefreq: 'yearly' },
+    { loc: `${BASE_URL}/terms`, priority: '0.2', changefreq: 'yearly' },
+  ];
+  const articleUrls = articles.map((a) => ({
+    loc: `${BASE_URL}/articles/${a.slug}`,
+    lastmod: a.date,
+    priority: '0.8',
+    changefreq: 'monthly',
+  }));
+  const allUrls = [...staticUrls, ...articleUrls];
+  const urlEntries = allUrls.map(({ loc, lastmod, priority, changefreq }) => `  <url>
+    <loc>${loc}</loc>${lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : `\n    <lastmod>${today}</lastmod>`}
+    <changefreq>${changefreq}</changefreq>
+    <priority>${priority}</priority>
+  </url>`).join('\n');
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urlEntries}
+</urlset>`;
+}
 
 async function main() {
   const entries = await readdir(ARTICLES_DIR);
@@ -39,13 +66,16 @@ async function main() {
 
   await cp(ARTICLES_DIR, join(DIST_DIR, 'articles'), { recursive: true });
   for (const asset of STATIC_ASSETS) {
-    await cp(join(__dirname, asset), join(DIST_DIR, asset));
+    const target = join(DIST_DIR, asset);
+    await mkdir(dirname(target), { recursive: true });
+    await cp(join(__dirname, asset), target);
   }
 
   await writeFile(join(DIST_DIR, 'index.html'), renderIndex(articles), 'utf-8');
   await writeFile(join(DIST_DIR, 'sharp.html'), renderSharp(articles), 'utf-8');
+  await writeFile(join(DIST_DIR, 'sitemap.xml'), renderSitemap(articles), 'utf-8');
 
-  console.log(`built dist/ from ${articles.length} articles`);
+  console.log(`built dist/ from ${articles.length} articles (sitemap: ${articles.length + 4} urls)`);
 }
 
 main().catch((err) => {

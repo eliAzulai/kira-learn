@@ -22,6 +22,11 @@
 
 !/favicon.svg
 !/robots.txt
+!/privacy.html
+!/terms.html
+!/assets/
+!/assets/og-image.svg
+!/assets/og-image.png
 
 !/docs/
 !/docs/**

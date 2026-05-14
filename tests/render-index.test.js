@@ -51,6 +51,15 @@ test('renderIndex renders the live study console shell', () => {
   assert.match(html, /When does agent orchestration become product architecture\?/);
 });
 
+test('renderIndex exposes large social preview metadata', () => {
+  const html = renderIndex(sampleArticles);
+  assert.match(html, /<meta property="og:image" content="https:\/\/kiralearn\.space\/assets\/og-image\.png">/);
+  assert.match(html, /<meta property="og:image:width" content="1200">/);
+  assert.match(html, /<meta property="og:image:height" content="630">/);
+  assert.match(html, /<meta name="twitter:card" content="summary_large_image">/);
+  assert.match(html, /<meta name="twitter:image:alt" content="Kira Learn live study console with an agentic systems map\.">/);
+});
+
 test('renderIndex renders system map labels', () => {
   const html = renderIndex(sampleArticles);
   for (const label of ['Agent loops', 'Orchestration', 'Tool protocols', 'Memory', 'Evaluation', 'Product systems']) {
