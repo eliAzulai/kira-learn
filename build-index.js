@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 import { extractMetadata } from './lib/extract-metadata.js';
 import { renderIndex } from './lib/render-index.js';
 import { renderSharp } from './lib/render-sharp.js';
+import { enrichArticleHtml } from './lib/render-article-meta.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ARTICLES_DIR = join(__dirname, 'articles');
@@ -64,7 +65,17 @@ async function main() {
   await rm(DIST_DIR, { recursive: true, force: true });
   await mkdir(DIST_DIR, { recursive: true });
 
-  await cp(ARTICLES_DIR, join(DIST_DIR, 'articles'), { recursive: true });
+  // Enrich each article's <head> with AEO metadata (description, OG, JSON-LD)
+  // as we copy it to dist/. Source articles are not modified.
+  const distArticlesDir = join(DIST_DIR, 'articles');
+  await mkdir(distArticlesDir, { recursive: true });
+  for (const meta of articles) {
+    const srcPath = join(ARTICLES_DIR, `${meta.slug}.html`);
+    const dstPath = join(distArticlesDir, `${meta.slug}.html`);
+    const srcHtml = await readFile(srcPath, 'utf-8');
+    await writeFile(dstPath, enrichArticleHtml(srcHtml, meta), 'utf-8');
+  }
+
   for (const asset of STATIC_ASSETS) {
     const target = join(DIST_DIR, asset);
     await mkdir(dirname(target), { recursive: true });
