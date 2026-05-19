@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Closing a Claude Code session well — Kira Learn</title>
+<meta name="description" content="What /compact and /init actually do, and why neither alone is enough to close a Claude Code session cleanly.">
+<meta name="article:published" content="2026-05-15">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: #08090a; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-feature-settings: "cv01", "ss03";
+    background: #08090a;
+    color: #d0d6e0;
+    line-height: 1.6;
+    padding: 4rem 1.5rem 6rem;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  article {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .nav {
+    max-width: 720px;
+    margin: 0 auto 2.5rem;
+    font-size: 13px;
+    color: #62666d;
+    letter-spacing: -0.13px;
+  }
+  .nav a {
+    color: #8a8f98;
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .nav a:hover { color: #f7f8f8; }
+  h1 {
+    font-size: 48px;
+    font-weight: 500;
+    color: #f7f8f8;
+    line-height: 1.05;
+    letter-spacing: -1.056px;
+    margin-bottom: 1rem;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .hook {
+    font-size: 18px;
+    font-weight: 400;
+    color: #8a8f98;
+    line-height: 1.55;
+    letter-spacing: -0.165px;
+    margin-bottom: 3rem;
+    max-width: 600px;
+  }
+  .meta {
+    font-size: 13px;
+    color: #62666d;
+    letter-spacing: -0.13px;
+    margin-bottom: 4rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  h2 {
+    font-size: 24px;
+    font-weight: 500;
+    color: #f7f8f8;
+    line-height: 1.3;
+    letter-spacing: -0.288px;
+    margin: 3.5rem 0 1.25rem;
+    font-feature-settings: "cv01", "ss03";
+  }
+  h3 {
+    font-size: 17px;
+    font-weight: 590;
+    color: #f7f8f8;
+    line-height: 1.5;
+    margin: 2.25rem 0 0.75rem;
+    font-feature-settings: "cv01", "ss03";
+  }
+  p {
+    font-size: 16px;
+    color: #d0d6e0;
+    line-height: 1.65;
+    margin-bottom: 1.1rem;
+  }
+  p.body-lead {
+    font-size: 17px;
+    color: #d0d6e0;
+    line-height: 1.65;
+  }
+  strong { color: #f7f8f8; font-weight: 590; }
+  em { color: #f7f8f8; font-style: italic; font-weight: 400; }
+  ul {
+    list-style: none;
+    margin: 0 0 1.5rem;
+    padding: 0;
+  }
+  ul li {
+    font-size: 16px;
+    color: #d0d6e0;
+    line-height: 1.65;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+  }
+  ul li::before {
+    content: "";
+    position: absolute;
+    left: 0.4rem;
+    top: 0.65rem;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #5e6ad2;
+  }
+  code {
+    font-family: 'Berkeley Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 0.92em;
+    background: rgba(255,255,255,0.05);
+    color: #f7f8f8;
+    padding: 0.12em 0.4em;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  pre {
+    background: #141620;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-family: 'Berkeley Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 13px;
+    color: #d0d6e0;
+    line-height: 1.65;
+  }
+  pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  /* Diagram container */
+  .diagram {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    margin: 2.5rem 0;
+  }
+  .diagram-label {
+    font-size: 11px;
+    font-weight: 510;
+    color: #62666d;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+    text-align: center;
+  }
+  .diagram svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin: 2.5rem 0;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .compare-col {
+    padding: 1.5rem 1.5rem;
+    background: rgba(255,255,255,0.02);
+  }
+  .compare-col + .compare-col {
+    border-left: 1px solid rgba(255,255,255,0.05);
+  }
+  .compare-col h4 {
+    font-size: 13px;
+    font-weight: 510;
+    color: #7170ff;
+    letter-spacing: 0;
+    margin-bottom: 0.5rem;
+    font-family: 'Berkeley Mono', ui-monospace, monospace;
+  }
+  .compare-col p {
+    font-size: 14px;
+    color: #d0d6e0;
+    line-height: 1.55;
+    margin: 0 0 0.6rem;
+  }
+  .compare-col .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 510;
+    padding: 1px 8px;
+    border-radius: 9999px;
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #8a8f98;
+    margin-top: 0.5rem;
+  }
+
+  .takeaway-list {
+    background: rgba(94,106,210,0.05);
+    border: 1px solid rgba(113,112,255,0.18);
+    border-radius: 12px;
+    padding: 1.75rem 1.75rem 1.5rem;
+    margin: 2.5rem 0 0;
+  }
+  .takeaway-list h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 20px;
+    color: #f7f8f8;
+  }
+  .takeaway-list ul li::before { background: #7170ff; }
+
+  footer {
+    max-width: 720px;
+    margin: 5rem auto 0;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    font-size: 13px;
+    color: #62666d;
+    letter-spacing: -0.13px;
+  }
+  footer a { color: #8a8f98; text-decoration: none; }
+  footer a:hover { color: #f7f8f8; }
+
+  @media (max-width: 600px) {
+    body { padding: 2.5rem 1.25rem 4rem; }
+    h1 { font-size: 36px; letter-spacing: -0.792px; }
+    h2 { font-size: 21px; }
+    .hook { font-size: 17px; }
+    .compare-grid { grid-template-columns: 1fr; }
+    .compare-col + .compare-col {
+      border-left: none;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav"><a href="/">← Kira Learn</a></nav>
+
+<article>
+  <h1>Closing a Claude Code session well</h1>
+  <p class="hook"><code>/compact</code> and <code>/init</code> aren't a session-close ritual. Here's what each one actually does, and what you need around them.</p>
+  <p class="meta">May 15, 2026 · ~5 min read</p>
+
+  <section>
+    <h2>The simple version</h2>
+
+    <p class="body-lead">Picture a workshop. You spend the day at one bench making something. By evening the bench is covered in tools, off-cuts, sketches, notes.</p>
+
+    <p><code>/compact</code> is like sweeping the bench mid-day. You push the mess into a tidy pile so you have room to keep working. The pile is still on <em>your</em> bench. The moment you leave the workshop, that pile is gone.</p>
+
+    <p><code>/init</code> is like writing a manual for the workshop. Someone walks around and writes "the chisels live here, the saws live there." It's not for today's project. It's for next week, when you've forgotten where everything is.</p>
+
+    <p>Neither one <strong>closes the workshop</strong>. To actually close up for the night you have to put the tools back (commit), lock the door (push), update the wall map with what changed today (edit <code>CLAUDE.md</code> by hand), and write tomorrow's to-do list (Todoist or similar). Then you leave.</p>
+  </section>
+
+  <div class="compare-grid">
+    <div class="compare-col">
+      <h4>/compact</h4>
+      <p>Summarises the current conversation to free up Claude's context window. Lives in this session only.</p>
+      <p>Nothing gets written to disk. The summary disappears when the session ends.</p>
+      <span class="badge">in-session</span>
+    </div>
+    <div class="compare-col">
+      <h4>/init</h4>
+      <p>Analyses the codebase and generates a <code style="font-size:12px">CLAUDE.md</code> describing stack, commands, architecture.</p>
+      <p>Writes to disk. But it rewrites — it doesn't know about your hand-edited notes.</p>
+      <span class="badge">on-disk</span>
+    </div>
+  </div>
+
+  <section>
+    <h2>How it actually works</h2>
+
+    <h3>/compact — context, not persistence</h3>
+    <p><code>/compact</code> is a mid-session move. As you work, your conversation grows. Every exchange — every file read, every tool call, every reply — eats into Claude's context window. Past a threshold, responses slow down and the model starts compacting for you.</p>
+    <p><code>/compact</code> lets you do it deliberately. The conversation up to that point gets summarised into a smaller blob, freeing space for new work. It is <strong>purely in-session optimisation</strong>. Nothing reaches disk. The summary lives in the conversation and dies when the conversation ends.</p>
+
+    <p><em>When it helps:</em></p>
+    <ul>
+      <li>You're mid-flow and crossed ~60% context</li>
+      <li>You've done heavy exploration and want only the conclusions kept</li>
+      <li>You're about to start a big new sub-task in the same session</li>
+    </ul>
+
+    <p><em>When it doesn't:</em></p>
+    <ul>
+      <li>You're under 30% — no benefit, just losing nuance</li>
+      <li>You're about to close the session anyway — pointless, it doesn't persist</li>
+    </ul>
+
+    <h3>/init — analysis, not journal</h3>
+    <p><code>/init</code> reads your codebase (file tree, manifests, key entry points) and writes a <code>CLAUDE.md</code> describing what it found: stack, commands, architecture, file purposes. It's a code-shape document, not a conversation log.</p>
+    <p>That's where the trap is. If your <code>CLAUDE.md</code> has hand-written sections — status, decisions, gotchas, "we tried X but pivoted to Y" — <code>/init</code> doesn't know about those. Re-running it can wipe out the most valuable parts of the file.</p>
+
+    <p><em>When it's right:</em></p>
+    <ul>
+      <li>Brand-new project with no <code>CLAUDE.md</code> yet</li>
+      <li>Major architectural reshape where the existing doc is meaningfully wrong</li>
+    </ul>
+
+    <p><em>When it's wrong:</em></p>
+    <ul>
+      <li>Any project where you've been curating <code>CLAUDE.md</code> for weeks or months</li>
+      <li>You just want to capture today's decisions — that's an <em>edit</em>, not an <code>/init</code></li>
+    </ul>
+  </section>
+
+  <div class="diagram">
+    <div class="diagram-label">Session-close ritual</div>
+    <svg viewBox="0 0 640 280" xmlns="http://www.w3.org/2000/svg" aria-label="Five-step session close ritual diagram">
+      <defs>
+        <linearGradient id="accentLine" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#5e6ad2"/>
+          <stop offset="100%" stop-color="#7170ff"/>
+        </linearGradient>
+      </defs>
+
+      <!-- horizontal flow line -->
+      <line x1="60" y1="140" x2="580" y2="140" stroke="url(#accentLine)" stroke-width="2" opacity="0.45"/>
+
+      <!-- step 1 -->
+      <g>
+        <circle cx="80" cy="140" r="22" fill="#0f1011" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+        <text x="80" y="146" text-anchor="middle" fill="#7170ff" font-family="Inter, sans-serif" font-size="14" font-weight="510">1</text>
+        <text x="80" y="100" text-anchor="middle" fill="#f7f8f8" font-family="Inter, sans-serif" font-size="13" font-weight="510">commit</text>
+        <text x="80" y="190" text-anchor="middle" fill="#62666d" font-family="Inter, sans-serif" font-size="11">code state</text>
+      </g>
+
+      <!-- step 2 -->
+      <g>
+        <circle cx="195" cy="140" r="22" fill="#0f1011" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+        <text x="195" y="146" text-anchor="middle" fill="#7170ff" font-family="Inter, sans-serif" font-size="14" font-weight="510">2</text>
+        <text x="195" y="100" text-anchor="middle" fill="#f7f8f8" font-family="Inter, sans-serif" font-size="13" font-weight="510">push</text>
+        <text x="195" y="190" text-anchor="middle" fill="#62666d" font-family="Inter, sans-serif" font-size="11">off this machine</text>
+      </g>
+
+      <!-- step 3 -->
+      <g>
+        <circle cx="320" cy="140" r="22" fill="#0f1011" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+        <text x="320" y="146" text-anchor="middle" fill="#7170ff" font-family="Inter, sans-serif" font-size="14" font-weight="510">3</text>
+        <text x="320" y="100" text-anchor="middle" fill="#f7f8f8" font-family="Inter, sans-serif" font-size="13" font-weight="510">edit CLAUDE.md</text>
+        <text x="320" y="190" text-anchor="middle" fill="#62666d" font-family="Inter, sans-serif" font-size="11">today's deltas</text>
+      </g>
+
+      <!-- step 4 -->
+      <g>
+        <circle cx="445" cy="140" r="22" fill="#0f1011" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+        <text x="445" y="146" text-anchor="middle" fill="#7170ff" font-family="Inter, sans-serif" font-size="14" font-weight="510">4</text>
+        <text x="445" y="100" text-anchor="middle" fill="#f7f8f8" font-family="Inter, sans-serif" font-size="13" font-weight="510">task tracker</text>
+        <text x="445" y="190" text-anchor="middle" fill="#62666d" font-family="Inter, sans-serif" font-size="11">what's next</text>
+      </g>
+
+      <!-- step 5 -->
+      <g>
+        <circle cx="560" cy="140" r="22" fill="#5e6ad2" stroke="#7170ff" stroke-width="1.5"/>
+        <text x="560" y="146" text-anchor="middle" fill="#ffffff" font-family="Inter, sans-serif" font-size="14" font-weight="590">5</text>
+        <text x="560" y="100" text-anchor="middle" fill="#f7f8f8" font-family="Inter, sans-serif" font-size="13" font-weight="510">close session</text>
+        <text x="560" y="190" text-anchor="middle" fill="#62666d" font-family="Inter, sans-serif" font-size="11">fresh next time</text>
+      </g>
+    </svg>
+  </div>
+
+  <section>
+    <h3>What actually persists</h3>
+    <p>Nothing in Claude Code auto-saves your conversation to a permanent place. If today's session decided to switch from Postgres to SQLite, that decision exists only in the code you wrote and whatever you explicitly captured. Close the session without writing it down and the next session won't know.</p>
+    <p>Session-end persistence is a checklist, not a command:</p>
+
+<pre><code>1. git add + commit + push
+   → code state is durable, off this machine
+2. Hand-edit CLAUDE.md
+   → status changes, decisions, gotchas discovered
+3. Capture cross-project learnings to memory
+   → things bigger than this one project
+4. Update task tracker (Todoist, Linear, GitHub issues)
+   → what's next, what's blocked
+5. Close the session</code></pre>
+
+    <p>Step five matters. Long-lived sessions feel efficient but rarely are — context decay never gets captured, the conversation gets expensive to re-process, and you tend to keep tweaking instead of shipping.</p>
+
+    <h3>Why close instead of keeping it open</h3>
+    <p>A fresh session forces three useful behaviours:</p>
+    <ul>
+      <li><strong>Discipline.</strong> You can't close cleanly without writing things down. Future-you wins.</li>
+      <li><strong>Cheap context.</strong> New sessions don't carry yesterday's transcript. They start lean and fast.</li>
+      <li><strong>Deployable state.</strong> Closing requires committed code, which means the repo is always shippable.</li>
+    </ul>
+    <p>The exception is loop-style work — scheduled tasks, polling, long-running monitors — where the session lifetime <em>is</em> the loop. For normal feature work or research, close at the natural finish line, not "when the screen gets full."</p>
+  </section>
+
+  <div class="takeaway-list">
+    <h2>Key takeaways</h2>
+    <ul>
+      <li><code>/compact</code> is in-session context optimisation. It saves nothing to disk.</li>
+      <li><code>/init</code> analyses code shape and can destroy a hand-edited <code>CLAUDE.md</code>. Use it once, not weekly.</li>
+      <li>Session-end persistence is explicit: git, <code>CLAUDE.md</code> edits, memory, task tracker. Nothing auto-saves.</li>
+      <li>Hand-edit <code>CLAUDE.md</code> for incremental context. Reserve <code>/init</code> for fresh projects or major reshapes.</li>
+      <li>Close sessions at natural breakpoints. Running one forever costs context and discipline.</li>
+    </ul>
+  </div>
+
+</article>
+
+<footer>
+  <a href="/">← Back to Kira Learn</a>
+</footer>
+
+</body>
+</html>
